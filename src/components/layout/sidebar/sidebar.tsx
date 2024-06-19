@@ -20,7 +20,6 @@ import * as Styled from './styles';
 
 interface SidebarProps {
   isOpen: boolean;
-  onToggle: () => void;
 }
 
 export const Sidebar = (props: SidebarProps): ReactElement => {
