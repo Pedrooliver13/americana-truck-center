@@ -1,6 +1,6 @@
 // Packages
 import { ReactElement } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
 import {
   DashboardOutlined as DashboardOutlinedIcon,
@@ -24,8 +24,6 @@ interface SidebarProps {
 }
 
 export const Sidebar = (props: SidebarProps): ReactElement => {
-  const navigate = useNavigate();
-
   return (
     <Styled.SidebarContainer
       collapsible
@@ -33,22 +31,20 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
       width={250}
       trigger={null}
     >
-      <Link to="/">
+      <a href="/">
         <img className="sidebar__logo" src={TruckCenterLogo} alt="Logo marca" />
-      </Link>
+      </a>
 
       <Menu
         className="sidebar__menu"
-        defaultSelectedKeys={['1']}
-        // defaultOpenKeys={['sub1']}
+        defaultSelectedKeys={[location.pathname]}
         mode="inline"
         items={[
           /* Dashboard */
           {
-            key: '1',
+            key: '/',
             icon: <DashboardOutlinedIcon />,
-            label: 'Dashboard',
-            onClick: () => navigate('/'),
+            label: <Link to={'/'}>Dashboard</Link>,
           },
 
           /* ITEMS */
@@ -56,35 +52,31 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
             type: 'divider',
           },
           {
-            key: '2',
+            key: '1',
             label: !props.isOpen && 'Serviços',
             type: 'group',
             children: [
               {
-                key: '2-1',
+                key: '/services',
                 icon: <CarOutlinedIcon />,
-                onClick: () => navigate('/services'),
-                label: 'Serviços',
+                label: <Link to={'/services'}>Serviços</Link>,
               },
             ],
           },
           {
-            key: '3',
+            key: '/clients',
             icon: <UserOutlinedIcon />,
-            label: 'Clientes',
-            onClick: () => navigate('/clientes'),
+            label: <Link to={'/clients'}>Clientes</Link>,
           },
           {
-            key: '4',
+            key: '/prices',
             icon: <DollarOutlinedIcon />,
-            label: 'Preços',
-            onClick: () => navigate('/prices'),
+            label: <Link to={'/prices'}>Preços</Link>,
           },
           {
-            key: '5',
+            key: '/reports',
             icon: <PieChartOutlinedIcon />,
-            label: 'Relatórios',
-            onClick: () => navigate('/reports'),
+            label: <Link to={'/prices'}>Relatórios</Link>,
           },
 
           /* FOOTER */
@@ -93,15 +85,14 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
             className: 'sidebar__footer',
           },
           {
-            key: '6',
+            key: '/settings',
             icon: <SettingOutlinedIcon />,
-            label: 'Configurações',
-            onClick: () => navigate('/settings'),
+            label: <Link to={'/settings'}>Configurações</Link>,
           },
           {
-            key: '7',
+            key: '/logout',
             icon: <PoweroffOutlinedIcon />,
-            label: 'Sair',
+            label: <Link to={'/logout'}>Sair</Link>,
           },
         ]}
       />

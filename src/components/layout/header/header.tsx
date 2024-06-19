@@ -16,7 +16,7 @@ export const Header = (props: HeaderProps): ReactElement => {
         <div className="content__toggle">
           <MenuOutlinedIcon onClick={props.onToggle} size={20} />
         </div>
-        <div className="content__search">Hello world</div>
+        <div className="content__search"></div>
         <div className="content__avatar"></div>
       </div>
     </Styled.HeaderContainer>
