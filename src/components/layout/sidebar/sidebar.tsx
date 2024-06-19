@@ -28,7 +28,6 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
     <Styled.SidebarContainer
       collapsible
       collapsed={props.isOpen}
-      width={250}
       trigger={null}
     >
       <a href="/">

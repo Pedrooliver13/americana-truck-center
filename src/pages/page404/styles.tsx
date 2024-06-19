@@ -6,7 +6,6 @@ export const Page404Container = styled.div`
   flex-direction: column;
 
   img {
-    max-width: 600px;
     margin: 30px auto;
   }
 

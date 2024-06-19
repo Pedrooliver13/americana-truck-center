@@ -11,8 +11,12 @@ export const SidebarContainer = styled(Layout.Sider)`
     z-index: 9999;
     top: 0;
     left: 0;
-    height: 100vh;
-    transition: all 0.3s;
+    transition: all 0.3s ease-in-out;
+
+    .ant-layout-sider-children {
+      width: inherit;
+      position: fixed;
+    }
 
     .sidebar__logo {
       height: 15vh;
