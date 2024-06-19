@@ -15,5 +15,6 @@ export const Page404Container = styled.div`
   p {
     text-align: center;
     font-size: 3rem;
+    font-weight: 900;
   }
 `;

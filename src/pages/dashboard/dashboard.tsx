@@ -19,7 +19,7 @@ export const Dashboard = (): ReactElement => {
         <div>preços</div>
       </div>
 
-      <div className="dashboard__charts">
+      <div className="container dashboard__charts">
         <SalesOverview />
       </div>
     </Styled.DashboardContainer>
