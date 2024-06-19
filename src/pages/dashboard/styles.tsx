@@ -10,7 +10,7 @@ export const DashboardContainer = styled.div`
   }
 
   .dashboard__charts {
-    padding-left: 15px;
-    padding-right: 15px;
+    margin: 0 auto;
+    width: 90%;
   }
 `;

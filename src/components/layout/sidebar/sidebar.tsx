@@ -20,7 +20,6 @@ import * as Styled from './styles';
 
 interface SidebarProps {
   isOpen: boolean;
-  onToggle: () => void;
 }
 
 export const Sidebar = (props: SidebarProps): ReactElement => {
@@ -29,6 +28,7 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
       collapsible
       collapsed={props.isOpen}
       trigger={null}
+      width={250}
     >
       <a href="/">
         <img className="sidebar__logo" src={TruckCenterLogo} alt="Logo marca" />
