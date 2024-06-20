@@ -85,6 +85,10 @@ export const SalesOverview = (): ReactElement => {
 
   return (
     <Styled.SalesOverviewContainer>
+      <header className="salesOverview__header">
+        <h2>Detalhe das vendas</h2>
+      </header>
+
       <Chart
         options={optionscolumnchart as Props}
         series={seriescolumnchart}

@@ -30,8 +30,8 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
       trigger={null}
       width={250}
     >
-      <a href="/">
-        <img className="sidebar__logo" src={TruckCenterLogo} alt="Logo marca" />
+      <a href="/" className="sidebar__logo">
+        <img src={TruckCenterLogo} alt="Logo marca" />
       </a>
       <Menu
         className="sidebar__menu"

@@ -6,8 +6,6 @@ export const SidebarContainer = styled(Layout.Sider)`
   ${({ theme }) => css`
     display: flex;
     flex-direction: column;
-    background: ${theme.colors.white};
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     z-index: 9999;
     top: 0;
     left: 0;
@@ -16,9 +14,11 @@ export const SidebarContainer = styled(Layout.Sider)`
     .ant-layout-sider-children {
       width: inherit;
       position: fixed;
+      background-color: ${theme.colors.white};
+      box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     }
 
-    .sidebar__logo {
+    .sidebar__logo img {
       height: 15vh;
       display: flex;
       margin: 0 auto;
