@@ -8,12 +8,12 @@ interface StatusCardProps {
   title: string;
   value: string;
   icon: ReactNode;
-  bgIcon?: string;
+  bgicon?: string;
 }
 
 export const StatusCard = (props: StatusCardProps): ReactElement => {
   return (
-    <Styled.StatusCardContainer bgIcon={props.bgIcon}>
+    <Styled.StatusCardContainer $bgicon={props.bgicon}>
       <div className="status-card__infos">
         <h3 className="status-card__infos--title">{props.title}</h3>
         <p className="status-card__infos--value">{props.value}</p>

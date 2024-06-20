@@ -2,11 +2,11 @@
 import styled, { css } from 'styled-components';
 
 interface StatusCardContainerProps {
-  bgIcon?: string;
+  $bgicon?: string;
 }
 
 export const StatusCardContainer = styled.div<StatusCardContainerProps>`
-  ${({ theme, bgIcon }) => css`
+  ${({ theme, $bgicon }) => css`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -43,7 +43,7 @@ export const StatusCardContainer = styled.div<StatusCardContainerProps>`
       width: 6rem;
       height: 6rem;
       padding: 1.5rem;
-      background-color: ${bgIcon || theme.colors['purple-100']};
+      background-color: ${$bgicon || theme.colors['purple-100']};
 
       border-radius: 23px;
     }

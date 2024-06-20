@@ -25,19 +25,19 @@ export const Dashboard = (): ReactElement => {
         <StatusCard
           title="Vendas"
           value="40,0000"
-          bgIcon="#D9F7E8"
+          bgicon="#D9F7E8"
           icon={<img src={SalesImage} alt="Icon" />}
         />
         <StatusCard
           title="Nº de veículos"
           value="40,0000"
-          bgIcon="#FFF3D6"
+          bgicon="#FFF3D6"
           icon={<img src={VehiclesImage} alt="Icon" />}
         />
         <StatusCard
           title="Pendentes"
           value="40,0000"
-          bgIcon="#FFEEF0"
+          bgicon="#FFEEF0"
           icon={<img src={PendingImage} alt="Icon" />}
         />
       </div>
