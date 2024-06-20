@@ -1,16 +1,37 @@
 // Packages
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const DashboardContainer = styled.div`
-  margin-top: 10px;
-
-  .dashboard__infos {
+  ${({ theme }) => css`
     display: flex;
-    margin-bottom: 100px;
-  }
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
-  .dashboard__charts {
-    margin: 0 auto;
-    width: 90%;
-  }
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .dashboard__infos {
+      display: grid;
+      justify-content: space-between;
+      grid-template-columns: repeat(4, 1fr);
+
+      width: 90%;
+      margin-bottom: 100px;
+      gap: 10px;
+
+      @media (max-width: ${theme.breakpoints.XL}) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (max-width: ${theme.breakpoints.SM}) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dashboard__charts {
+      margin-top: auto;
+      width: 90%;
+    }
+  `}
 `;

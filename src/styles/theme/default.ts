@@ -5,6 +5,7 @@ export const defaultTheme = {
     white: '#FFFFFF',
     green: '#4AD991',
     purple: '#8280FF',
+    'purple-100': '#e5e4ff',
     red: '#FF9066',
     'red-900': '#EF3826',
     yellow: '#FEC53D',

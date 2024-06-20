@@ -33,7 +33,6 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
       <a href="/">
         <img className="sidebar__logo" src={TruckCenterLogo} alt="Logo marca" />
       </a>
-
       <Menu
         className="sidebar__menu"
         defaultSelectedKeys={[location.pathname]}
