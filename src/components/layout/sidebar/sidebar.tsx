@@ -1,5 +1,5 @@
 // Packages
-import { ReactElement } from 'react';
+import { ReactElement, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
 import {
@@ -20,15 +20,40 @@ import * as Styled from './styles';
 
 interface SidebarProps {
   isOpen: boolean;
+  onToggle: (status?: boolean) => void;
 }
 
 export const Sidebar = (props: SidebarProps): ReactElement => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  const currentCollapsedWidth = isMobile ? 0 : 80;
+  const isShowTriggerButton = isMobile && !props.isOpen;
+
+  const handleBreakpoint = (broken: boolean) => {
+    if (broken && !isMobile) {
+      setIsMobile(true);
+      return;
+    }
+
+    if (broken && props.isOpen && isMobile) {
+      props.onToggle();
+    }
+
+    setIsMobile(false);
+  };
+
   return (
     <Styled.SidebarContainer
       collapsible
       collapsed={props.isOpen}
-      trigger={null}
       width={250}
+      breakpoint="lg"
+      collapsedWidth={currentCollapsedWidth}
+      trigger={
+        isShowTriggerButton ? <div className="sidebar__outline" /> : null
+      }
+      onCollapse={() => props.onToggle()}
+      onBreakpoint={handleBreakpoint}
     >
       <a href="/" className="sidebar__logo">
         <img src={TruckCenterLogo} alt="Logo marca" />

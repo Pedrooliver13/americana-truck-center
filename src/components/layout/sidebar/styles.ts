@@ -11,6 +11,25 @@ export const SidebarContainer = styled(Layout.Sider)`
     left: 0;
     transition: all 0.3s ease-in-out;
 
+    @media (max-width: ${theme.breakpoints.LG}) {
+      position: fixed;
+      transition: all 0.1s ease-in-out;
+
+      .ant-menu-inline-collapsed {
+        width: 0;
+      }
+
+      .sidebar__outline {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        z-index: -1;
+        top: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+    }
+
     .ant-layout-sider-children {
       width: inherit;
       position: fixed;
