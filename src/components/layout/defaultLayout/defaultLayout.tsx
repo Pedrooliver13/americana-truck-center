@@ -17,7 +17,7 @@ export const DefaultLayout = (): ReactElement => {
 
   return (
     <Styled.DefaultLayoutContainer>
-      <Sidebar isOpen={isOpen} />
+      <Sidebar isOpen={isOpen} onToggle={handleToggle} />
 
       <div className="content">
         <Header onToggle={handleToggle} />
