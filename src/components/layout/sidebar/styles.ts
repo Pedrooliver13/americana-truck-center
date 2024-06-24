@@ -13,7 +13,6 @@ export const SidebarContainer = styled(Layout.Sider)`
 
     @media (max-width: ${theme.breakpoints.LG}) {
       position: fixed;
-      transition: all 0.1s ease-in-out;
 
       .ant-menu-inline-collapsed {
         width: 0;
