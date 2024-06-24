@@ -1,5 +1,6 @@
 // Components
 export { Card } from './card';
+export { Avatar } from './avatar';
 export { StatusCard } from './statusCard';
 
 // Fields

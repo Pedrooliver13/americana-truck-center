@@ -17,8 +17,13 @@ export const HeaderContainer = styled.header`
         max-height: 40px;
         width: 100%;
 
+        @media (max-width: ${theme.breakpoints.MD}) {
+          display: none;
+        }
+
         &--input {
           border-radius: 20px;
+          background-color: ${theme.colors['gray-200']};
         }
 
         input {
@@ -28,6 +33,17 @@ export const HeaderContainer = styled.header`
         button {
           border: 0;
           background-color: transparent;
+        }
+      }
+
+      &__avatar {
+        margin-left: auto;
+        max-width: 180px;
+        width: 100%;
+        cursor: pointer;
+
+        @media (max-width: ${theme.breakpoints.MD}) {
+          max-width: 80px;
         }
       }
     }

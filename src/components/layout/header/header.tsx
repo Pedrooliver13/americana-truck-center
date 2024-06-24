@@ -6,7 +6,7 @@ import {
 } from '@ant-design/icons';
 
 // Components
-import { Input } from 'components/core';
+import { Avatar, Input } from 'components/core';
 
 // Styles
 import * as Styled from './styles';
@@ -41,7 +41,10 @@ export const Header = (props: HeaderProps): ReactElement => {
             }
           />
         </form>
-        <div className="content__avatar"></div>
+
+        <div className="content__avatar">
+          <Avatar />
+        </div>
       </div>
     </Styled.HeaderContainer>
   );
