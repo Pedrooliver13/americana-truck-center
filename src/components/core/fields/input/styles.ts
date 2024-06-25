@@ -3,8 +3,6 @@ import styled, { css } from 'styled-components';
 
 export const InputContainer = styled.div`
   ${({ theme }) => css`
-    min-height: 61px;
-
     svg {
       color: ${theme.colors['gray-300']};
     }

@@ -4,7 +4,7 @@ export { Avatar } from './avatar';
 export { StatusCard } from './statusCard';
 
 // Fields
-export { Input } from './fields';
+export { Input, Button } from './fields';
 
 // Charts
 export { SalesOverview } from './charts';

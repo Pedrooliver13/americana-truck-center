@@ -38,7 +38,7 @@ export const Avatar = (): ReactElement => {
           <span>Admin</span>
         </div>
 
-        <Button size="small">
+        <Button shape="circle" size="small">
           <DownOutlinedIcon />
         </Button>
       </Styled.AvatarContainer>
