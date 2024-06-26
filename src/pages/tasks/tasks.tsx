@@ -33,7 +33,7 @@ export const Tasks = (): ReactElement => {
     <Styled.TasksContainer className="container">
       <Form onFinish={handleSubmit(handleNewItem)}>
         <FormItem control={control} name="name">
-          <Input placeholder="Nome" />
+          <Input placeholder="Nome" autoComplete="first-name" />
         </FormItem>
         <FormItem control={control} name="teste">
           <Input placeholder="teste" />

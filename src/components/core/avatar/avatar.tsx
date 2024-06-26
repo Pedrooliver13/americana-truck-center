@@ -1,7 +1,10 @@
 // Packages
 import { ReactElement } from 'react';
-import { Button, Dropdown, Avatar as AvatarAntDesign } from 'antd';
+import { Dropdown, Avatar as AvatarAntDesign } from 'antd';
 import { DownOutlined as DownOutlinedIcon } from '@ant-design/icons';
+
+// Components
+import { Button } from 'components/core';
 
 // Assets
 import AdminAvatarImage from 'assets/admin.png';

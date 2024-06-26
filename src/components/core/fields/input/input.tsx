@@ -1,5 +1,5 @@
 // Packages
-import React, { ReactElement, InputHTMLAttributes } from 'react';
+import React, { ReactElement } from 'react';
 import {
   InputRef,
   Input as InputAntDesign,
@@ -9,12 +9,7 @@ import {
 // Styles
 import * as Styled from './styles';
 
-type InputAntDesignProp = InputAntDesignProps &
-  InputHTMLAttributes<HTMLInputElement>;
-
-interface InputProps extends InputAntDesignProp {
-  error?: string | undefined;
-}
+interface InputProps extends InputAntDesignProps {}
 
 export const InputBase = (
   props: InputProps,
@@ -23,7 +18,6 @@ export const InputBase = (
   return (
     <Styled.InputContainer>
       <InputAntDesign ref={ref} size="large" {...props} />
-      {props?.error && <span className="input-error">{props.error}</span>}
     </Styled.InputContainer>
   );
 };
