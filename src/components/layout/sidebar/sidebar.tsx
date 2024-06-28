@@ -80,9 +80,9 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
             type: 'group',
             children: [
               {
-                key: '/services',
+                key: '/tasks',
                 icon: <CarOutlinedIcon />,
-                label: <Link to={'/services'}>Serviços</Link>,
+                label: <Link to={'/tasks'}>Serviços</Link>,
               },
             ],
           },
