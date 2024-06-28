@@ -1,2 +1,3 @@
 // Pages
-export { Tasks } from './tasks';
+export { Tasks } from './table/tasks';
+export { TasksForm } from './form/tasksForm';

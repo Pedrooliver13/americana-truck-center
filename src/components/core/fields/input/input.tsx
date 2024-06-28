@@ -1,5 +1,5 @@
 // Packages
-import React, { ReactElement } from 'react';
+import { ReactElement, forwardRef } from 'react';
 import {
   InputRef,
   Input as InputAntDesign,
@@ -22,4 +22,4 @@ export const InputBase = (
   );
 };
 
-export const Input = React.forwardRef(InputBase);
+export const Input = forwardRef(InputBase);
