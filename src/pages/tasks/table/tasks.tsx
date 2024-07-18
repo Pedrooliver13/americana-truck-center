@@ -1,14 +1,15 @@
 // Packages
 import { ReactElement, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Checkbox, CheckboxOptionType, TableColumnsType, Tag } from 'antd';
+import { Checkbox, TableColumnsType, notification } from 'antd';
 import {
   EditOutlined as EditOutlinedIcon,
   DeleteOutlined as DeleteOutlinedIcon,
+  SearchOutlined as SearchOutlinedIcon,
 } from '@ant-design/icons';
 
 // Components
-import { Table, Button, Modal, Input } from 'components/core';
+import { Table, Button, Modal, Input, Tag } from 'components/core';
 
 // Hooks
 import { useGetColumnSearch, useGetHiddenColumns } from 'hooks/core';
@@ -125,17 +126,31 @@ export const Tasks = (): ReactElement => {
     <Styled.TasksContainer className="container">
       <header className="tasks__header">
         <h1>Serviços</h1>
-        <Button size="large" type="primary">
-          <Link to="/tasks/new">Adicionar Serviços</Link>
-        </Button>
+
+        <Link to="/tasks/new">
+          <Button size="large" type="primary">
+            Adicionar Serviço
+          </Button>
+        </Link>
       </header>
 
       <div className="tasks__actions">
-        <Input id="task-search" placeholder="Pesquisar" allowClear />
+        <div className="tasks__actions--search">
+          <Input
+            id="task-search"
+            size="large"
+            placeholder="Pesquisar"
+            allowClear
+            autoComplete="off"
+          />
+          <Button type="primary" size="large" icon={<SearchOutlinedIcon />}>
+            Buscar
+          </Button>
+        </div>
 
         <Checkbox.Group
           value={checkedList}
-          options={options as CheckboxOptionType[]}
+          options={options}
           onChange={(value) => {
             setCheckedList(value as string[]);
           }}
@@ -154,18 +169,17 @@ export const Tasks = (): ReactElement => {
             <div className="tasks-table__expands">
               <h3>Serviços: </h3>
               <p>
-                <Tag color="orange">Lubrificação</Tag>
-                <Tag color="orange">Lubrificação</Tag>
-                <Tag color="orange">Lubrificação</Tag>
-                <Tag color="orange">Lubrificação</Tag>
-                <Tag color="orange">Lubrificação</Tag>
+                <Tag color="purple">Lubrificação</Tag>
+                <Tag color="purple">Lubrificação</Tag>
+                <Tag color="purple">Lubrificação</Tag>
+                <Tag color="purple">Lubrificação</Tag>
               </p>
             </div>
           ),
         }}
         pagination={{
           defaultPageSize: 5,
-          pageSizeOptions: ['5', '10', '20', '30'],
+          pageSizeOptions: ['5', '10', '20', '30', '50', '100'],
         }}
       />
 
@@ -177,11 +191,16 @@ export const Tasks = (): ReactElement => {
         cancelText="Cancelar"
         onClose={handleToggleModal}
         onCancel={handleToggleModal}
-        onOk={handleToggleModal}
+        onOk={() => {
+          notification.success({
+            message: 'Serviço excluído com sucesso!',
+          });
+          handleToggleModal();
+        }}
         okButtonProps={{ danger: true }}
       >
         <p>
-          Tem certeza que deseja excluir este registro? Após excluindo essa ação
+          Tem certeza que deseja excluir este registro? Após excluído essa ação
           não poderá ser desfeita!
         </p>
       </Modal>

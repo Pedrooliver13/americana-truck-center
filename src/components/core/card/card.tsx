@@ -1,9 +1,14 @@
 // Packages
-import { ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
+import { CardProps as CardAntDesignProps } from 'antd';
 
 // Styles
 import * as Styled from './styles';
 
-export const Card = (): ReactElement => {
-  return <Styled.CardContainer>Card</Styled.CardContainer>;
+interface CardProps extends CardAntDesignProps {
+  children: ReactNode;
+}
+
+export const Card = (props: CardProps): ReactElement => {
+  return <Styled.CardContainer {...props} />;
 };

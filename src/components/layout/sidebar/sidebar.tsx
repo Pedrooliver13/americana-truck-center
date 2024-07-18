@@ -56,7 +56,7 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
       onBreakpoint={handleBreakpoint}
     >
       <a href="/" className="sidebar__logo">
-        <img src={TruckCenterLogo} alt="Logo marca" />
+        <img src={TruckCenterLogo} alt="Logo marca" loading="lazy" />
       </a>
       <Menu
         className="sidebar__menu"

@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 
 export const HeaderContainer = styled.header`
   ${({ theme }) => css`
-    background-color: ${theme.colors.white};
+    background-color: ${theme.colors.background};
 
     .content {
       display: flex;
@@ -23,7 +23,13 @@ export const HeaderContainer = styled.header`
 
         &--input {
           border-radius: 20px;
-          background-color: ${theme.colors['gray-200']};
+          background-color: ${theme.colors.body} !important;
+          color: ${theme.colors.text} !important;
+          border-color: ${theme.colors.body};
+
+          ::placeholder {
+            color: ${theme.colors['gray-300']};
+          }
         }
 
         input {

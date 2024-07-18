@@ -10,7 +10,13 @@ export const TasksContainer = styled.div`
       display: flex;
       align-items: center;
       justify-content: space-between;
+
+      gap: 10px;
       margin-bottom: 40px;
+
+      h1 {
+        font-size: 2.5rem;
+      }
 
       @media (max-width: ${theme.breakpoints.SM}) {
         flex-direction: column;
@@ -22,8 +28,15 @@ export const TasksContainer = styled.div`
     .tasks__actions {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 20px;
       margin: 20px 0;
+
+      &--search {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
 
       @media (max-width: ${theme.breakpoints.MD}) {
         display: none;

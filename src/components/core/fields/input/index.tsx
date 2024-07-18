@@ -1,2 +1,2 @@
 // Components
-export { Input } from './input';
+export { Input, type InputProps } from './input';

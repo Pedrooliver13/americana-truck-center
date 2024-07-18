@@ -8,6 +8,16 @@ export const TableAntDesign = styled(Table)<TableProps>`
     border-radius: 16px;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
+    /* .ant-table-content {
+      background-color: ${theme.colors.background};
+      color: ${theme.colors.text};
+    }
+
+    .ant-table-row:hover {
+      background-color: ${theme.colors.background};
+      border-bottom: 1px solid red;
+    } */
+
     .ant-pagination {
       padding: 0px 20px;
     }

@@ -67,7 +67,7 @@ export const SalesOverview = (): ReactElement => {
       },
     },
     tooltip: {
-      theme: 'light',
+      theme: 'dark',
       fillSeriesColor: false,
     },
   };

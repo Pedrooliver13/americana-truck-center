@@ -1,12 +1,12 @@
-export const defaultTheme = {
+export const darkTheme = {
   colors: {
-    body: '#F5F6FA',
+    body: '#1B2431',
     primary: '#5D87FF',
     secondary: '#49BEFF',
-    text: '#2B3034',
-    background: '#FFFFFF',
-    border: '#d9d9d9',
-    inputBackground: '#FFFFFF',
+    text: '#FFFFFF',
+    background: '#273142',
+    border: '#1B2431',
+    inputBackground: '#323d4e',
 
     white: '#FFFFFF',
     green: '#4AD991',
