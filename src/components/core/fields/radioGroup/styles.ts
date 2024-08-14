@@ -5,7 +5,9 @@ import {
   RadioGroupProps as RadioGroupAntDesignProps,
 } from 'antd';
 
-export const RadioGroupContainer = styled(
+export const RadioContainer = styled.div``;
+
+export const RadioGroup = styled(
   RadioAntDesign.Group
 )<RadioGroupAntDesignProps>`
   ${() => css`

@@ -9,13 +9,10 @@ import {
 } from '@ant-design/icons';
 
 // Components
-import { Table, Button, Modal, Input, Tag, Select } from 'components/core';
+import { Table, Button, Modal, Input, Select } from 'components/core';
 
 // Hooks
 import { useGetColumnSearch, useGetHiddenColumns } from 'hooks/core';
-
-// Utils
-import { priceFormatter } from 'utils/formatter';
 
 // Styles
 import * as Styled from './styles';
@@ -24,9 +21,7 @@ interface DataType {
   id: string;
   name: string;
   registrationNumber: string | number;
-  vehicle: string;
   date: string;
-  total: number;
   status: number;
 }
 
@@ -42,7 +37,7 @@ const data: DataType[] = Array(90)
     status: 1,
   }));
 
-export const Tasks = (): ReactElement => {
+export const ClientTable = (): ReactElement => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { getColumnSearchProps } = useGetColumnSearch<DataType>();
 
@@ -59,24 +54,6 @@ export const Tasks = (): ReactElement => {
       key: 'registrationNumber',
       responsive: ['md'],
       ...getColumnSearchProps('registrationNumber', 'Documento'),
-    },
-    {
-      title: 'Veículo',
-      dataIndex: 'vehicle',
-      key: 'vehicle',
-      responsive: ['md'],
-      ...getColumnSearchProps('vehicle', 'Veículo'),
-    },
-    {
-      title: 'Total',
-      dataIndex: 'total',
-      key: 'total',
-      sorter: (a, b) => a.total - b.total,
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('total', 'Total'),
-      render: (value) => (
-        <Tag color="green">{priceFormatter.format(value)}</Tag>
-      ),
     },
     {
       title: 'Data',
@@ -114,13 +91,7 @@ export const Tasks = (): ReactElement => {
   const { newColumns, options, checkedList, setCheckedList } =
     useGetHiddenColumns({
       columns,
-      defaultCheckedList: [
-        'name',
-        'registrationNumber',
-        'total',
-        'date',
-        'actions',
-      ],
+      defaultCheckedList: ['name', 'registrationNumber', 'date', 'actions'],
     });
 
   const handleToggleModal = () => {
@@ -128,21 +99,21 @@ export const Tasks = (): ReactElement => {
   };
 
   return (
-    <Styled.TasksContainer className="container">
-      <header className="tasks__header">
-        <h1>Serviços</h1>
+    <Styled.ClientTableContainer className="container">
+      <header className="clients__header">
+        <h1>Clientes</h1>
 
-        <Link to="/tasks/new">
+        <Link to="/clients/new">
           <Button size="large" type="primary">
-            Adicionar Serviço
+            Adicionar Cliente
           </Button>
         </Link>
       </header>
 
-      <div className="tasks__actions">
-        <div className="tasks__actions--search">
+      <div className="clients__actions">
+        <div className="clients__actions--search">
           <Input
-            id="task-search"
+            id="client-search"
             size="large"
             placeholder="Pesquisar"
             allowClear
@@ -153,7 +124,7 @@ export const Tasks = (): ReactElement => {
           </Button>
         </div>
 
-        <div className="tasks__actions--columns">
+        <div className="clients__actions--columns">
           <Select
             id="select-columns"
             mode="tags"
@@ -172,25 +143,12 @@ export const Tasks = (): ReactElement => {
       </div>
 
       <Table
-        id="tasks-table"
+        id="clients-table"
         rowKey="id"
-        data-cy="tasks-table"
+        data-cy="clients-table"
         columns={newColumns}
         dataSource={data}
         size="small"
-        expandable={{
-          expandedRowRender: () => (
-            <div className="tasks-table__expands">
-              <h3>Serviços: </h3>
-              <p>
-                <Tag color="purple">Lubrificação</Tag>
-                <Tag color="purple">Lubrificação</Tag>
-                <Tag color="purple">Lubrificação</Tag>
-                <Tag color="purple">Lubrificação</Tag>
-              </p>
-            </div>
-          ),
-        }}
         pagination={{
           defaultPageSize: 5,
           pageSizeOptions: ['5', '10', '20', '30', '50', '100'],
@@ -198,7 +156,7 @@ export const Tasks = (): ReactElement => {
       />
 
       <Modal
-        title="Desejar excluir o serviço?"
+        title="Desejar excluir um cliente?"
         open={isOpenModal}
         centered
         okText="Confirmar"
@@ -207,17 +165,17 @@ export const Tasks = (): ReactElement => {
         onCancel={handleToggleModal}
         onOk={() => {
           notification.success({
-            message: 'Serviço excluído com sucesso!',
+            message: 'Cliente excluído com sucesso!',
           });
           handleToggleModal();
         }}
         okButtonProps={{ danger: true }}
       >
         <p>
-          Tem certeza que deseja excluir este registro? Após excluído essa ação
+          Tem certeza que deseja excluir este cliente? Após excluído essa ação
           não poderá ser desfeita!
         </p>
       </Modal>
-    </Styled.TasksContainer>
+    </Styled.ClientTableContainer>
   );
 };

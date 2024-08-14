@@ -1,6 +1,5 @@
 // Packages
 import { ReactElement, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { TableColumnsType, notification } from 'antd';
 import {
   EditOutlined as EditOutlinedIcon,
@@ -9,7 +8,7 @@ import {
 } from '@ant-design/icons';
 
 // Components
-import { Table, Button, Modal, Input, Tag, Select } from 'components/core';
+import { Button, Input, Modal, Select, Table, Tag } from 'components/core';
 
 // Hooks
 import { useGetColumnSearch, useGetHiddenColumns } from 'hooks/core';
@@ -22,68 +21,37 @@ import * as Styled from './styles';
 
 interface DataType {
   id: string;
-  name: string;
-  registrationNumber: string | number;
-  vehicle: string;
-  date: string;
-  total: number;
-  status: number;
+  service: string;
+  price: number;
 }
 
 const data: DataType[] = Array(90)
   .fill(null)
   .map((_, index) => ({
     id: `${index}`,
-    name: 'John Brown',
-    registrationNumber: '638.822.570-59',
-    vehicle: index % 2 === 0 ? 'Mercedez Bens' : 'BMW',
-    total: index % 2 === 0 ? 1000 : 3000,
-    date: index % 2 === 0 ? '27/06/2024' : '10/10/2021',
-    status: 1,
+    service: 'Lubrificação',
+    price: 100,
   }));
 
-export const Tasks = (): ReactElement => {
+export const Prices = (): ReactElement => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { getColumnSearchProps } = useGetColumnSearch<DataType>();
 
   const columns: TableColumnsType<DataType> = [
     {
-      title: 'Nome',
-      dataIndex: 'name',
-      key: 'name',
-      ...getColumnSearchProps('name', 'Nome'),
+      title: 'Serviços',
+      dataIndex: 'service',
+      key: 'service',
+      ...getColumnSearchProps('service', 'Serviços'),
     },
     {
-      title: 'Documento',
-      dataIndex: 'registrationNumber',
-      key: 'registrationNumber',
-      responsive: ['md'],
-      ...getColumnSearchProps('registrationNumber', 'Documento'),
-    },
-    {
-      title: 'Veículo',
-      dataIndex: 'vehicle',
-      key: 'vehicle',
-      responsive: ['md'],
-      ...getColumnSearchProps('vehicle', 'Veículo'),
-    },
-    {
-      title: 'Total',
-      dataIndex: 'total',
-      key: 'total',
-      sorter: (a, b) => a.total - b.total,
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('total', 'Total'),
+      title: 'Preços',
+      dataIndex: 'price',
+      key: 'price',
+      ...getColumnSearchProps('price', 'Preços'),
       render: (value) => (
         <Tag color="green">{priceFormatter.format(value)}</Tag>
       ),
-    },
-    {
-      title: 'Data',
-      dataIndex: 'date',
-      key: 'date',
-      responsive: ['md'],
-      ...getColumnSearchProps('date', 'Data'),
     },
     {
       title: 'Ações',
@@ -93,12 +61,7 @@ export const Tasks = (): ReactElement => {
       width: '100px',
       render: () => (
         <div className="table__actions">
-          <Button
-            type="text"
-            className="table__actions--normal"
-            icon={<EditOutlinedIcon color="#2B3034" />}
-            size="small"
-          />
+          <Button type="text" icon={<EditOutlinedIcon />} size="small" />
           <Button
             danger
             icon={<DeleteOutlinedIcon />}
@@ -114,13 +77,7 @@ export const Tasks = (): ReactElement => {
   const { newColumns, options, checkedList, setCheckedList } =
     useGetHiddenColumns({
       columns,
-      defaultCheckedList: [
-        'name',
-        'registrationNumber',
-        'total',
-        'date',
-        'actions',
-      ],
+      defaultCheckedList: ['service', 'price', 'actions'],
     });
 
   const handleToggleModal = () => {
@@ -128,21 +85,15 @@ export const Tasks = (): ReactElement => {
   };
 
   return (
-    <Styled.TasksContainer className="container">
-      <header className="tasks__header">
-        <h1>Serviços</h1>
-
-        <Link to="/tasks/new">
-          <Button size="large" type="primary">
-            Adicionar Serviço
-          </Button>
-        </Link>
+    <Styled.PriceContainer className="container">
+      <header className="prices__header">
+        <h1>Preços</h1>
       </header>
 
-      <div className="tasks__actions">
-        <div className="tasks__actions--search">
+      <div className="prices__actions">
+        <div className="prices__actions--search">
           <Input
-            id="task-search"
+            id="price-search"
             size="large"
             placeholder="Pesquisar"
             allowClear
@@ -153,7 +104,7 @@ export const Tasks = (): ReactElement => {
           </Button>
         </div>
 
-        <div className="tasks__actions--columns">
+        <div>
           <Select
             id="select-columns"
             mode="tags"
@@ -172,25 +123,13 @@ export const Tasks = (): ReactElement => {
       </div>
 
       <Table
-        id="tasks-table"
+        id="prices-table"
         rowKey="id"
-        data-cy="tasks-table"
+        data-cy="prices-table"
         columns={newColumns}
         dataSource={data}
         size="small"
-        expandable={{
-          expandedRowRender: () => (
-            <div className="tasks-table__expands">
-              <h3>Serviços: </h3>
-              <p>
-                <Tag color="purple">Lubrificação</Tag>
-                <Tag color="purple">Lubrificação</Tag>
-                <Tag color="purple">Lubrificação</Tag>
-                <Tag color="purple">Lubrificação</Tag>
-              </p>
-            </div>
-          ),
-        }}
+        bordered
         pagination={{
           defaultPageSize: 5,
           pageSizeOptions: ['5', '10', '20', '30', '50', '100'],
@@ -218,6 +157,6 @@ export const Tasks = (): ReactElement => {
           não poderá ser desfeita!
         </p>
       </Modal>
-    </Styled.TasksContainer>
+    </Styled.PriceContainer>
   );
 };

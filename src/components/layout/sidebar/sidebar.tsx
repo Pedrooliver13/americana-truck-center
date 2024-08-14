@@ -99,7 +99,8 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
           {
             key: '/reports',
             icon: <PieChartOutlinedIcon />,
-            label: <Link to={'/prices'}>Relatórios</Link>,
+            label: <span>Relatórios</span>,
+            disabled: true,
           },
 
           /* FOOTER */

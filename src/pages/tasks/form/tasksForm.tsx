@@ -1,6 +1,6 @@
 // Packages
-import { ReactElement } from 'react';
-import { Divider } from 'antd';
+import { ReactElement, useEffect } from 'react';
+import { Divider, Empty } from 'antd';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { FormItem } from 'react-hook-form-antd';
@@ -12,14 +12,17 @@ import * as zod from 'zod';
 import {
   Form,
   Input,
-  Select,
   Button,
   Card,
   Row,
   Col,
   Radio,
   RadioGroup,
+  Select,
 } from 'components/core';
+
+// Utils
+import { priceFormatter } from 'utils/formatter';
 
 // Styles
 import * as Styled from './styles';
@@ -28,20 +31,20 @@ const schema = zod.object({
   name: zod.string().min(1, { message: 'Campo obrigatório' }),
   client: zod.string().optional().nullable(),
   licensePlate: zod.string().min(1, { message: 'Campo obrigatório' }),
-  description: zod.string().min(1, { message: 'Campo obrigatório' }),
-  cavalo: zod.string().min(1, { message: 'Campo obrigatório' }),
+  washTankRadio: zod.string().min(1, { message: 'Campo obrigatório' }),
+  cavaloRadio: zod.string().min(1, { message: 'Campo obrigatório' }),
 });
 
 type FormValues = zod.infer<typeof schema>;
 
 export const TasksForm = (): ReactElement => {
-  const { control, handleSubmit } = useForm<FormValues>({
+  const { control, handleSubmit, setFocus } = useForm<FormValues>({
     defaultValues: {
       name: '',
       client: null,
       licensePlate: '',
-      description: 'c',
-      cavalo: 'c',
+      washTankRadio: '0',
+      cavaloRadio: '0',
     },
     resolver: zodResolver(schema),
   });
@@ -49,6 +52,10 @@ export const TasksForm = (): ReactElement => {
   const handleNewItem = (data: FormValues) => {
     console.log(data);
   };
+
+  useEffect(() => {
+    setFocus('name');
+  }, [setFocus]);
 
   return (
     <Styled.TasksFormContainer className="container">
@@ -79,13 +86,24 @@ export const TasksForm = (): ReactElement => {
               </FormItem>
             </Col>
             <Col xs={24} md={12}>
+              <FormItem control={control} name="licensePlate">
+                <Input
+                  id="licensePlate"
+                  name="licensePlate"
+                  label="Placa do veículo"
+                  placeholder="Placa do Veículo"
+                  autoComplete="off"
+                />
+              </FormItem>
+            </Col>
+            <Col xs={24} md={24}>
               <FormItem control={control} name="client">
                 <Select
                   id="client"
                   showSearch
                   placeholder="Selecione um cliente"
                   optionFilterProp="label"
-                  label="Cliente"
+                  label="Vincular cliente"
                   allowClear
                   autoClearSearchValue
                   options={[
@@ -97,37 +115,26 @@ export const TasksForm = (): ReactElement => {
                 />
               </FormItem>
             </Col>
-            <Col xs={24} md={12}>
-              <FormItem control={control} name="licensePlate">
-                <Input
-                  id="licensePlate"
-                  name="licensePlate"
-                  label="Placa do veículo"
-                  placeholder="Placa do Veículo"
-                  autoComplete="off"
-                />
-              </FormItem>
-            </Col>
             <Divider />
             <Col xs={24} lg={12}>
-              <FormItem control={control} name="description">
+              <FormItem control={control} name="washTankRadio">
                 <RadioGroup
                   label="Lavagem Tanque"
                   size="large"
                   buttonStyle="solid"
                 >
-                  <Radio value="a">Visual</Radio>
-                  <Radio value="b">Completo</Radio>
-                  <Radio value="c">Nenhum</Radio>
+                  <Radio value="100">Visual</Radio>
+                  <Radio value="200">Completo</Radio>
+                  <Radio value="0">Nenhum</Radio>
                 </RadioGroup>
               </FormItem>
             </Col>
             <Col xs={24} lg={12}>
-              <FormItem control={control} name="cavalo">
+              <FormItem control={control} name="cavaloRadio">
                 <RadioGroup label="Cavalo" size="large" buttonStyle="solid">
-                  <Radio value="a">Visual</Radio>
-                  <Radio value="b">Completo</Radio>
-                  <Radio value="c">Nenhum</Radio>
+                  <Radio value="100">Visual</Radio>
+                  <Radio value="200">Completo</Radio>
+                  <Radio value="0">Nenhum</Radio>
                 </RadioGroup>
               </FormItem>
             </Col>
@@ -135,10 +142,27 @@ export const TasksForm = (): ReactElement => {
         </Card>
 
         <Card className="tasks-form__price">
-          <h1>Hello World</h1>
-          <Button htmlType="submit" type="primary" size="large">
-            Salvar
-          </Button>
+          <div className="tasks-form__services">
+            <Empty description="Nenhum serviço selecionado!" />
+          </div>
+
+          <div className="tasks-form__price--content">
+            <div>
+              <p>Total de itens</p>
+              <span>{0}</span>
+            </div>
+
+            <div className="form__content--total">
+              <p>Total</p>
+              <span>{priceFormatter.format(0)}</span>
+            </div>
+          </div>
+
+          <div className="tasks-form__price--footer">
+            <Button size="large" type="primary">
+              Salvar
+            </Button>
+          </div>
         </Card>
       </Form>
     </Styled.TasksFormContainer>

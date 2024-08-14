@@ -7,6 +7,7 @@ export const defaultTheme = {
     background: '#FFFFFF',
     border: '#d9d9d9',
     inputBackground: '#FFFFFF',
+    placeholder: '#99999999',
 
     white: '#FFFFFF',
     green: '#4AD991',

@@ -1,5 +1,5 @@
 // Packages
-import {  ReactElement } from 'react';
+import { ReactElement } from 'react';
 import {
   CheckboxOptionType,
   Checkbox as CheckBoxAntDesign,
@@ -7,9 +7,12 @@ import {
 } from 'antd';
 
 interface CheckboxGroupProps extends CheckBoxAntDesignProps {
-  options?: CheckboxOptionType[] | Array<void>;
+  options?: Array<{ id: string; value: string } | void | CheckboxOptionType>;
+  onChange?: (
+    checkedValue: Array<{ id: string; value: string } | void>
+  ) => void;
 }
 
 export const CheckboxGroup = (props: CheckboxGroupProps): ReactElement => {
-  return <CheckBoxAntDesign {...props} />;
+  return <CheckBoxAntDesign.Group {...props} />;
 };

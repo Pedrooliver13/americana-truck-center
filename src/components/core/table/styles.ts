@@ -8,18 +8,21 @@ export const TableAntDesign = styled(Table)<TableProps>`
     border-radius: 16px;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
-    /* .ant-table-content {
+    .ant-table-content {
       background-color: ${theme.colors.background};
       color: ${theme.colors.text};
     }
 
-    .ant-table-row:hover {
-      background-color: ${theme.colors.background};
-      border-bottom: 1px solid red;
-    } */
+    .ant-table-content.ant-table-row-hover:hover {
+      background-color: ${theme.colors.background} !important;
+      filter: brightness(195%);
+    }
 
     .ant-pagination {
-      padding: 0px 20px;
+      margin: 0 !important;
+      padding: 16px 20px;
+      background-color: inherit;
+      /* color: ${theme.colors.text}; */
     }
 
     .table__actions {
@@ -33,6 +36,10 @@ export const TableAntDesign = styled(Table)<TableProps>`
       border: 1px solid ${theme.colors['gray-300']};
       border-radius: 8px;
       padding: 2px;
+
+      &--normal {
+        color: ${theme.colors['gray-400']};
+      }
 
       button + button {
         border-left: 1px solid ${theme.colors['gray-300']};

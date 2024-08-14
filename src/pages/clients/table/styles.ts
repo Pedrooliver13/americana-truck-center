@@ -1,12 +1,12 @@
 // Packages
 import styled, { css } from 'styled-components';
 
-export const TasksContainer = styled.div`
+export const ClientTableContainer = styled.div`
   ${({ theme }) => css`
     padding-top: 20px;
     padding-bottom: 20px;
 
-    .tasks__header {
+    .clients__header {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -25,14 +25,13 @@ export const TasksContainer = styled.div`
       }
     }
 
-    .tasks__actions {
+    .clients__actions {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 20px;
       margin: 20px 0;
       color: ${theme.colors.text};
-      border-radius: 8px;
 
       &--search {
         display: flex;
@@ -40,16 +39,12 @@ export const TasksContainer = styled.div`
         gap: 5px;
       }
 
-      &--columns {
-        min-width: 100px;
-      }
-
       @media (max-width: ${theme.breakpoints.MD}) {
         display: none;
       }
     }
 
-    .tasks-table__expands {
+    .clients-table__expands {
       display: flex;
       align-items: center;
       flex-wrap: wrap;

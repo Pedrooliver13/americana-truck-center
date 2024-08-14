@@ -7,6 +7,7 @@ export const darkTheme = {
     background: '#273142',
     border: '#1B2431',
     inputBackground: '#323d4e',
+    placeholder: '#eeee',
 
     white: '#FFFFFF',
     green: '#4AD991',

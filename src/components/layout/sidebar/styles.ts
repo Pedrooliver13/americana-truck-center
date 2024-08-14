@@ -64,10 +64,6 @@ export const SidebarContainer = styled(Layout.Sider)`
         &:active {
           background-color: ${theme.colors.primary} !important;
         }
-
-        &:hover {
-          color: ${theme.colors.text} !important;
-        }
       }
 
       .ant-menu-item-selected {

@@ -43,8 +43,13 @@ export const HeaderContainer = styled.header`
       }
 
       &__avatar {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 20px;
+
         margin-left: auto;
-        max-width: 180px;
+        max-width: 280px;
         width: 100%;
         cursor: pointer;
 

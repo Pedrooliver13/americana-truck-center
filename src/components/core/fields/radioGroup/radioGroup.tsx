@@ -16,17 +16,17 @@ const RadioGroupBase = (
   ref: any
 ): ReactElement => {
   return (
-    <>
+    <Styled.RadioContainer>
       {props.label && (
         <Typography.Title level={5}>
           {props.label} {props?.required && '*'}
         </Typography.Title>
       )}
 
-      <Styled.RadioGroupContainer ref={ref} {...props}>
+      <Styled.RadioGroup ref={ref} {...props}>
         {props.children}
-      </Styled.RadioGroupContainer>
-    </>
+      </Styled.RadioGroup>
+    </Styled.RadioContainer>
   );
 };
 

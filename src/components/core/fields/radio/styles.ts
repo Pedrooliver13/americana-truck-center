@@ -8,5 +8,6 @@ import {
 export const RadioContainer = styled(
   RadioAntDesign.Button
 )<RadioAntDesignProps>`
-  width: 100% !important;
+  max-width: 100%;
+  width: 100%;
 `;
