@@ -20,7 +20,8 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    background-color: ${({ theme }): string => theme.colors['gray-200']};
+    background-color: ${({ theme }): string => theme.colors.body};
+    color: ${({ theme }): string => theme.colors.text};
     --webkit-font-smoothing: antialised;
   }
   
@@ -28,6 +29,12 @@ export const GlobalStyle = createGlobalStyle`
     font-weight: 400;
     font-family: ${({ theme }): string => theme.fonts.default};
     font-size: ${({ theme }): string => theme.textSizes['text-m']};
+  }
+
+
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 
   img {

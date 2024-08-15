@@ -3,7 +3,8 @@ import styled, { css } from 'styled-components';
 
 export const SalesOverviewContainer = styled.div`
   ${({ theme }) => css`
-    background-color: ${theme.colors.white};
+    background-color: ${theme.colors.background};
+    color: ${theme.colors.text};
     max-width: 100%;
     padding: 3rem;
     border-radius: 12px;

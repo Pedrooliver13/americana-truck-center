@@ -11,7 +11,7 @@ export const StatusCardContainer = styled.div<StatusCardContainerProps>`
     justify-content: space-between;
     align-items: center;
 
-    background-color: ${theme.colors.white};
+    background-color: ${theme.colors.background};
     box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
       rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
     width: 100%;

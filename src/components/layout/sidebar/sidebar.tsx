@@ -56,7 +56,7 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
       onBreakpoint={handleBreakpoint}
     >
       <a href="/" className="sidebar__logo">
-        <img src={TruckCenterLogo} alt="Logo marca" />
+        <img src={TruckCenterLogo} alt="Logo marca" loading="lazy" />
       </a>
       <Menu
         className="sidebar__menu"
@@ -80,9 +80,9 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
             type: 'group',
             children: [
               {
-                key: '/services',
+                key: '/tasks',
                 icon: <CarOutlinedIcon />,
-                label: <Link to={'/services'}>Serviços</Link>,
+                label: <Link to={'/tasks'}>Serviços</Link>,
               },
             ],
           },
@@ -99,7 +99,8 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
           {
             key: '/reports',
             icon: <PieChartOutlinedIcon />,
-            label: <Link to={'/prices'}>Relatórios</Link>,
+            label: <span>Relatórios</span>,
+            disabled: true,
           },
 
           /* FOOTER */

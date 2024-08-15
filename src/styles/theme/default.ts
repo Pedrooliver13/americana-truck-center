@@ -1,7 +1,14 @@
 export const defaultTheme = {
   colors: {
+    body: '#F5F6FA',
     primary: '#5D87FF',
     secondary: '#49BEFF',
+    text: '#2B3034',
+    background: '#FFFFFF',
+    border: '#d9d9d9',
+    inputBackground: '#FFFFFF',
+    placeholder: '#99999999',
+
     white: '#FFFFFF',
     green: '#4AD991',
     'green-100': '#D9F7E8',

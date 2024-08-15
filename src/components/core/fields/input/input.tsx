@@ -1,6 +1,8 @@
 // Packages
-import { ReactElement } from 'react';
+import { ReactElement, forwardRef } from 'react';
 import {
+  InputRef,
+  Typography,
   Input as InputAntDesign,
   InputProps as InputAntDesignProps,
 } from 'antd';
@@ -8,15 +10,29 @@ import {
 // Styles
 import * as Styled from './styles';
 
-interface InputProps extends InputAntDesignProps {
-  error?: string;
+export interface InputProps extends InputAntDesignProps {
+  label?: string;
+  className?: string;
 }
 
-export const Input = (props: InputProps): ReactElement => {
+export const InputBase = (
+  props: InputProps,
+  ref: React.LegacyRef<InputRef> | undefined
+): ReactElement => {
   return (
     <Styled.InputContainer>
-      <InputAntDesign size="large" {...props} />
-      {props?.error && <span className="input-error">{props.error}</span>}
+      {props.label && (
+        <Typography.Title
+          level={5}
+          className="label"
+          disabled={props?.disabled}
+        >
+          {props.label} {props?.required && '*'}
+        </Typography.Title>
+      )}
+      <InputAntDesign ref={ref} size="large" {...props} required={false} />
     </Styled.InputContainer>
   );
 };
+
+export const Input = forwardRef(InputBase);

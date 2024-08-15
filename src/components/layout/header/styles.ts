@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 
 export const HeaderContainer = styled.header`
   ${({ theme }) => css`
-    background-color: ${theme.colors.white};
+    background-color: ${theme.colors.background};
 
     .content {
       display: flex;
@@ -23,7 +23,13 @@ export const HeaderContainer = styled.header`
 
         &--input {
           border-radius: 20px;
-          background-color: ${theme.colors['gray-200']};
+          background-color: ${theme.colors.body} !important;
+          color: ${theme.colors.text} !important;
+          border-color: ${theme.colors.body};
+
+          ::placeholder {
+            color: ${theme.colors['gray-300']};
+          }
         }
 
         input {
@@ -37,8 +43,13 @@ export const HeaderContainer = styled.header`
       }
 
       &__avatar {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 20px;
+
         margin-left: auto;
-        max-width: 180px;
+        max-width: 280px;
         width: 100%;
         cursor: pointer;
 

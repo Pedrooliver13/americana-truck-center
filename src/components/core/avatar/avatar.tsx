@@ -1,7 +1,10 @@
 // Packages
 import { ReactElement } from 'react';
-import { Button, Dropdown, Avatar as AvatarAntDesign } from 'antd';
+import { Dropdown, Avatar as AvatarAntDesign } from 'antd';
 import { DownOutlined as DownOutlinedIcon } from '@ant-design/icons';
+
+// Components
+import { Button } from 'components/core';
 
 // Assets
 import AdminAvatarImage from 'assets/admin.png';
@@ -38,7 +41,7 @@ export const Avatar = (): ReactElement => {
           <span>Admin</span>
         </div>
 
-        <Button size="small">
+        <Button shape="circle" size="small">
           <DownOutlinedIcon />
         </Button>
       </Styled.AvatarContainer>

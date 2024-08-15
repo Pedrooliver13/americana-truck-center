@@ -1,0 +1,84 @@
+// Packages
+import styled, { css } from 'styled-components';
+
+export const TasksFormContainer = styled.div`
+  ${({ theme }) => css`
+    padding-top: 20px;
+
+    button {
+      width: 100%;
+    }
+
+    .tasks__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .tasks__total {
+      font-weight: bold;
+      font-size: 1.5rem;
+      padding: 0.5rem;
+    }
+
+    .tasks-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+
+      &__fields {
+        width: 650px;
+
+        @media (max-width: ${theme.breakpoints.XL}) {
+          width: 100%;
+        }
+      }
+
+      &__price {
+        flex: 1;
+        max-width: 100%;
+        max-height: 300px;
+
+        .ant-card-body {
+          display: flex;
+          flex-direction: column;
+          max-height: 450px;
+          height: 100%;
+        }
+
+        @media (max-width: ${theme.breakpoints.SM}) {
+          max-width: 100%;
+          min-width: 100%;
+          width: 100%;
+          margin-bottom: 20px;
+        }
+
+        &--content {
+          margin-top: auto;
+          padding: 5px;
+
+          div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.6rem;
+            line-height: 2;
+
+            p {
+              font-weight: bold;
+            }
+          }
+        }
+
+        &--footer {
+          display: flex;
+          margin-top: 20px;
+          height: auto;
+        }
+      }
+    }
+  `}
+`;
+
+export const TasksFormPriceCard = styled.div``;
