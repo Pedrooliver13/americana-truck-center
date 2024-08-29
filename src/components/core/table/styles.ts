@@ -10,6 +10,7 @@ export const TableAntDesign = styled(Table)<TableProps>`
     .ant-table-content {
       background-color: ${theme.colors.background};
       color: ${theme.colors.text};
+      min-height: 250px;
     }
 
     .ant-table-content.ant-table-row-hover:hover {

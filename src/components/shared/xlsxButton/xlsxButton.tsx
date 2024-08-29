@@ -8,6 +8,7 @@ import { Button, Tooltip, XlsxIcon } from 'components/core';
 
 interface XlsxButtonProps {
   data: { [key: string]: string | number | boolean }[];
+  filename: string;
 }
 
 export const XlsxButtonBase = (
@@ -20,11 +21,11 @@ export const XlsxButtonBase = (
 ): ReactElement => {
   const handleDownloadExcel = () => {
     if (Array.isArray(props.data) && !props.data.length) {
-      return toast.error('Não há dados para exportar.');
+      return toast.error('Não há dados para gerar o EXCEL.');
     }
 
     downloadExcel({
-      fileName: `tabela-de-servicos-${new Date().toLocaleDateString()}`,
+      fileName: `${props?.filename}-${new Date().toLocaleDateString()}`,
       sheet: 'react-export-table-to-excel',
       tablePayload: {
         header: Object.keys(props?.data[0]),

@@ -19,12 +19,12 @@ import {
   Input,
   Tag,
   Card,
-  PdfIcon,
   Tooltip,
 } from 'components/core';
-import { ButtonHideColumns, XlsxButton } from 'components/shared';
+import { ButtonHideColumns, PdfButton, XlsxButton } from 'components/shared';
 
 // Hooks
+import { useGetTasks } from 'hooks/tasks/useGetTasks';
 import { useTaskTableTour } from 'hooks/tasks/useTaskTableTour';
 import { useGetColumnSearch, useGetHiddenColumns } from 'hooks/core';
 
@@ -45,20 +45,22 @@ interface DataType {
   [key: string]: string | number | boolean;
 }
 
-const data: { [key: string]: string | number | boolean }[] = Array(5)
-  .fill(null)
-  .map((_, index) => ({
-    id: `${index}`,
-    registrationNumber: '638.822.570-59',
-    vehicle: index % 2 === 0 ? 'Mercedez Bens' : 'BMW',
-    name: 'John Brown',
-    total: index % 2 === 0 ? 1000 : 3000,
-    date: index % 2 === 0 ? '27/06/2024' : '10/10/2021',
-    status: 1,
-  }));
+// const data: { [key: string]: string | number | boolean }[] = Array(5)
+//   .fill(null)
+//   .map((_, index) => ({
+//     id: `${index}`,
+//     registrationNumber: '638.822.570-59',
+//     vehicle: index % 2 === 0 ? 'Mercedez Bens' : 'BMW',
+//     name: 'John Brown',
+//     total: index % 2 === 0 ? 1000 : 3000,
+//     date: index % 2 === 0 ? '27/06/2024' : '10/10/2021',
+//     status: 1,
+//   }));
 
 export const Tasks = (): ReactElement => {
   const [isOpenModal, setIsOpenModal] = useState(false);
+
+  const { data, isPending } = useGetTasks();
 
   const { isOpenTourState, steps, ref1, ref2, ref3, ref4, ref5, ref6 } =
     useTaskTableTour();
@@ -70,6 +72,8 @@ export const Tasks = (): ReactElement => {
       title: 'Nome',
       dataIndex: 'name',
       key: 'name',
+      width: '25%',
+      sorter: (a, b) => a.name.localeCompare(b.name),
       ...getColumnSearchProps('name', 'Nome'),
     },
     {
@@ -94,7 +98,7 @@ export const Tasks = (): ReactElement => {
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('total', 'Total'),
       render: (value) => (
-        <Tag color="green">{priceFormatter.format(value)}</Tag>
+        <Tag color="green">{priceFormatter.format(value ?? 0)}</Tag>
       ),
     },
     {
@@ -197,21 +201,13 @@ export const Tasks = (): ReactElement => {
               placeholder="Pesquisar"
               allowClear
               autoComplete="off"
+              prefix={<SearchOutlinedIcon />}
             />
-            <Button type="primary" size="large" icon={<SearchOutlinedIcon />}>
-              Buscar
-            </Button>
           </div>
 
           <div className="tasks-card__actions--columns">
-            <XlsxButton ref={ref3} data={data} />
-            <Tooltip title="Gerar PDF" defaultOpen={false}>
-              <>
-                <Button shape="circle" size="large" ref={ref4}>
-                  <PdfIcon />
-                </Button>
-              </>
-            </Tooltip>
+            <XlsxButton filename="tabela-de-servicos" ref={ref3} data={data} />
+            <PdfButton filename="tabela-de-servicos" ref={ref4} data={data} />
             <div ref={ref5}>
               <ButtonHideColumns
                 {...{ options, checkedList, setCheckedList }}
@@ -223,10 +219,11 @@ export const Tasks = (): ReactElement => {
         <div ref={ref6}>
           <Table
             id="tasks-table"
-            rowKey="id"
+            rowKey="name"
             data-cy="tasks-table"
             columns={newColumns}
             dataSource={data}
+            isLoading={isPending}
             size="small"
             bordered
             expandable={{

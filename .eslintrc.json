@@ -28,7 +28,8 @@
           { "path": "date-fns" },
           { "path": "phosphor-react" },
           { "path": "react-toastify" },
-          { "path": "@ant-design/icons" }
+          { "path": "@ant-design/icons" },
+          { "path": "jspdf" }
         ],
         "Utils": [{ "path": "utils" }],
         "Routes": [{ "path": "router" }],
