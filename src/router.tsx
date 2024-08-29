@@ -8,9 +8,9 @@ import { DefaultLayout } from 'components/layout';
 // Pages
 import { Dashboard } from 'pages/dashboard';
 import { Tasks, TasksForm } from 'pages/tasks';
+import { ClientTable, ClientForm } from 'pages/clients';
 import { Prices } from 'pages/prices';
 import { Page404 } from 'pages/page404';
-import { ClientTable } from 'pages/clients';
 
 export const Router = (): ReactElement => {
   return (
@@ -19,7 +19,8 @@ export const Router = (): ReactElement => {
         <Route path="/" element={<Dashboard />} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/tasks/new" element={<TasksForm />} />
-        <Route path="clients" element={<ClientTable />} />
+        <Route path="/clients" element={<ClientTable />} />
+        <Route path="/clients/new" element={<ClientForm />} />
         <Route path="/prices" element={<Prices />} />
       </Route>
 

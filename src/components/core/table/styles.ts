@@ -6,7 +6,6 @@ export const TableAntDesign = styled(Table)<TableProps>`
   ${({ theme }) => css`
     overflow: hidden;
     border-radius: 16px;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
     .ant-table-content {
       background-color: ${theme.colors.background};
@@ -20,9 +19,9 @@ export const TableAntDesign = styled(Table)<TableProps>`
 
     .ant-pagination {
       margin: 0 !important;
-      padding: 16px 20px;
-      background-color: inherit;
-      /* color: ${theme.colors.text}; */
+      padding: 8px 20px;
+      background-color: ${theme.colors.body};
+      color: ${theme.colors.text};
     }
 
     .table__actions {
@@ -33,6 +32,7 @@ export const TableAntDesign = styled(Table)<TableProps>`
       max-width: 100px;
       margin: 0 auto;
       background-color: ${theme.colors['gray-200']};
+      color: ${theme.colors['gray-400']};
       border: 1px solid ${theme.colors['gray-300']};
       border-radius: 8px;
       padding: 2px;

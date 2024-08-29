@@ -29,6 +29,8 @@ export const Table = (props: TableProps): ReactElement => {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
+                width: '1000px',
+                minWidth: '100%',
                 flex: 1,
               }}
             />

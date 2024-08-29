@@ -7,17 +7,10 @@ export { Tooltip } from './tooltip';
 export { StatusCard } from './statusCard';
 export { Skeleton } from './skeleton';
 export { ButtonTheme } from './buttonTheme';
+export { Breadcrumb } from './breadcrumb';
 
 // Fields
-export {
-  Form,
-  Input,
-  Select,
-  CheckboxGroup,
-  RadioGroup,
-  Radio,
-  Button,
-} from './fields';
+export { Form, Input, Select, RadioGroup, Radio, Button } from './fields';
 
 // Grids
 export { Row, Col } from './grids';
@@ -27,3 +20,7 @@ export { SalesOverview } from './charts';
 
 // Tables
 export { Table } from './table';
+
+// Icons
+export { PdfIcon } from './icons/pdfIcon';
+export { XlsxIcon } from './icons/xlsxIcon';

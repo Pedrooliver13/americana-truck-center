@@ -1,17 +1,31 @@
 // Packages
 import { ReactElement, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { TableColumnsType, notification } from 'antd';
+import { toast } from 'react-toastify';
+import { TableColumnsType, Tour } from 'antd';
 import {
   EditOutlined as EditOutlinedIcon,
+  FileTextOutlined as FileTextOutlinedIcon,
   DeleteOutlined as DeleteOutlinedIcon,
   SearchOutlined as SearchOutlinedIcon,
+  QuestionCircleOutlined as QuestionCircleOutlinedIcon,
 } from '@ant-design/icons';
 
 // Components
-import { Table, Button, Modal, Input, Tag, Select } from 'components/core';
+import {
+  Table,
+  Button,
+  Modal,
+  Input,
+  Tag,
+  Card,
+  PdfIcon,
+  Tooltip,
+} from 'components/core';
+import { ButtonHideColumns, XlsxButton } from 'components/shared';
 
 // Hooks
+import { useTaskTableTour } from 'hooks/tasks/useTaskTableTour';
 import { useGetColumnSearch, useGetHiddenColumns } from 'hooks/core';
 
 // Utils
@@ -28,15 +42,16 @@ interface DataType {
   date: string;
   total: number;
   status: number;
+  [key: string]: string | number | boolean;
 }
 
-const data: DataType[] = Array(90)
+const data: { [key: string]: string | number | boolean }[] = Array(5)
   .fill(null)
   .map((_, index) => ({
     id: `${index}`,
-    name: 'John Brown',
     registrationNumber: '638.822.570-59',
     vehicle: index % 2 === 0 ? 'Mercedez Bens' : 'BMW',
+    name: 'John Brown',
     total: index % 2 === 0 ? 1000 : 3000,
     date: index % 2 === 0 ? '27/06/2024' : '10/10/2021',
     status: 1,
@@ -44,6 +59,10 @@ const data: DataType[] = Array(90)
 
 export const Tasks = (): ReactElement => {
   const [isOpenModal, setIsOpenModal] = useState(false);
+
+  const { isOpenTourState, steps, ref1, ref2, ref3, ref4, ref5, ref6 } =
+    useTaskTableTour();
+
   const { getColumnSearchProps } = useGetColumnSearch<DataType>();
 
   const columns: TableColumnsType<DataType> = [
@@ -93,19 +112,39 @@ export const Tasks = (): ReactElement => {
       width: '100px',
       render: () => (
         <div className="table__actions">
-          <Button
-            type="text"
-            className="table__actions--normal"
-            icon={<EditOutlinedIcon color="#2B3034" />}
-            size="small"
-          />
-          <Button
-            danger
-            icon={<DeleteOutlinedIcon />}
-            type="text"
-            size="small"
-            onClick={handleToggleModal}
-          />
+          <Tooltip title="Editar Serviço">
+            <>
+              <Button
+                id="edit-service"
+                type="text"
+                className="table__actions--normal"
+                icon={<EditOutlinedIcon color="#2B3034" />}
+                size="small"
+              />
+            </>
+          </Tooltip>
+          <Tooltip title="Gerar Recibo">
+            <>
+              <Button
+                id="print-service"
+                type="text"
+                icon={<FileTextOutlinedIcon color="#2B3034" />}
+                size="small"
+              />
+            </>
+          </Tooltip>
+          <Tooltip title="Deletar Serviço">
+            <>
+              <Button
+                id="delete-service"
+                danger
+                icon={<DeleteOutlinedIcon />}
+                type="text"
+                size="small"
+                onClick={handleToggleModal}
+              />
+            </>
+          </Tooltip>
         </div>
       ),
     },
@@ -130,72 +169,86 @@ export const Tasks = (): ReactElement => {
   return (
     <Styled.TasksContainer className="container">
       <header className="tasks__header">
-        <h1>Serviços</h1>
+        <h1>
+          Serviços
+          <Tooltip title="Fazer tour da página" placement="bottom">
+            <div>
+              <QuestionCircleOutlinedIcon
+                id="info-icon"
+                onClick={() => isOpenTourState[1](true)}
+              />
+            </div>
+          </Tooltip>
+        </h1>
 
-        <Link to="/tasks/new">
-          <Button size="large" type="primary">
+        <Link to="/tasks/new" ref={ref1}>
+          <Button size="middle" type="primary">
             Adicionar Serviço
           </Button>
         </Link>
       </header>
 
-      <div className="tasks__actions">
-        <div className="tasks__actions--search">
-          <Input
-            id="task-search"
-            size="large"
-            placeholder="Pesquisar"
-            allowClear
-            autoComplete="off"
-          />
-          <Button type="primary" size="large" icon={<SearchOutlinedIcon />}>
-            Buscar
-          </Button>
+      <Card className="tasks-card">
+        <div className="tasks-card__actions">
+          <div className="tasks-card__actions--search" ref={ref2}>
+            <Input
+              id="task-search"
+              size="large"
+              placeholder="Pesquisar"
+              allowClear
+              autoComplete="off"
+            />
+            <Button type="primary" size="large" icon={<SearchOutlinedIcon />}>
+              Buscar
+            </Button>
+          </div>
+
+          <div className="tasks-card__actions--columns">
+            <XlsxButton ref={ref3} data={data} />
+            <Tooltip title="Gerar PDF" defaultOpen={false}>
+              <>
+                <Button shape="circle" size="large" ref={ref4}>
+                  <PdfIcon />
+                </Button>
+              </>
+            </Tooltip>
+            <div ref={ref5}>
+              <ButtonHideColumns
+                {...{ options, checkedList, setCheckedList }}
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="tasks__actions--columns">
-          <Select
-            id="select-columns"
-            mode="tags"
-            showSearch={false}
-            value={checkedList}
-            placeholder="Colunas"
-            options={options}
-            maxTagPlaceholder="Colunas"
-            maxTagCount={0}
-            dropdownStyle={{ width: '250px' }}
-            onChange={(value) => {
-              setCheckedList(value as string[]);
+        <div ref={ref6}>
+          <Table
+            id="tasks-table"
+            rowKey="id"
+            data-cy="tasks-table"
+            columns={newColumns}
+            dataSource={data}
+            size="small"
+            bordered
+            expandable={{
+              expandedRowRender: () => (
+                <div className="tasks-table__expands">
+                  <h3>Serviços: </h3>
+                  <p>
+                    <Tag color="purple">Lubrificação</Tag>
+                    <Tag color="purple">Lubrificação</Tag>
+                    <Tag color="purple">Lubrificação</Tag>
+                    <Tag color="purple">Lubrificação</Tag>
+                  </p>
+                </div>
+              ),
+            }}
+            pagination={{
+              defaultPageSize: 5,
+              pageSizeOptions: ['5', '10', '20', '30', '50', '100'],
             }}
           />
         </div>
-      </div>
-
-      <Table
-        id="tasks-table"
-        rowKey="id"
-        data-cy="tasks-table"
-        columns={newColumns}
-        dataSource={data}
-        size="small"
-        expandable={{
-          expandedRowRender: () => (
-            <div className="tasks-table__expands">
-              <h3>Serviços: </h3>
-              <p>
-                <Tag color="purple">Lubrificação</Tag>
-                <Tag color="purple">Lubrificação</Tag>
-                <Tag color="purple">Lubrificação</Tag>
-                <Tag color="purple">Lubrificação</Tag>
-              </p>
-            </div>
-          ),
-        }}
-        pagination={{
-          defaultPageSize: 5,
-          pageSizeOptions: ['5', '10', '20', '30', '50', '100'],
-        }}
-      />
+      </Card>
 
       <Modal
         title="Desejar excluir o serviço?"
@@ -206,9 +259,7 @@ export const Tasks = (): ReactElement => {
         onClose={handleToggleModal}
         onCancel={handleToggleModal}
         onOk={() => {
-          notification.success({
-            message: 'Serviço excluído com sucesso!',
-          });
+          toast.success('Serviço excluído com sucesso!');
           handleToggleModal();
         }}
         okButtonProps={{ danger: true }}
@@ -218,6 +269,13 @@ export const Tasks = (): ReactElement => {
           não poderá ser desfeita!
         </p>
       </Modal>
+
+      <Tour
+        open={isOpenTourState[0]}
+        onClose={() => isOpenTourState[1](false)}
+        steps={steps}
+        zIndex={999999}
+      />
     </Styled.TasksContainer>
   );
 };

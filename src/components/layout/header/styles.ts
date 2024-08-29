@@ -21,11 +21,10 @@ export const HeaderContainer = styled.header`
           display: none;
         }
 
-        &--input {
+        &--input .ant-select-selector {
           border-radius: 20px;
           background-color: ${theme.colors.body} !important;
           color: ${theme.colors.text} !important;
-          border-color: ${theme.colors.body};
 
           ::placeholder {
             color: ${theme.colors['gray-300']};
@@ -49,7 +48,7 @@ export const HeaderContainer = styled.header`
         gap: 20px;
 
         margin-left: auto;
-        max-width: 280px;
+        max-width: 180px;
         width: 100%;
         cursor: pointer;
 

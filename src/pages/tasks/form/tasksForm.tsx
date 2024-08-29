@@ -1,11 +1,9 @@
 // Packages
 import { ReactElement, useEffect } from 'react';
 import { Divider, Empty } from 'antd';
-import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { FormItem } from 'react-hook-form-antd';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeftOutlined as ArrowLeftOutlinedIcon } from '@ant-design/icons';
 import * as zod from 'zod';
 
 // Components
@@ -19,7 +17,11 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Breadcrumb,
 } from 'components/core';
+
+// Hooks
+import { useTasksCount } from 'hooks/tasks/useTasksCount';
 
 // Utils
 import { priceFormatter } from 'utils/formatter';
@@ -29,6 +31,8 @@ import * as Styled from './styles';
 
 const schema = zod.object({
   name: zod.string().min(1, { message: 'Campo obrigatório' }),
+  document: zod.string().nullable(),
+  vehicle: zod.string(),
   client: zod.string().optional().nullable(),
   licensePlate: zod.string().min(1, { message: 'Campo obrigatório' }),
   washTankRadio: zod.string().min(1, { message: 'Campo obrigatório' }),
@@ -38,18 +42,56 @@ const schema = zod.object({
 type FormValues = zod.infer<typeof schema>;
 
 export const TasksForm = (): ReactElement => {
-  const { control, handleSubmit, setFocus } = useForm<FormValues>({
+  const washData = [
+    {
+      name: 'washTankRadio',
+      label: 'Lavagem Tanque',
+      visualValue: '100',
+      completeValue: '200',
+    },
+    {
+      name: 'cavaloRadio',
+      label: 'Lavagem Tanque 2',
+      visualValue: '100',
+      completeValue: '200',
+    },
+    {
+      name: 'teste',
+      label: 'Lavagem Teste',
+      visualValue: '100',
+      completeValue: '200',
+    },
+  ];
+
+  const data = {
+    name: 'Teste',
+    document: '123456789',
+    vehicle: 'Carro',
+    client: 'Jack',
+    licensePlate: 'ABC-1234',
+    washTankRadio: '100',
+    cavaloRadio: '200',
+  };
+
+  const { control, handleSubmit, setFocus, watch } = useForm<FormValues>({
     defaultValues: {
       name: '',
+      document: '',
+      vehicle: '',
       client: null,
       licensePlate: '',
-      washTankRadio: '0',
-      cavaloRadio: '0',
+      ...Object.fromEntries(washData.map((item) => [item.name, '0'])),
     },
+    values: data,
     resolver: zodResolver(schema),
   });
 
-  const handleNewItem = (data: FormValues) => {
+  const { totalPrice, totalItems, listSelected } = useTasksCount({
+    watch,
+    radioList: washData,
+  });
+
+  const handleNewItem = (data: FormValues): void => {
     console.log(data);
   };
 
@@ -59,15 +101,7 @@ export const TasksForm = (): ReactElement => {
 
   return (
     <Styled.TasksFormContainer className="container">
-      <header className="tasks__header">
-        <Link to={'/tasks'}>
-          <Button
-            type="dashed"
-            size="middle"
-            icon={<ArrowLeftOutlinedIcon size={10} />}
-          />
-        </Link>
-      </header>
+      <Breadcrumb />
 
       <Form onFinish={handleSubmit(handleNewItem)} className="tasks-form">
         <Card className="tasks-form__fields">
@@ -86,6 +120,28 @@ export const TasksForm = (): ReactElement => {
               </FormItem>
             </Col>
             <Col xs={24} md={12}>
+              <FormItem control={control} name="document">
+                <Input
+                  name="document"
+                  label="Documento"
+                  placeholder="Documento"
+                  autoComplete="off"
+                  maxLength={150}
+                />
+              </FormItem>
+            </Col>
+            <Col xs={24} md={12}>
+              <FormItem control={control} name="vehicle">
+                <Input
+                  name="vehicle"
+                  label="Veículo"
+                  placeholder="Nome do Veículo"
+                  autoComplete="off"
+                  maxLength={150}
+                />
+              </FormItem>
+            </Col>
+            <Col xs={24} md={12}>
               <FormItem control={control} name="licensePlate">
                 <Input
                   id="licensePlate"
@@ -96,7 +152,7 @@ export const TasksForm = (): ReactElement => {
                 />
               </FormItem>
             </Col>
-            <Col xs={24} md={24}>
+            <Col xs={24}>
               <FormItem control={control} name="client">
                 <Select
                   id="client"
@@ -116,45 +172,54 @@ export const TasksForm = (): ReactElement => {
               </FormItem>
             </Col>
             <Divider />
-            <Col xs={24} lg={12}>
-              <FormItem control={control} name="washTankRadio">
-                <RadioGroup
-                  label="Lavagem Tanque"
-                  size="large"
-                  buttonStyle="solid"
+            {washData.map((item) => (
+              <Col xs={24} md={24} lg={12} key={item?.name}>
+                <FormItem
+                  control={control}
+                  name={item?.name as keyof FormValues}
                 >
-                  <Radio value="100">Visual</Radio>
-                  <Radio value="200">Completo</Radio>
-                  <Radio value="0">Nenhum</Radio>
-                </RadioGroup>
-              </FormItem>
-            </Col>
-            <Col xs={24} lg={12}>
-              <FormItem control={control} name="cavaloRadio">
-                <RadioGroup label="Cavalo" size="large" buttonStyle="solid">
-                  <Radio value="100">Visual</Radio>
-                  <Radio value="200">Completo</Radio>
-                  <Radio value="0">Nenhum</Radio>
-                </RadioGroup>
-              </FormItem>
-            </Col>
+                  <RadioGroup
+                    label={item?.label}
+                    id={item?.name}
+                    size="large"
+                    buttonStyle="solid"
+                  >
+                    <Radio value={item?.completeValue}>Completo</Radio>
+                    <Radio value={item?.visualValue}>Visual</Radio>
+                    <Radio value={'0'}>Nenhum</Radio>
+                  </RadioGroup>
+                </FormItem>
+              </Col>
+            ))}
           </Row>
         </Card>
 
         <Card className="tasks-form__price">
           <div className="tasks-form__services">
-            <Empty description="Nenhum serviço selecionado!" />
+            {listSelected.map((item) => (
+              <li
+                key={item.label}
+                style={{ display: 'flex', justifyContent: 'space-between' }}
+              >
+                <p>{item.label}</p>
+                <span>{priceFormatter.format(+item.value)}</span>
+              </li>
+            ))}
+
+            {totalItems <= 0 && (
+              <Empty description="Nenhum serviço selecionado!" />
+            )}
           </div>
 
           <div className="tasks-form__price--content">
             <div>
-              <p>Total de itens</p>
-              <span>{0}</span>
+              <p>Total de itens:</p>
+              <span>{totalItems}</span>
             </div>
 
             <div className="form__content--total">
-              <p>Total</p>
-              <span>{priceFormatter.format(0)}</span>
+              <p>Total:</p>
+              <span>{priceFormatter.format(totalPrice)}</span>
             </div>
           </div>
 
