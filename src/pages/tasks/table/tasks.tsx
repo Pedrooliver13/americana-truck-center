@@ -45,7 +45,7 @@ interface DataType {
   [key: string]: string | number | boolean;
 }
 
-// const data: { [key: string]: string | number | boolean }[] = Array(5)
+// const data: { [key: string]: string | number | boolean }[] = Array(100)
 //   .fill(null)
 //   .map((_, index) => ({
 //     id: `${index}`,
@@ -54,7 +54,6 @@ interface DataType {
 //     name: 'John Brown',
 //     total: index % 2 === 0 ? 1000 : 3000,
 //     date: index % 2 === 0 ? '27/06/2024' : '10/10/2021',
-//     status: 1,
 //   }));
 
 export const Tasks = (): ReactElement => {
@@ -222,7 +221,7 @@ export const Tasks = (): ReactElement => {
             rowKey="name"
             data-cy="tasks-table"
             columns={newColumns}
-            dataSource={data}
+            dataSource={data ?? []}
             isLoading={isPending}
             size="small"
             bordered
