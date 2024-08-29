@@ -16,12 +16,12 @@ export const useGetHiddenColumns = (
   options: { label: string; value: string }[];
   newColumns: { [key: string]: string | boolean }[];
 } => {
-  const defaultCheckedList = props?.columns.map((item) => item.key as string);
+  const defaultCheckedList = props?.columns.map((item) => item?.key as string);
   const [checkedList, setCheckedList] = useState(
-    props.defaultCheckedList || defaultCheckedList
+    props?.defaultCheckedList || defaultCheckedList
   );
 
-  if (!props.columns) {
+  if (!props?.columns) {
     return {
       checkedList: [],
       setCheckedList: () => {},
@@ -30,15 +30,15 @@ export const useGetHiddenColumns = (
     };
   }
 
-  const options = props.columns.map(({ key, title }, index) => ({
+  const options = props?.columns.map(({ key, title }, index) => ({
     id: `${key}${index}`,
     label: title,
     value: key,
   }));
 
-  const newColumns = props.columns.map((item) => ({
+  const newColumns = props?.columns.map((item) => ({
     ...item,
-    hidden: !checkedList.includes(item.key as string),
+    hidden: !checkedList.includes(item?.key as string),
   }));
 
   return { checkedList, setCheckedList, options, newColumns };

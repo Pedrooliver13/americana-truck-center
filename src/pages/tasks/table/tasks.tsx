@@ -58,12 +58,10 @@ interface DataType {
 
 export const Tasks = (): ReactElement => {
   const [isOpenModal, setIsOpenModal] = useState(false);
-
-  const { data, isPending } = useGetTasks();
-
   const { isOpenTourState, steps, ref1, ref2, ref3, ref4, ref5, ref6 } =
     useTaskTableTour();
 
+  const { data, isPending } = useGetTasks();
   const { getColumnSearchProps } = useGetColumnSearch<DataType>();
 
   const columns: TableColumnsType<DataType> = [

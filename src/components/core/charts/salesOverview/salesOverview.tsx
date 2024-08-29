@@ -7,10 +7,12 @@ import * as Styled from './styles';
 
 export const SalesOverview = (): ReactElement => {
   const optionscolumnchart = {
-    theme: {
-      mode: localStorage.getItem('theme'),
-    },
     chart: {
+      events: {
+        mounted: (chart: Props) => {
+          chart.windowResizeHandler();
+        },
+      },
       type: 'bar',
       fontFamily: "'Plus Jakarta Sans', sans-serif;",
       foreColor: '#adb0bb',
@@ -18,7 +20,6 @@ export const SalesOverview = (): ReactElement => {
         show: true,
       },
       height: 370,
-      background: 'transparent',
     },
     colors: ['#5D87FF', '#49BEFF'],
     plotOptions: {
