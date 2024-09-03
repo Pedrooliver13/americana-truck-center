@@ -1,5 +1,5 @@
 // Packages
-import { ReactElement, useRef, useState } from 'react';
+import { ReactElement, forwardRef, useRef, useState } from 'react';
 import { AppstoreOutlined as AppstoreOutlinedIcon } from '@ant-design/icons';
 
 // Components
@@ -15,8 +15,13 @@ interface ButtonHideColumnsProps {
   setCheckedList: (value: string[]) => void;
 }
 
-export const ButtonHideColumns = (
-  props: ButtonHideColumnsProps
+export const ButtonHideColumnsBase = (
+  props: ButtonHideColumnsProps,
+  ref:
+    | ((instance: HTMLButtonElement | HTMLAnchorElement | null) => void)
+    | React.RefObject<HTMLButtonElement | HTMLAnchorElement>
+    | null
+    | undefined
 ): ReactElement => {
   const selectRef = useRef<BaseSelectRef>(null);
   const [isOpenSelectColumns, setIsOpenSelectColumns] = useState(false);
@@ -29,7 +34,7 @@ export const ButtonHideColumns = (
     <Styled.ButtonHideColumnsContainer>
       <Tooltip title="Gerenciar colunas">
         <div>
-          <Button shape="circle" size="large" onClick={handleToggle}>
+          <Button shape="circle" size="large" onClick={handleToggle} ref={ref}>
             <AppstoreOutlinedIcon />
           </Button>
         </div>
@@ -55,3 +60,5 @@ export const ButtonHideColumns = (
     </Styled.ButtonHideColumnsContainer>
   );
 };
+
+export const ButtonHideColumns = forwardRef(ButtonHideColumnsBase);

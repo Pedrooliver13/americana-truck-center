@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // Packages
 import { ReactElement, forwardRef } from 'react';
 import { downloadExcel } from 'react-export-table-to-excel';
@@ -7,7 +9,7 @@ import { toast } from 'react-toastify';
 import { Button, Tooltip, XlsxIcon } from 'components/core';
 
 interface XlsxButtonProps {
-  data: { [key: string]: string | number | boolean }[];
+  data?: Array<any> | undefined;
   filename: string;
 }
 
@@ -20,16 +22,38 @@ export const XlsxButtonBase = (
     | undefined
 ): ReactElement => {
   const handleDownloadExcel = () => {
-    if (Array.isArray(props.data) && !props.data.length) {
+    if (!props?.data || (Array.isArray(props?.data) && !props?.data.length)) {
       return toast.error('Não há dados para gerar o EXCEL.');
     }
+
+    const body = props?.data.map((item) => {
+      let formatedItem = {};
+
+      Object.keys(item).forEach((key) => {
+        if (Array.isArray(item[key])) {
+          formatedItem = {
+            ...formatedItem,
+            [key]: (item[key] as any)?.join(', '),
+          };
+
+          return;
+        }
+
+        formatedItem = {
+          ...formatedItem,
+          [key]: item[key],
+        };
+      });
+
+      return formatedItem;
+    });
 
     downloadExcel({
       fileName: `${props?.filename}-${new Date().toLocaleDateString()}`,
       sheet: 'react-export-table-to-excel',
       tablePayload: {
         header: Object.keys(props?.data[0]),
-        body: props?.data,
+        body,
       },
     });
   };

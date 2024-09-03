@@ -12,9 +12,11 @@
   "dependencies": {
     "@hookform/resolvers": "^3.6.0",
     "@tanstack/react-query": "^5.52.2",
+    "@tanstack/react-query-devtools": "^5.53.1",
     "antd": "^5.18.2",
     "apexcharts": "^3.49.1",
     "axios": "^1.7.5",
+    "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
     "react": "^18.2.0",

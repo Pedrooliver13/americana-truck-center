@@ -8,7 +8,8 @@ import autoTable from 'jspdf-autotable';
 import { Button, Tooltip, PdfIcon } from 'components/core';
 
 interface PdfButtonProps {
-  data: { [key: string]: string | number | boolean }[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data?: Array<{ [key: string]: any }>;
   filename: string;
 }
 
@@ -21,12 +22,23 @@ export const PdfButtonBase = (
     | undefined
 ): ReactElement => {
   const handleDownloadPdf = () => {
-    if (Array.isArray(props.data) && !props.data.length) {
+    if (!props?.data || (Array.isArray(props?.data) && !props?.data.length)) {
       return toast.error('Não há dados para gerar o PDF.');
     }
 
     const doc = new jsPDF();
-    const values = props?.data.map((item) => Object.values(item));
+
+    const values = props?.data
+      .map((item) => {
+        return Object.values(item).map((value) => {
+          if (Array.isArray(value)) {
+            return Object.values(value).join(', ');
+          }
+
+          return value;
+        });
+      })
+      .filter(Boolean);
 
     autoTable(doc, {
       head: [Object.keys(props?.data[0])],

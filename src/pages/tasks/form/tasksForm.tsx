@@ -86,7 +86,7 @@ export const TasksForm = (): ReactElement => {
     resolver: zodResolver(schema),
   });
 
-  const { totalPrice, totalItems, listSelected } = useTasksCount({
+  const { totalPrice, totalItems, listSelected } = useTasksCount<FormValues>({
     watch,
     radioList: washData,
   });

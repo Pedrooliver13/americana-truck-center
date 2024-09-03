@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 // Packages
 import { useMemo } from 'react';
+import { UseFormWatch } from 'react-hook-form';
 
 type RadioList = Array<{
   name: string;
@@ -10,15 +9,16 @@ type RadioList = Array<{
   completeValue: string;
 }>;
 
-interface UseTasksCountProps {
-  watch: any;
+interface UseTasksCountProps<T> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  watch: UseFormWatch<T | any>;
   radioList: RadioList;
 }
 
-export const useTasksCount = ({
+export const useTasksCount = <T,>({
   watch,
   radioList,
-}: UseTasksCountProps): {
+}: UseTasksCountProps<T>): {
   totalPrice: number;
   totalItems: number;
   listSelected: Array<{ label: string; value: number }>;

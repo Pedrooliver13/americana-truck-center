@@ -28,6 +28,12 @@ import { useGetTasks } from 'hooks/tasks/useGetTasks';
 import { useTaskTableTour } from 'hooks/tasks/useTaskTableTour';
 import { useGetColumnSearch, useGetHiddenColumns } from 'hooks/core';
 
+// Models
+import { Task } from 'models/tasks/tasks';
+
+// Pdfs
+import { generateReceiptsPDF } from 'pdfs/receiptsPdf';
+
 // Utils
 import { priceFormatter } from 'utils/formatter';
 
@@ -42,26 +48,41 @@ interface DataType {
   date: string;
   total: number;
   status: number;
-  [key: string]: string | number | boolean;
+  services: Array<{ name: string; total: number }>;
 }
 
-// const data: { [key: string]: string | number | boolean }[] = Array(100)
-//   .fill(null)
-//   .map((_, index) => ({
-//     id: `${index}`,
-//     registrationNumber: '638.822.570-59',
-//     vehicle: index % 2 === 0 ? 'Mercedez Bens' : 'BMW',
-//     name: 'John Brown',
-//     total: index % 2 === 0 ? 1000 : 3000,
-//     date: index % 2 === 0 ? '27/06/2024' : '10/10/2021',
-//   }));
+const data: Array<Task> = Array(1000)
+  .fill(null)
+  .map((_, index) => ({
+    id: `${index}`,
+    registrationNumber: '638.822.570-59',
+    vehicle: index % 2 === 0 ? 'Mercedez Bens' : 'BMW',
+    name: 'John Brown',
+    total: index % 2 === 0 ? 600 : 600,
+    date: index % 2 === 0 ? '27/06/2024' : '10/10/2021',
+    services: [
+      { name: 'Lubrificação', total: 200 },
+      { name: 'troca de pneus', total: 200 },
+      { name: 'Lubrificação', total: 200 },
+    ],
+  }));
+
+const formatData = () => {
+  return data.map((item) => {
+    return {
+      ...item,
+      services: item.services.map((service) => service.name),
+    };
+  });
+};
 
 export const Tasks = (): ReactElement => {
   const [isOpenModal, setIsOpenModal] = useState(false);
+
   const { isOpenTourState, steps, ref1, ref2, ref3, ref4, ref5, ref6 } =
     useTaskTableTour();
 
-  const { data, isPending } = useGetTasks();
+  const { isPending } = useGetTasks();
   const { getColumnSearchProps } = useGetColumnSearch<DataType>();
 
   const columns: TableColumnsType<DataType> = [
@@ -104,6 +125,7 @@ export const Tasks = (): ReactElement => {
       key: 'date',
       responsive: ['md'],
       ...getColumnSearchProps('date', 'Data'),
+      sorter: (a, b) => a.date.localeCompare(b.date),
     },
     {
       title: 'Ações',
@@ -111,7 +133,7 @@ export const Tasks = (): ReactElement => {
       key: 'actions',
       align: 'center',
       width: '100px',
-      render: () => (
+      render: (_value, record) => (
         <div className="table__actions">
           <Tooltip title="Editar Serviço">
             <>
@@ -131,6 +153,7 @@ export const Tasks = (): ReactElement => {
                 type="text"
                 icon={<FileTextOutlinedIcon color="#2B3034" />}
                 size="small"
+                onClick={() => generateReceiptsPDF(record as unknown as Task)}
               />
             </>
           </Tooltip>
@@ -203,23 +226,30 @@ export const Tasks = (): ReactElement => {
           </div>
 
           <div className="tasks-card__actions--columns">
-            <XlsxButton filename="tabela-de-servicos" ref={ref3} data={data} />
-            <PdfButton filename="tabela-de-servicos" ref={ref4} data={data} />
-            <div ref={ref5}>
-              <ButtonHideColumns
-                {...{ options, checkedList, setCheckedList }}
-              />
-            </div>
+            <XlsxButton
+              filename="tabela-de-servicos"
+              ref={ref3}
+              data={formatData()}
+            />
+            <PdfButton
+              filename="tabela-de-servicos"
+              ref={ref4}
+              data={formatData()}
+            />
+            <ButtonHideColumns
+              ref={ref5}
+              {...{ options, checkedList, setCheckedList }}
+            />
           </div>
         </div>
 
         <div ref={ref6}>
           <Table
             id="tasks-table"
-            rowKey="name"
+            rowKey="id"
             data-cy="tasks-table"
             columns={newColumns}
-            dataSource={data ?? []}
+            dataSource={data}
             isLoading={isPending}
             size="small"
             bordered

@@ -29,7 +29,8 @@
           { "path": "phosphor-react" },
           { "path": "react-toastify" },
           { "path": "@ant-design/icons" },
-          { "path": "jspdf" }
+          { "path": "jspdf" },
+          { "path": "html2canvas" }
         ],
         "Utils": [{ "path": "utils" }],
         "Routes": [{ "path": "router" }],
@@ -40,6 +41,7 @@
         "Hooks": [{ "path": "hooks" }],
         "Models": [{ "path": "models" }],
         "Services": [{ "path": "services" }],
+        "Pdfs": [{ "path": "pdfs" }],
         "Styles": [
           { "path": "styles" },
           { "path": ".css" },

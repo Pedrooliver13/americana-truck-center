@@ -2,15 +2,15 @@
 import { useQuery } from '@tanstack/react-query';
 
 // Services
-import { api } from 'services/axios';
+import { getAllPokemon } from 'services/tasks/getAllTasks';
+
+// Models
+import { PokemonType } from 'models/tasks/pokemon';
 
 export const useGetTasks = () => {
-  const response = useQuery({
+  const response = useQuery<Array<PokemonType>>({
     queryKey: ['tasks'],
-    queryFn: async () => {
-      const response = await api.get('/pokemon?limit=100000&offset=0');
-      return response?.data?.results;
-    },
+    queryFn: () => getAllPokemon(),
     staleTime: 1000 * 60 * 5,
   });
 

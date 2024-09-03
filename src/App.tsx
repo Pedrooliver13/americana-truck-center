@@ -5,6 +5,7 @@ import { ThemeProvider } from 'styled-components';
 import { FloatButton, ConfigProvider, theme } from 'antd';
 import { ToastContainer } from 'react-toastify';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import ptBR from 'antd/lib/locale/pt_BR';
 
 // Routes
@@ -25,6 +26,8 @@ function App(): ReactElement {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
+
       <ConfigProvider
         locale={ptBR}
         theme={{
@@ -37,11 +40,11 @@ function App(): ReactElement {
             (!isDarkMode ? defaultTheme : darkTheme) as typeof defaultTheme
           }
         >
+          <GlobalStyle />
           <BrowserRouter>
             <Router />
           </BrowserRouter>
 
-          <GlobalStyle />
           <ToastContainer
             position="top-right"
             autoClose={5000}

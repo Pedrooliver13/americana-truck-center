@@ -8,11 +8,6 @@ import * as Styled from './styles';
 export const SalesOverview = (): ReactElement => {
   const optionscolumnchart = {
     chart: {
-      events: {
-        mounted: (chart: Props) => {
-          chart.windowResizeHandler();
-        },
-      },
       type: 'bar',
       fontFamily: "'Plus Jakarta Sans', sans-serif;",
       foreColor: '#adb0bb',
