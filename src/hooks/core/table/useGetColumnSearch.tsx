@@ -48,11 +48,11 @@ export const useGetColumnSearch = <T extends DataType>() => {
       >
         <Input
           ref={searchInput}
-          id="table-search-input"
+          id={`table-search-input-${dataIndex}`}
           placeholder={`Buscar por ${columnName ? columnName : dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
+            setSelectedKeys(e?.target?.value ? [e?.target?.value] : [])
           }
           onPressEnter={() =>
             handleSearch(selectedKeys as string[], confirm, dataIndex)
@@ -84,11 +84,16 @@ export const useGetColumnSearch = <T extends DataType>() => {
     filterIcon: (filtered: boolean) => (
       <SearchOutlinedIcon style={{ color: filtered ? '#1677ff' : undefined }} />
     ),
-    onFilter: (value, record) =>
-      record[dataIndex]
+    onFilter: (value, record) => {
+      if (!record[dataIndex]) {
+        return false;
+      }
+
+      return record[dataIndex]
         .toString()
         .toLowerCase()
-        .includes((value as string).toLowerCase()),
+        .includes((value as string).toLowerCase());
+    },
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);
@@ -100,10 +105,10 @@ export const useGetColumnSearch = <T extends DataType>() => {
           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={text ? text.toString() : ''}
+          textToHighlight={text ? text.toString() : '-'}
         />
       ) : (
-        text
+        text ?? '-'
       ),
   });
 

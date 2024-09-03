@@ -60,6 +60,7 @@ export const SidebarContainer = styled(Layout.Sider)`
         align-items: center;
         height: 50px;
         color: ${theme.colors.text};
+        transition: none !important;
 
         &:active {
           background-color: ${theme.colors.primary} !important;
@@ -69,6 +70,7 @@ export const SidebarContainer = styled(Layout.Sider)`
       .ant-menu-item-selected {
         background-color: ${theme.colors.primary};
         color: ${theme.colors.white};
+        transition: none !important;
 
         &:hover {
           color: ${theme.colors.white} !important;

@@ -1,6 +1,6 @@
 // Packages
 import { ReactElement, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu } from 'antd';
 import {
   DashboardOutlined as DashboardOutlinedIcon,
@@ -24,6 +24,7 @@ interface SidebarProps {
 }
 
 export const Sidebar = (props: SidebarProps): ReactElement => {
+  const location = useLocation();
   const [isMobile, setIsMobile] = useState(false);
 
   const currentCollapsedWidth = isMobile ? 0 : 80;
@@ -60,7 +61,7 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
       </a>
       <Menu
         className="sidebar__menu"
-        defaultSelectedKeys={[location.pathname]}
+        selectedKeys={[location.pathname]}
         mode="inline"
         items={[
           /* Dashboard */

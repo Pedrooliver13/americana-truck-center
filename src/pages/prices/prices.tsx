@@ -61,7 +61,11 @@ export const Prices = (): ReactElement => {
       width: '100px',
       render: () => (
         <div className="table__actions">
-          <Button type="text" icon={<EditOutlinedIcon />} size="small" />
+          <Button
+            type="text"
+            icon={<EditOutlinedIcon color="#2B3034" />}
+            size="small"
+          />
           <Button
             danger
             icon={<DeleteOutlinedIcon />}

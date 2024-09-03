@@ -29,6 +29,7 @@ export const TasksFormContainer = styled.div`
 
       &__fields {
         width: 650px;
+        margin-bottom: 20px;
 
         @media (max-width: ${theme.breakpoints.XL}) {
           width: 100%;
@@ -38,7 +39,8 @@ export const TasksFormContainer = styled.div`
       &__price {
         flex: 1;
         max-width: 100%;
-        max-height: 300px;
+        max-height: 350px;
+        box-sizing: border-box;
 
         .ant-card-body {
           display: flex;

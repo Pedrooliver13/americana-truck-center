@@ -14,5 +14,9 @@ export const RadioGroup = styled(
     display: flex;
     align-items: center;
     text-align: center;
+
+    @media (max-width: 320px) {
+      flex-wrap: wrap;
+    }
   `}
 `;
