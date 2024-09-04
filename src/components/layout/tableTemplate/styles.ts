@@ -1,12 +1,12 @@
 // Packages
 import styled, { css } from 'styled-components';
 
-export const TasksContainer = styled.div`
+export const TableTemplateContainer = styled.div`
   ${({ theme }) => css`
     padding-top: 20px;
     padding-bottom: 20px;
 
-    .tasks__header {
+    .table-template__header {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -31,7 +31,7 @@ export const TasksContainer = styled.div`
       }
     }
 
-    .ant-card-body.tasks-card {
+    .ant-card-body.table-template-card {
       @media (max-width: ${theme.breakpoints.MD}) {
         padding: 0 !important;
         margin: 0;
@@ -39,7 +39,7 @@ export const TasksContainer = styled.div`
       }
     }
 
-    .tasks-card__actions {
+    .table-template-card__actions {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -65,7 +65,7 @@ export const TasksContainer = styled.div`
       }
     }
 
-    .tasks-table__expands {
+    .table-template__expands {
       display: flex;
       align-items: center;
       flex-wrap: wrap;

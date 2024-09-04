@@ -1,2 +1,2 @@
 // Pages
-export { Prices } from './prices';
+export { PricesTable } from './table/pricesTable';

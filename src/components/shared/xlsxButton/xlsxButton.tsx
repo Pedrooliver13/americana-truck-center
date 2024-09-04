@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import { Button, Tooltip, XlsxIcon } from 'components/core';
 
 interface XlsxButtonProps {
-  data?: Array<any> | undefined;
+  data?: Array<any> | undefined | null;
   filename: string;
 }
 

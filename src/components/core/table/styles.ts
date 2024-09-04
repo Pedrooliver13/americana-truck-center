@@ -27,28 +27,22 @@ export const TableAntDesign = styled(Table)<TableProps>`
 
     .table__actions {
       display: flex;
-      align-items: center;
       justify-content: space-around;
-
       max-width: 100px;
+      width: fit-content;
       margin: 0 auto;
-      background-color: ${theme.colors['gray-200']};
+      background-color: ${theme.colors['gray-200']} !important;
       color: ${theme.colors['gray-400']};
-      border: 1px solid ${theme.colors['gray-300']};
+      border: 1px dashed ${theme.colors['gray-300']};
       border-radius: 8px;
-      padding: 2px;
 
       &--normal {
         color: ${theme.colors['gray-400']};
       }
 
-      button + button {
-        border-left: 1px solid ${theme.colors['gray-300']};
-      }
-
       button {
-        flex: 1;
-        border-radius: 0;
+        width: 30px;
+        border-radius: 8px;
       }
     }
   `}
