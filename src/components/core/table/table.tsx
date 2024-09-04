@@ -17,6 +17,7 @@ export const Table = (props: TableProps): ReactElement => {
   return (
     <Styled.TableAntDesign
       {...props}
+      size="small"
       loading={props?.isLoading}
       locale={{
         emptyText: () => {

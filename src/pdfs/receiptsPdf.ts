@@ -8,9 +8,6 @@ import { Task } from 'models/tasks/tasks';
 // Assets
 import LogoImage from 'assets/americana-truck-center.png';
 
-// Utils
-import { priceFormatter } from 'utils/formatter';
-
 export const generateReceiptsPDF = (data: Task) => {
   // Criar um novo documento PDF
   const doc = new jsPDF();
@@ -74,26 +71,17 @@ export const generateReceiptsPDF = (data: Task) => {
   let finalY;
 
   const body = data?.services.length
-    ? data?.services.map((service) => {
-        const value = {
-          ...service,
-          total: priceFormatter.format(service?.total),
-        };
-
-        return Object.values(value);
-      })
+    ? data?.services.map((service) => [service, '1x'])
     : [];
 
   autoTable(doc, {
-    head: [['SERVIÇOS', 'VALOR']],
+    head: [['SERVIÇOS', 'QTD']],
     body,
     startY: marginTop + 35 + 3 * lineSpacing + 10, // Ajustar a posição de início da tabela
     didDrawCell: (data) => {
       finalY = data.cell.y + data.cell.height;
     },
-    foot: [['TOTAL:', priceFormatter.format(data?.total)]],
-    showFoot: 'everyPage',
-    footStyles: { fontStyle: 'bold' },
+    bodyStyles: { valign: 'top' },
   });
 
   if (finalY) {

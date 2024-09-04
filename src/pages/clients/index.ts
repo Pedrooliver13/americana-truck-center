@@ -1,3 +1,3 @@
 // Components
-export { ClientTable } from './table/clientTable';
+export { ClientsTable } from './table/clientsTable';
 export { ClientForm } from './form/clientForm';

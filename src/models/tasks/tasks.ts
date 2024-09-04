@@ -5,5 +5,5 @@ export interface Task {
   name: string;
   total: number;
   date: string;
-  services: Array<{ name: string; total: number }>;
+  services: Array<string>;
 }
