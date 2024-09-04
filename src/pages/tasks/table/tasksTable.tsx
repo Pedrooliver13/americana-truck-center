@@ -39,9 +39,9 @@ const data: Array<Task> = Array(1000)
   .fill(null)
   .map((_, index) => ({
     id: `${index}`,
-    registrationNumber: '638.822.570-59',
+    registrationNumber: index % 2 === 0 ? '638.822.570-59' : '506.555.388-28',
     vehicle: index % 2 === 0 ? 'Mercedez Bens' : 'BMW',
-    name: 'John Brown',
+    name: index % 2 === 0 ? 'John Brown' : 'Pedro Oliveira',
     total: index % 2 === 0 ? 600 : 600,
     date: index % 2 === 0 ? '27/06/2024' : '10/10/2021',
     services: ['Lubrificação', 'Troca de óleo', 'Troca de pneu'],
