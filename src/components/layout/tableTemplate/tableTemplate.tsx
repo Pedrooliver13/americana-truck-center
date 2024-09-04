@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 // Packages
-import { ReactElement, RefObject } from 'react';
+import { ReactElement, ChangeEvent, RefObject, useState } from 'react';
 import { TableProps, Tour } from 'antd';
 import { Link } from 'react-router-dom';
 import {
@@ -42,20 +42,35 @@ interface TableTemplateProps {
     isOpenTourState: Array<any>;
     steps: Array<any>;
     ref1: RefObject<any>;
-    ref2: any;
-    ref3: any;
-    ref4: any;
-    ref5: any;
-    ref6: any;
+    ref2: RefObject<any>;
+    ref3: RefObject<any>;
+    ref4: RefObject<any>;
+    ref5: RefObject<any>;
+    ref6: RefObject<any>;
   };
 }
 
 export const TableTemplate = (props: TableTemplateProps): ReactElement => {
+  const [filteredData, setFilteredData] = useState(props?.table?.dataSource);
+
   const { newColumns, options, checkedList, setCheckedList } =
     useGetHiddenColumns({
       columns: props?.table?.columns as Array<any>,
       defaultCheckedList: props?.table?.defaultCheckedList as Array<string>,
     });
+
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    const search = event.target.value.toLowerCase();
+    const data = props?.table?.dataSource as Array<any>;
+
+    const filteredData = data.filter((item) => {
+      return Object.keys(item).some((key) => {
+        return String(item[key]).toLowerCase().includes(search);
+      });
+    });
+
+    setFilteredData(filteredData);
+  };
 
   return (
     <Styled.TableTemplateContainer className="container">
@@ -92,6 +107,7 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
               allowClear
               autoComplete="off"
               prefix={<SearchOutlinedIcon />}
+              onChange={handleSearch}
             />
           </div>
 
@@ -116,6 +132,7 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
         <div ref={props?.tour?.ref6}>
           <Table
             {...props?.table}
+            dataSource={filteredData}
             id="table-template"
             data-cy="table-template"
             columns={newColumns}
