@@ -17,6 +17,9 @@ import { ButtonHideColumns, PdfButton, XlsxButton } from 'components/shared';
 // Hooks
 import { useGetHiddenColumns } from 'hooks/core';
 
+// Utils
+import { debounce } from 'utils/debounce';
+
 // Styles
 import * as Styled from './styles';
 
@@ -107,7 +110,7 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
               allowClear
               autoComplete="off"
               prefix={<SearchOutlinedIcon />}
-              onChange={handleSearch}
+              onChange={debounce(handleSearch, 300)}
             />
           </div>
 
@@ -118,7 +121,7 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
               ref={props?.tour?.ref3}
             />
             <PdfButton
-              filename="tabela-de-servicos"
+              filename={props?.exports?.pdf?.filename}
               data={props?.table?.dataSource as Array<any>}
               ref={props?.tour?.ref4}
             />
