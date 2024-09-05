@@ -48,8 +48,7 @@ export const generateReceiptsPDF = (data: Task) => {
   // Linhas para dados do cliente, agora alinhados em duas colunas
   doc.setFontSize(10);
   const firstColumn = marginLeft;
-  const secondColumn = 105; // Posição horizontal da segunda coluna
-
+  const secondColumn = 140; // Posição horizontal da segunda coluna
   const lineSpacing = 10; // Espaçamento vertical entre linhas
 
   doc.text(`CLIENTE: ${data?.name.toUpperCase()}`, firstColumn, marginTop + 45);
@@ -81,7 +80,9 @@ export const generateReceiptsPDF = (data: Task) => {
     didDrawCell: (data) => {
       finalY = data.cell.y + data.cell.height;
     },
+    columnStyles: { 0: { cellWidth: 126 } },
     bodyStyles: { valign: 'top' },
+    foot: [['TOTAL DE SERVIÇOS:', data?.services.length]],
   });
 
   if (finalY) {
@@ -95,13 +96,17 @@ export const generateReceiptsPDF = (data: Task) => {
       marginLeft,
       finalY + 15
     );
-
     doc.text(
       'Assinatura do Cliente: ___________________________',
       marginLeft,
       finalY + 40
     );
-    doc.text('RG do Cliente: ___________________________', 110, finalY + 40);
+    doc.text(`${data.registrationNumber}`, 147, finalY + 39);
+    doc.text(
+      'Documento do Cliente: ___________________________',
+      110,
+      finalY + 40
+    );
   }
 
   // Salvar o PDF

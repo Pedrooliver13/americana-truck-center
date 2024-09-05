@@ -68,10 +68,10 @@ export const Tasks = (): ReactElement => {
         }}
         exports={{
           xlsx: {
-            filename: `tabela-de-serviços-${new Date().toISOString()}`,
+            filename: `tabela-de-serviços-${new Date().toLocaleDateString()}`,
           },
           pdf: {
-            filename: `tabela-de-serviços-${new Date().toISOString()}`,
+            filename: `tabela-de-serviços-${new Date().toLocaleDateString()}`,
           },
         }}
         table={{
