@@ -51,8 +51,12 @@ export const generateReceiptsPDF = (data: Task) => {
   const secondColumn = 140; // Posição horizontal da segunda coluna
   const lineSpacing = 10; // Espaçamento vertical entre linhas
 
-  doc.text(`CLIENTE: ${data?.name.toUpperCase()}`, firstColumn, marginTop + 45);
-  doc.text(`DATA: ${data?.date}`, secondColumn, marginTop + 45);
+  doc.text(
+    `CLIENTE: ${data?.name?.toUpperCase() ?? ''}`,
+    firstColumn,
+    marginTop + 45
+  );
+  doc.text(`DATA: ${data?.date ?? ''}`, secondColumn, marginTop + 45);
   doc.text('CAVALO: TESTE', firstColumn, marginTop + 45 + lineSpacing);
   doc.text('CARRETA: TESTE', secondColumn, marginTop + 45 + lineSpacing);
   doc.text(
@@ -61,7 +65,7 @@ export const generateReceiptsPDF = (data: Task) => {
     marginTop + 45 + 2 * lineSpacing
   );
   doc.text(
-    `PLACA: ${data?.vehicle}`,
+    `PLACA: ${data?.vehicle ?? ''}`,
     secondColumn,
     marginTop + 45 + 2 * lineSpacing
   );
@@ -101,7 +105,7 @@ export const generateReceiptsPDF = (data: Task) => {
       marginLeft,
       finalY + 40
     );
-    doc.text(`${data.registrationNumber}`, 147, finalY + 39);
+    doc.text(`${data?.registrationNumber ?? ''}`, 147, finalY + 39);
     doc.text(
       'Documento do Cliente: ___________________________',
       110,
