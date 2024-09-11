@@ -11,6 +11,7 @@ import * as Styled from './styles';
 
 interface TableProps extends TableAntDesignProps {
   isLoading?: boolean;
+  minHeight?: string;
 }
 
 export const Table = (props: TableProps): ReactElement => {

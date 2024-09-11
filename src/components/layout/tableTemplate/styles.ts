@@ -70,7 +70,7 @@ export const TableTemplateContainer = styled.div`
       align-items: center;
       flex-wrap: wrap;
       gap: 20px;
-      margin-left: 20px;
+      margin-left: 45px;
       line-height: 2;
     }
   `}

@@ -35,7 +35,7 @@ interface DataType {
   services: Array<string>;
 }
 
-const data: Array<Task> = Array(1000)
+const data: Array<Task> = Array(2)
   .fill(null)
   .map((_, index) => ({
     id: `${index}`,

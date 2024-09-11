@@ -13,7 +13,20 @@ export const TasksFormContainer = styled.div`
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 10px;
       margin-bottom: 20px;
+      font-size: 1rem;
+
+      h1 {
+        display: flex;
+        gap: 10px;
+        font-size: 2.5rem;
+
+        #info-icon {
+          font-size: 1.5rem;
+          color: ${theme.colors.primary};
+        }
+      }
     }
 
     .tasks__total {
@@ -36,16 +49,42 @@ export const TasksFormContainer = styled.div`
         }
       }
 
+      &__services {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        font-size: 1.6rem;
+
+        ul {
+          max-height: 170px;
+          overflow-y: auto;
+        }
+
+        li {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background-color: ${theme.colors.body};
+          border: 1px solid ${theme.colors.border};
+          border-radius: 8px;
+          margin: 10px 0px;
+          padding: 0.5rem;
+        }
+
+        &--empty {
+          margin: auto;
+        }
+      }
+
       &__price {
         flex: 1;
         max-width: 100%;
-        max-height: 350px;
+        max-height: 380px;
         box-sizing: border-box;
 
         .ant-card-body {
           display: flex;
           flex-direction: column;
-          max-height: 450px;
           height: 100%;
         }
 
@@ -58,6 +97,7 @@ export const TasksFormContainer = styled.div`
 
         &--content {
           margin-top: auto;
+          font-size: 1.6rem;
           padding: 5px;
 
           div {
@@ -76,6 +116,7 @@ export const TasksFormContainer = styled.div`
         &--footer {
           display: flex;
           margin-top: 20px;
+          gap: 10px;
           height: auto;
         }
       }
