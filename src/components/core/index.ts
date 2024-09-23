@@ -10,7 +10,15 @@ export { ButtonTheme } from './buttonTheme';
 export { Breadcrumb } from './breadcrumb';
 
 // Fields
-export { Form, Input, Select, RadioGroup, Radio, Button } from './fields';
+export {
+  Form,
+  Input,
+  Select,
+  RadioGroup,
+  Radio,
+  Button,
+  MaskedInput,
+} from './fields';
 
 // Grids
 export { Row, Col } from './grids';
