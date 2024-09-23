@@ -22,12 +22,14 @@ import {
   Tag,
   Modal,
   Tooltip,
+  MaskedInput,
 } from 'components/core';
 
 // Hooks
 import { useTasksCount } from 'hooks/tasks/useTasksCount';
 
 // Utils
+import { Masks } from 'utils/masks';
 import { priceFormatter } from 'utils/formatter';
 
 // Styles
@@ -35,12 +37,11 @@ import * as Styled from './styles';
 
 const schema = zod.object({
   name: zod.string().min(1, { message: 'Campo obrigatório' }),
+  phone: zod.string().min(1, { message: 'Campo obrigatório' }).nullable(),
   document: zod.string().nullable(),
-  vehicle: zod.string(),
+  vehicle: zod.string().nullable(),
   client: zod.string().optional().nullable(),
-  licensePlate: zod.string().min(1, { message: 'Campo obrigatório' }),
-  washTankRadio: zod.string().min(1, { message: 'Campo obrigatório' }),
-  cavaloRadio: zod.string().min(1, { message: 'Campo obrigatório' }),
+  licensePlate: zod.string().nullable(),
 });
 
 type FormValues = zod.infer<typeof schema>;
@@ -76,16 +77,22 @@ export const TasksForm = (): ReactElement => {
   const navigate = useNavigate();
   const [isOpenModal, setIsOpenModal] = useState(false);
 
-  const { control, handleSubmit, setFocus, watch } = useForm<FormValues>({
+  const {
+    control,
+    handleSubmit,
+    setFocus,
+    watch,
+    formState: { errors },
+  } = useForm<FormValues>({
     defaultValues: {
       name: '',
+      phone: '',
       document: '',
       vehicle: '',
       client: null,
       licensePlate: '',
       ...Object.fromEntries(washData.map((item) => [item.name, '0'])),
     },
-    // values: data,
     resolver: zodResolver(schema),
   });
 
@@ -98,8 +105,9 @@ export const TasksForm = (): ReactElement => {
     setIsOpenModal((state) => !state);
   };
 
-  const handleNewItem = (data: FormValues): void => {
-    console.log(data);
+  const handleNewItem = (): void => {
+    const value = watch();
+    console.log(value);
   };
 
   useEffect(() => {
@@ -114,10 +122,7 @@ export const TasksForm = (): ReactElement => {
             Adicionar serviço
             <Tooltip title="Fazer tour da página" placement="bottom">
               <>
-                <QuestionCircleOutlinedIcon
-                  id="info-icon"
-                  // onClick={() => props?.tour?.isOpenTourState[1](true)}
-                />
+                <QuestionCircleOutlinedIcon id="info-icon" />
               </>
             </Tooltip>
           </h1>
@@ -129,7 +134,7 @@ export const TasksForm = (): ReactElement => {
         <Form onFinish={handleSubmit(handleNewItem)} className="tasks-form">
           <Card className="tasks-form__fields">
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-              <Col xs={24} md={12}>
+              <Col xs={24} md={24}>
                 <FormItem control={control} name="name">
                   <Input
                     name="name"
@@ -144,12 +149,38 @@ export const TasksForm = (): ReactElement => {
               </Col>
               <Col xs={24} md={12}>
                 <FormItem control={control} name="document">
-                  <Input
-                    name="document"
+                  <MaskedInput
+                    id="document"
                     label="Documento"
                     placeholder="Documento"
                     autoComplete="off"
-                    maxLength={150}
+                    firstmasklength={11}
+                    mask={[
+                      {
+                        mask: Masks.CPF,
+                        lazy: true,
+                      },
+                      {
+                        mask: Masks.CNPJ,
+                        lazy: true,
+                      },
+                    ]}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="phone" status={'error'}>
+                  <MaskedInput
+                    id="phone"
+                    label="Celular"
+                    placeholder="Celular"
+                    status={errors?.phone ? 'error' : ''}
+                    mask={[
+                      {
+                        mask: Masks.PHONE,
+                        lazy: true,
+                      },
+                    ]}
                   />
                 </FormItem>
               </Col>
@@ -158,7 +189,7 @@ export const TasksForm = (): ReactElement => {
                   <Input
                     name="vehicle"
                     label="Veículo"
-                    placeholder="Nome do Veículo"
+                    placeholder="Modelo do Veículo"
                     autoComplete="off"
                     maxLength={150}
                   />
@@ -166,12 +197,17 @@ export const TasksForm = (): ReactElement => {
               </Col>
               <Col xs={24} md={12}>
                 <FormItem control={control} name="licensePlate">
-                  <Input
+                  <MaskedInput
                     id="licensePlate"
-                    name="licensePlate"
                     label="Placa do veículo"
                     placeholder="Placa do Veículo"
                     autoComplete="off"
+                    mask={[
+                      {
+                        mask: 'aaa-0*00',
+                        lazy: true,
+                      },
+                    ]}
                   />
                 </FormItem>
               </Col>
@@ -208,7 +244,14 @@ export const TasksForm = (): ReactElement => {
                       buttonStyle="solid"
                     >
                       <Radio value={item?.completeValue}>Completo</Radio>
-                      <Radio value={item?.visualValue}>Visual</Radio>
+                      <Radio
+                        value={{
+                          service: item?.name,
+                          value: item?.visualValue,
+                        }}
+                      >
+                        Visual
+                      </Radio>
                       <Radio value={'0'}>Nenhum</Radio>
                     </RadioGroup>
                   </FormItem>
