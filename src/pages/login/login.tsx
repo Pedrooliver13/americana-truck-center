@@ -1,5 +1,5 @@
 // Packages
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { FormItem } from 'react-hook-form-antd';
@@ -35,7 +35,7 @@ export const Login = (): ReactElement => {
   const navigate = useNavigate();
   const { mutate, isPending } = useSignIn();
 
-  const { control, handleSubmit } = useForm<FormValues>({
+  const { control, handleSubmit, setFocus } = useForm<FormValues>({
     defaultValues: {
       email: '',
       password: '',
@@ -46,6 +46,10 @@ export const Login = (): ReactElement => {
   const handleLogin = async (data: FormValues) => {
     mutate(data);
   };
+
+  useEffect(() => {
+    setFocus('email');
+  }, [setFocus]);
 
   return (
     <Styled.LoginContainer>

@@ -1,5 +1,5 @@
 // Packages
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { FormItem } from 'react-hook-form-antd';
@@ -28,7 +28,7 @@ export const ForgotPassword = (): ReactElement => {
   const navigate = useNavigate();
   const { mutate, isPending } = usePasswordReset();
 
-  const { control, handleSubmit } = useForm<FormValues>({
+  const { control, handleSubmit, setFocus } = useForm<FormValues>({
     defaultValues: {
       email: '',
     },
@@ -38,6 +38,10 @@ export const ForgotPassword = (): ReactElement => {
   const handleLogin = async (data: FormValues) => {
     mutate(data);
   };
+
+  useEffect(() => {
+    setFocus('email');
+  }, [setFocus]);
 
   return (
     <LoginTemplate>
@@ -84,7 +88,11 @@ export const ForgotPassword = (): ReactElement => {
         <Divider>ou</Divider>
 
         <div className="footer">
-          <Button type="text" onClick={() => navigate('/login')}>
+          <Button
+            type="text"
+            htmlType="submit"
+            onClick={() => navigate('/login')}
+          >
             Voltar para o login
           </Button>
         </div>
