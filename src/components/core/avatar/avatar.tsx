@@ -12,7 +12,16 @@ import AdminAvatarImage from 'assets/admin.png';
 // Styles
 import * as Styled from './styles';
 
+// Hooks
+import { useSignOut } from 'hooks/login/useSignOut';
+
+// Contexts
+import { useAuth } from 'contexts/authContext';
+
 export const Avatar = (): ReactElement => {
+  const { currentUser } = useAuth();
+  const { mutate } = useSignOut();
+
   return (
     <Dropdown
       menu={{
@@ -24,6 +33,7 @@ export const Avatar = (): ReactElement => {
           {
             label: 'Sair',
             key: '2',
+            onClick: () => mutate(),
           },
         ],
       }}
@@ -37,7 +47,7 @@ export const Avatar = (): ReactElement => {
         />
 
         <div className="avatar__infos">
-          <p>Júlia</p>
+          <p>{currentUser?.email}</p>
           <span>Admin</span>
         </div>
 
