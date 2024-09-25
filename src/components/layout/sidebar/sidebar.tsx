@@ -12,6 +12,9 @@ import {
   PoweroffOutlined as PoweroffOutlinedIcon,
 } from '@ant-design/icons';
 
+// Hooks
+import { useSignOut } from 'hooks/login/useSignOut';
+
 // Assets
 import TruckCenterLogo from 'assets/truck-center.png';
 
@@ -25,6 +28,7 @@ interface SidebarProps {
 
 export const Sidebar = (props: SidebarProps): ReactElement => {
   const location = useLocation();
+  const { mutate } = useSignOut();
   const [isMobile, setIsMobile] = useState(false);
 
   const currentCollapsedWidth = isMobile ? 0 : 80;
@@ -117,7 +121,11 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
           {
             key: '/logout',
             icon: <PoweroffOutlinedIcon />,
-            label: <Link to={'/logout'}>Sair</Link>,
+            label: (
+              <Link to={'/login'} onClick={() => mutate()}>
+                Sair
+              </Link>
+            ),
           },
         ]}
       />

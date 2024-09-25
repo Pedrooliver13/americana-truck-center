@@ -142,6 +142,7 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
             size="small"
             bordered
             pagination={{
+              showSizeChanger: true,
               defaultPageSize: 5,
               pageSizeOptions: ['5', '10', '20', '30', '50', '100'],
             }}

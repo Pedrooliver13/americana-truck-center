@@ -13,6 +13,7 @@ export { Breadcrumb } from './breadcrumb';
 export {
   Form,
   Input,
+  InputPassword,
   Select,
   RadioGroup,
   Radio,

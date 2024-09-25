@@ -17,6 +17,7 @@
     "antd-mask-input": "^2.0.7",
     "apexcharts": "^3.49.1",
     "axios": "^1.7.5",
+    "firebase": "^10.13.2",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",

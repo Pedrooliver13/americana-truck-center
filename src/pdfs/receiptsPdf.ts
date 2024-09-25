@@ -48,7 +48,7 @@ export const generateReceiptsPDF = (data: Task) => {
   // Linhas para dados do cliente, agora alinhados em duas colunas
   doc.setFontSize(10);
   const firstColumn = marginLeft;
-  const secondColumn = 140; // Posição horizontal da segunda coluna
+  const secondColumn = 135; // Posição horizontal da segunda coluna
   const lineSpacing = 10; // Espaçamento vertical entre linhas
 
   doc.text(
@@ -57,15 +57,24 @@ export const generateReceiptsPDF = (data: Task) => {
     marginTop + 45
   );
   doc.text(`DATA: ${data?.date ?? ''}`, secondColumn, marginTop + 45);
-  doc.text('CAVALO: TESTE', firstColumn, marginTop + 45 + lineSpacing);
-  doc.text('CARRETA: TESTE', secondColumn, marginTop + 45 + lineSpacing);
+  doc.text(
+    'CAVALO: ___________________________',
+    firstColumn,
+    marginTop + 45 + lineSpacing
+  );
+  doc.text(
+    'CARRETA: ____________________',
+    secondColumn,
+    marginTop + 45 + lineSpacing
+  );
   doc.text(
     'OUTROS: ___________________________',
     firstColumn,
     marginTop + 45 + 2 * lineSpacing
   );
+
   doc.text(
-    `PLACA: ${data?.vehicle ?? ''}`,
+    `PLACA: ${data?.vehicle ?? '_______________________'} `,
     secondColumn,
     marginTop + 45 + 2 * lineSpacing
   );
@@ -84,7 +93,7 @@ export const generateReceiptsPDF = (data: Task) => {
     didDrawCell: (data) => {
       finalY = data.cell.y + data.cell.height;
     },
-    columnStyles: { 0: { cellWidth: 126 } },
+    columnStyles: { 0: { cellWidth: 120 } },
     bodyStyles: { valign: 'top' },
     foot: [['TOTAL DE SERVIÇOS:', data?.services.length]],
   });

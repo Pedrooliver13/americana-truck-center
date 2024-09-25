@@ -7,7 +7,6 @@ export const AvatarContainer = styled.div`
     display: flex;
     align-items: center;
     gap: 15px;
-    max-width: 180px;
     width: 100%;
     cursor: pointer;
 
@@ -17,6 +16,7 @@ export const AvatarContainer = styled.div`
 
     .avatar__infos {
       flex: 1;
+      text-overflow: ellipsis;
 
       @media (max-width: ${theme.breakpoints.MD}) {
         display: none;
@@ -27,6 +27,10 @@ export const AvatarContainer = styled.div`
         line-height: 1;
         font-weight: bold;
         font-size: 1.6rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 120px;
       }
 
       span {

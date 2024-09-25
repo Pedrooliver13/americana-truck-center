@@ -46,10 +46,8 @@ export const HeaderContainer = styled.header`
         justify-content: flex-end;
         align-items: center;
         gap: 20px;
-
         margin-left: auto;
-        max-width: 180px;
-        width: 100%;
+
         cursor: pointer;
 
         @media (max-width: ${theme.breakpoints.MD}) {
