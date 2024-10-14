@@ -1,19 +1,22 @@
 // Packages
 import { ReactElement, useState } from 'react';
-import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 import {
-  EditOutlined as EditOutlinedIcon,
   FileTextOutlined as FileTextOutlinedIcon,
   DeleteOutlined as DeleteOutlinedIcon,
+  EyeOutlined as EyeOutlinedIcon,
 } from '@ant-design/icons';
 
 // Components
-import { Button, Modal, Tag, Tooltip } from 'components/core';
+import { Button, Modal, Table, Tag, Tooltip } from 'components/core';
 import { TableTemplate } from 'components/layout';
 
 // Hooks
-import { useTaskTableTour } from 'hooks/tasks/useTaskTableTour';
 import { useGetColumnSearch } from 'hooks/core';
+import { useTaskTableTour } from 'hooks/tasks/useTaskTableTour';
+import { useGetAllTasks } from 'hooks/tasks/useGetAllTasks';
+import { useDeleteByIdTask } from 'hooks/tasks/useDeleteTaskById';
 
 // Models
 import { Task } from 'models/tasks/tasks';
@@ -27,28 +30,21 @@ import { priceFormatter } from 'utils/formatter';
 interface DataType {
   id: string;
   name: string;
-  registrationNumber: string | number;
+  document: string | number;
   vehicle: string;
-  date: string;
+  createdAt: string;
   total: number;
   status: number;
   services: Array<string>;
 }
 
-const data: Array<Task> = Array(2)
-  .fill(null)
-  .map((_, index) => ({
-    id: `${index}`,
-    registrationNumber: index % 2 === 0 ? '638.822.570-59' : '079.024.590-62',
-    vehicle: index % 2 === 0 ? 'Mercedez Bens' : 'BMW',
-    name: index % 2 === 0 ? 'Júlia' : 'Pedro Oliveira',
-    total: index % 2 === 0 ? 600 : 600,
-    date: index % 2 === 0 ? '27/06/2024' : '10/10/2021',
-    services: ['Lubrificação', 'Troca de óleo', 'Troca de pneu'],
-  }));
-
 export const Tasks = (): ReactElement => {
+  const navigate = useNavigate();
+  const { data, isLoading } = useGetAllTasks();
+  const { mutate } = useDeleteByIdTask();
+
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [removeId, setRemoveId] = useState<string | null>(null);
   const { getColumnSearchProps } = useGetColumnSearch<DataType>();
 
   const { isOpenTourState, steps, ref1, ref2, ref3, ref4, ref5, ref6 } =
@@ -57,6 +53,17 @@ export const Tasks = (): ReactElement => {
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
   };
+
+  const formatedDataToExport = data?.map((item) => {
+    return {
+      NOME: item?.name,
+      DOCUMENTO: item?.document,
+      PLACA: item?.licensePlate,
+      'TOTAL(R$)': item?.total ?? 0,
+      SERVIÇOS: item?.services?.map((service) => service?.name).join(', '),
+      DATA: moment(item?.createdAt?.seconds * 1000).format('DD/MM/YYYY'),
+    };
+  });
 
   return (
     <>
@@ -69,26 +76,47 @@ export const Tasks = (): ReactElement => {
         exports={{
           xlsx: {
             filename: `tabela-de-serviços`,
+            data: formatedDataToExport,
           },
           pdf: {
             filename: `tabela-de-serviços`,
+            data: formatedDataToExport,
           },
         }}
         table={{
           dataSource: data,
+          isLoading,
           rowKey: 'id',
           expandable: {
-            expandedRowRender: () => (
-              <div className="table-template__expands">
-                <h3>Serviços: </h3>
-                <p>
-                  <Tag color="purple">Lubrificação</Tag>
-                  <Tag color="purple">Lubrificação</Tag>
-                  <Tag color="purple">Lubrificação</Tag>
-                  <Tag color="purple">Lubrificação</Tag>
-                </p>
-              </div>
-            ),
+            expandedRowRender: (row) => {
+              return (
+                <Table
+                  dataSource={row?.services}
+                  minHeight="0"
+                  rowKey={'id'}
+                  pagination={false}
+                  columns={[
+                    {
+                      title: 'Serviço',
+                      dataIndex: 'name',
+                      key: 'name',
+                      width: '25%',
+                      render: (value) => <Tag color="blue">{value}</Tag>,
+                    },
+                    {
+                      title: 'Valor',
+                      dataIndex: 'value',
+                      key: 'value',
+                      render: (value) => (
+                        <Tag color="green">
+                          {priceFormatter.format(value ?? 0)}
+                        </Tag>
+                      ),
+                    },
+                  ]}
+                />
+              );
+            },
           },
           columns: [
             {
@@ -101,10 +129,10 @@ export const Tasks = (): ReactElement => {
             },
             {
               title: 'Documento',
-              dataIndex: 'registrationNumber',
-              key: 'registrationNumber',
+              dataIndex: 'document',
+              key: 'document',
               responsive: ['md'],
-              ...getColumnSearchProps('registrationNumber', 'Documento'),
+              ...getColumnSearchProps('document', 'Documento'),
             },
             {
               title: 'Veículo',
@@ -118,7 +146,6 @@ export const Tasks = (): ReactElement => {
               dataIndex: 'total',
               key: 'total',
               sorter: (a, b) => a.total - b.total,
-              sortDirections: ['descend', 'ascend'],
               ...getColumnSearchProps('total', 'Total'),
               render: (value) => (
                 <Tag color="green">{priceFormatter.format(value ?? 0)}</Tag>
@@ -126,11 +153,18 @@ export const Tasks = (): ReactElement => {
             },
             {
               title: 'Data',
-              dataIndex: 'date',
-              key: 'date',
+              dataIndex: 'createdAt',
+              key: 'createdAt',
               responsive: ['md'],
-              ...getColumnSearchProps('date', 'Data'),
-              sorter: (a, b) => a.date.localeCompare(b.date),
+              sorter: (a, b) => {
+                return a?.createdAt?.seconds - b?.createdAt?.seconds;
+              },
+              ...getColumnSearchProps('createdAt', 'Data'),
+              render: (value) => {
+                return (
+                  moment(value.seconds * 1000).format('DD/MM/YYYY HH:mm') ?? '-'
+                );
+              },
             },
             {
               title: 'Ações',
@@ -140,14 +174,15 @@ export const Tasks = (): ReactElement => {
               width: '100px',
               render: (_value, record) => (
                 <div className="table__actions">
-                  <Tooltip title="Editar Serviço">
+                  <Tooltip title="Visualizar Serviço">
                     <>
                       <Button
-                        id="edit-service"
+                        id="visualize-service"
                         type="text"
                         className="table__actions--normal"
-                        icon={<EditOutlinedIcon color="#2B3034" />}
+                        icon={<EyeOutlinedIcon color="#2B3034" />}
                         size="small"
+                        onClick={() => navigate(`/tasks/${record?.id}`)}
                       />
                     </>
                   </Tooltip>
@@ -172,7 +207,10 @@ export const Tasks = (): ReactElement => {
                         icon={<DeleteOutlinedIcon />}
                         type="text"
                         size="small"
-                        onClick={handleToggleModal}
+                        onClick={() => {
+                          setRemoveId(record?.id);
+                          handleToggleModal();
+                        }}
                       />
                     </>
                   </Tooltip>
@@ -182,9 +220,9 @@ export const Tasks = (): ReactElement => {
           ],
           defaultCheckedList: [
             'name',
-            'registrationNumber',
+            'document',
             'total',
-            'date',
+            'createdAt',
             'actions',
           ],
         }}
@@ -209,7 +247,10 @@ export const Tasks = (): ReactElement => {
         onClose={handleToggleModal}
         onCancel={handleToggleModal}
         onOk={() => {
-          toast.success('Serviço excluído com sucesso!');
+          if (removeId) {
+            mutate(String(removeId));
+          }
+
           handleToggleModal();
         }}
         okButtonProps={{ danger: true }}

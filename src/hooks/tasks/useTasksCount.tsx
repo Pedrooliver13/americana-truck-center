@@ -1,62 +1,101 @@
 // Packages
-import { useMemo } from 'react';
-import { UseFormWatch } from 'react-hook-form';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { RadioChangeEvent } from 'antd';
 
 type RadioList = Array<{
+  id: number;
   name: string;
-  label: string;
-  visualValue: string;
-  completeValue: string;
+  value?: number;
+  minValue: string;
+  maxValue: string;
 }>;
 
-interface UseTasksCountProps<T> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  watch: UseFormWatch<T | any>;
-  radioList: RadioList;
-}
-
-export const useTasksCount = <T,>({
-  watch,
-  radioList,
-}: UseTasksCountProps<T>): {
+interface UseTasksCountReturn {
   totalPrice: number;
   totalItems: number;
-  listSelected: Array<{ label: string; value: number }>;
-} => {
-  const fields = watch(radioList.map((item) => item.name));
+  listServices: RadioList;
+  handleChangeAddNewServiceInList: (
+    e: RadioChangeEvent,
+    serviceItem: {
+      id: number;
+      name: string;
+      minValue: string;
+      maxValue: string;
+    }
+  ) => void;
+}
+
+export const useTasksCount = (serviceList: RadioList): UseTasksCountReturn => {
+  const [servicesSelectedList, setServicesSelectedList] =
+    useState<RadioList>(serviceList);
+
+  const pricesSelectedList = servicesSelectedList.map((item) =>
+    Number(item?.value)
+  );
 
   const totalPrice = useMemo(
     () =>
-      fields.reduce(
+      pricesSelectedList.reduce(
         (acc: number, field: number) => (field ? acc + Number(field) : acc),
         0
       ),
-    [fields]
+    [pricesSelectedList]
   );
 
   const totalItems = useMemo(
-    () => fields.filter((field: number) => field > 0).length,
-    [fields]
+    () => pricesSelectedList.filter((field: number) => field > 0).length,
+    [pricesSelectedList]
   );
 
-  const listSelected = useMemo(
-    () =>
-      radioList
-        .map((item, index) => {
-          const currentValue = fields[index];
-          const isSelected = currentValue ? currentValue > 0 : false;
+  const handleChangeAddNewServiceInList = useCallback(
+    (
+      e: RadioChangeEvent,
+      serviceItem: {
+        id: number;
+        name: string;
+        minValue: string;
+        maxValue: string;
+      }
+    ) => {
+      setServicesSelectedList((state) => {
+        if (!Array.isArray(state)) {
+          return [];
+        }
 
-          return isSelected
-            ? { label: item?.label, value: Number(currentValue) }
-            : undefined;
-        })
-        .filter(Boolean),
-    [fields, radioList]
-  ) as Array<{ label: string; value: number }>;
+        const alreadyServiceSelected = state?.find(
+          (item) => item?.id === serviceItem?.id
+        );
+
+        if (e.target.value === '0') {
+          return state.filter((item) => item.id !== serviceItem?.id);
+        }
+
+        if (alreadyServiceSelected) {
+          return state.map((item) => {
+            if (item.id !== serviceItem?.id) {
+              return item;
+            }
+
+            return { ...item, value: e.target.value };
+          });
+        }
+
+        return [...state, { ...serviceItem, value: e.target.value }];
+      });
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (Array.isArray(serviceList) && serviceList.length > 0) {
+      setServicesSelectedList(serviceList);
+    }
+  }, [serviceList]);
 
   return {
     totalPrice,
     totalItems,
-    listSelected,
+    listServices: servicesSelectedList,
+    handleChangeAddNewServiceInList,
   };
 };

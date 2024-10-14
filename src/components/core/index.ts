@@ -12,6 +12,7 @@ export { Breadcrumb } from './breadcrumb';
 // Fields
 export {
   Form,
+  FormItem,
   Input,
   InputPassword,
   Select,

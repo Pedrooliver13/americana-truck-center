@@ -1,9 +1,21 @@
+// Packages
+import { Timestamp } from 'firebase/firestore';
+
 export interface Task {
-  id: number | string;
-  registrationNumber: string;
-  vehicle: string;
+  id: string;
   name: string;
+  document: string;
+  vehicle: string;
+  licensePlate: string;
+  createdAt: Timestamp;
   total: number;
-  date: string;
-  services: Array<string>;
+  status: number;
+  phone: string;
+  services: Array<{
+    id: number;
+    name: string;
+    value?: number;
+    minValue: string;
+    maxValue: string;
+  }>;
 }

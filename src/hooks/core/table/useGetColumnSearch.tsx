@@ -14,17 +14,14 @@ type DataIndex<T> = Extract<keyof T, string>;
 
 export const useGetColumnSearch = <T extends DataType>() => {
   const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
 
   const handleSearch = (
     selectedKeys: string[],
-    confirm: FilterDropdownProps['confirm'],
-    dataIndex: DataIndex<T>
+    confirm: FilterDropdownProps['confirm']
   ) => {
     confirm();
     setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
   };
 
   const handleReset = (clearFilters: () => void) => {
@@ -54,17 +51,13 @@ export const useGetColumnSearch = <T extends DataType>() => {
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setSelectedKeys(e?.target?.value ? [e?.target?.value] : [])
           }
-          onPressEnter={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
-          }
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm)}
           style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
           <Button
             type="primary"
-            onClick={() =>
-              handleSearch(selectedKeys as string[], confirm, dataIndex)
-            }
+            onClick={() => handleSearch(selectedKeys as string[], confirm)}
             icon={<SearchOutlinedIcon />}
             size="small"
             style={{ width: 90 }}
@@ -99,17 +92,16 @@ export const useGetColumnSearch = <T extends DataType>() => {
         setTimeout(() => searchInput.current?.select(), 100);
       }
     },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
+    render: (text) => {
+      return (
         <Highlighter
           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
           searchWords={[searchText]}
           autoEscape
           textToHighlight={text ? text.toString() : '-'}
         />
-      ) : (
-        text ?? '-'
-      ),
+      );
+    },
   });
 
   return {

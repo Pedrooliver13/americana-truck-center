@@ -18,6 +18,10 @@ export const ForgotPasswordContainer = styled.div`
       align-self: center;
     }
 
+    span {
+      font-weight: lighter;
+    }
+
     .header {
       margin-bottom: 30px;
 

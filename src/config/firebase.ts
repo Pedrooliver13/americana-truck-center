@@ -1,6 +1,7 @@
 // Packages
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth/cordova';
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
@@ -14,5 +15,6 @@ const firebaseConfig = {
 
 const appFirebase = initializeApp(firebaseConfig);
 const auth = getAuth(appFirebase);
+const db = getFirestore(appFirebase);
 
-export { appFirebase, auth };
+export { appFirebase, auth, db };

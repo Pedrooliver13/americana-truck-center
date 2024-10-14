@@ -47,13 +47,13 @@ export const ForgotPassword = (): ReactElement => {
     <LoginTemplate>
       <Styled.ForgotPasswordContainer
         className="container"
-        style={{ maxWidth: '400px' }}
+        style={{ maxWidth: '400px', padding: '0 30px' }}
       >
         <div className="header">
           <h1>
             <strong>Redefinir senha!</strong>
           </h1>
-          <span style={{ fontWeight: 'lighter' }}>Esqueceu sua senha?</span>
+          <span>Esqueceu sua senha?</span>
         </div>
 
         <Form className="content" onFinish={handleSubmit(handleLogin)}>
@@ -61,6 +61,7 @@ export const ForgotPassword = (): ReactElement => {
             <Col xs={24} md={24}>
               <FormItem control={control} name="email">
                 <Input
+                  id="email"
                   name="email"
                   placeholder="E-mail"
                   autoComplete="off"

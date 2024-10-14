@@ -1,11 +1,12 @@
 // Packages
 import { ReactElement, useEffect, useState } from 'react';
-import { Divider, Empty } from 'antd';
+import { Divider, Empty, Tour } from 'antd';
 import { useForm } from 'react-hook-form';
 import { FormItem } from 'react-hook-form-antd';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { QuestionCircleOutlined as QuestionCircleOutlinedIcon } from '@ant-design/icons';
+import moment from 'moment';
 import * as zod from 'zod';
 
 // Components
@@ -27,10 +28,16 @@ import {
 
 // Hooks
 import { useTasksCount } from 'hooks/tasks/useTasksCount';
+import { usePostTask } from 'hooks/tasks/usePostTask';
+import { useGetByIdTask } from 'hooks/tasks/useGetByIdTask';
+import { useTaskFormTour } from 'hooks/tasks/useTaskFormTour';
 
 // Utils
 import { Masks } from 'utils/masks';
 import { priceFormatter } from 'utils/formatter';
+
+// Models
+import { PostTask } from 'models/tasks/postTasks';
 
 // Styles
 import * as Styled from './styles';
@@ -38,7 +45,7 @@ import * as Styled from './styles';
 const schema = zod.object({
   name: zod.string().min(1, { message: 'Campo obrigatório' }),
   phone: zod.string().min(1, { message: 'Campo obrigatório' }).nullable(),
-  document: zod.string().nullable(),
+  document: zod.string().min(1, { message: 'Campo obrigatório' }).nullable(),
   vehicle: zod.string().nullable(),
   client: zod.string().optional().nullable(),
   licensePlate: zod.string().nullable(),
@@ -46,36 +53,42 @@ const schema = zod.object({
 
 type FormValues = zod.infer<typeof schema>;
 
-export const TasksForm = (): ReactElement => {
-  const washData = [
-    {
-      name: 'washTankRadio',
-      label: 'Lavagem Tanque',
-      visualValue: '100',
-      completeValue: '200',
-    },
-    {
-      name: 'cavaloRadio',
-      label: 'Lavagem Tanque 2',
-      visualValue: '100',
-      completeValue: '200',
-    },
-    {
-      name: 'teste',
-      label: 'Lavagem Teste',
-      visualValue: '100',
-      completeValue: '200',
-    },
-    {
-      name: 'teste2',
-      label: 'Lavagem Teste3',
-      visualValue: '100',
-      completeValue: '200',
-    },
-  ];
+const washData = [
+  {
+    id: 123,
+    name: 'Lavagem Tanque',
+    minValue: '100',
+    maxValue: '200',
+  },
+  {
+    id: 431,
+    name: 'Lavagem Tanque 2',
+    minValue: '100',
+    maxValue: '200',
+  },
+  {
+    id: 1231,
+    name: 'Lavagem Teste',
+    minValue: '100',
+    maxValue: '200',
+  },
+];
 
+export const TasksForm = (): ReactElement => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const { data } = useGetByIdTask(id);
+  const { mutate, isPending } = usePostTask();
   const [isOpenModal, setIsOpenModal] = useState(false);
+
+  const { isOpenTourState, steps, ref1, ref2, ref3 } = useTaskFormTour();
+
+  const {
+    totalPrice,
+    totalItems,
+    listServices,
+    handleChangeAddNewServiceInList,
+  } = useTasksCount(data?.services ?? []);
 
   const {
     control,
@@ -93,21 +106,26 @@ export const TasksForm = (): ReactElement => {
       licensePlate: '',
       ...Object.fromEntries(washData.map((item) => [item.name, '0'])),
     },
+    values: data,
     resolver: zodResolver(schema),
-  });
-
-  const { totalPrice, totalItems, listSelected } = useTasksCount<FormValues>({
-    watch,
-    radioList: washData,
   });
 
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
   };
 
-  const handleNewItem = (): void => {
+  const handleNewItem = async (): Promise<void> => {
     const value = watch();
-    console.log(value);
+
+    const prepareData = {
+      ...value,
+      licensePlate: value.licensePlate?.toUpperCase(),
+      total: totalPrice,
+      services: listServices,
+      createdAt: data?.createdAt ?? moment().format('YYYY-MM-DD'),
+    };
+
+    mutate(prepareData as PostTask);
   };
 
   useEffect(() => {
@@ -122,7 +140,10 @@ export const TasksForm = (): ReactElement => {
             Adicionar serviço
             <Tooltip title="Fazer tour da página" placement="bottom">
               <>
-                <QuestionCircleOutlinedIcon id="info-icon" />
+                <QuestionCircleOutlinedIcon
+                  id="info-icon"
+                  onClick={() => isOpenTourState[1](true)}
+                />
               </>
             </Tooltip>
           </h1>
@@ -130,9 +151,8 @@ export const TasksForm = (): ReactElement => {
             <Button onClick={handleToggleModal}>Voltar</Button>
           </div>
         </div>
-
         <Form onFinish={handleSubmit(handleNewItem)} className="tasks-form">
-          <Card className="tasks-form__fields">
+          <Card className="tasks-form__fields" ref={ref1}>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
               <Col xs={24} md={24}>
                 <FormItem control={control} name="name">
@@ -155,6 +175,7 @@ export const TasksForm = (): ReactElement => {
                     placeholder="Documento"
                     autoComplete="off"
                     firstmasklength={11}
+                    status={errors?.document ? 'error' : ''}
                     mask={[
                       {
                         mask: Masks.CPF,
@@ -196,7 +217,11 @@ export const TasksForm = (): ReactElement => {
                 </FormItem>
               </Col>
               <Col xs={24} md={12}>
-                <FormItem control={control} name="licensePlate">
+                <FormItem
+                  control={control}
+                  name="licensePlate"
+                  className="licensePlate"
+                >
                   <MaskedInput
                     id="licensePlate"
                     label="Placa do veículo"
@@ -232,27 +257,53 @@ export const TasksForm = (): ReactElement => {
               </Col>
               <Divider />
               {washData.map((item) => (
-                <Col xs={24} md={24} lg={12} key={item?.name}>
+                <Col
+                  xs={24}
+                  md={24}
+                  lg={24}
+                  key={item?.name}
+                  style={{ marginBottom: '5px' }}
+                >
                   <FormItem
                     control={control}
                     name={item?.name as keyof FormValues}
                   >
                     <RadioGroup
-                      label={item?.label}
+                      label={item?.name}
                       id={item?.name}
                       size="large"
                       buttonStyle="solid"
                     >
-                      <Radio value={item?.completeValue}>Completo</Radio>
                       <Radio
-                        value={{
-                          service: item?.name,
-                          value: item?.visualValue,
-                        }}
+                        value={item?.maxValue}
+                        onChange={(e) =>
+                          handleChangeAddNewServiceInList(e, item)
+                        }
                       >
-                        Visual
+                        Completo:{' '}
+                        {priceFormatter
+                          .format(+item?.maxValue)
+                          .replace('R$ ', '')}
                       </Radio>
-                      <Radio value={'0'}>Nenhum</Radio>
+                      <Radio
+                        value={item?.minValue}
+                        onChange={(e) =>
+                          handleChangeAddNewServiceInList(e, item)
+                        }
+                      >
+                        VISUAL:{' '}
+                        {priceFormatter
+                          .format(+item?.minValue)
+                          .replace('R$ ', '')}
+                      </Radio>
+                      <Radio
+                        value={'0'}
+                        onChange={(e) =>
+                          handleChangeAddNewServiceInList(e, item)
+                        }
+                      >
+                        Nenhum
+                      </Radio>
                     </RadioGroup>
                   </FormItem>
                 </Col>
@@ -261,23 +312,21 @@ export const TasksForm = (): ReactElement => {
           </Card>
 
           <Card className="tasks-form__price">
-            <div className="tasks-form__services">
+            <div className="tasks-form__services" ref={ref2}>
               <strong>Serviços Selecionados:</strong>
               {totalItems > 0 && (
-                <>
-                  <ul>
-                    {listSelected.map((item) => (
-                      <li key={item.label}>
-                        <p>{item.label}</p>
-                        <span>
-                          <Tag color="green">
-                            {priceFormatter.format(+item.value)}
-                          </Tag>
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </>
+                <ul>
+                  {listServices.map((item) => (
+                    <li key={item?.id}>
+                      <p>{item?.name}</p>
+                      <span>
+                        <Tag color="green">
+                          {priceFormatter.format(Number(item?.value) ?? 0)}
+                        </Tag>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               )}
               {totalItems <= 0 && (
                 <Empty
@@ -299,16 +348,28 @@ export const TasksForm = (): ReactElement => {
               </div>
             </div>
 
-            <div className="tasks-form__price--footer">
+            <div className="tasks-form__price--footer" ref={ref3}>
               <Button size="large" type="default" onClick={handleToggleModal}>
                 Cancelar
               </Button>
-              <Button size="large" type="primary" htmlType="submit">
+              <Button
+                size="large"
+                type="primary"
+                htmlType="submit"
+                loading={isPending}
+                disabled={Boolean(id)}
+              >
                 Salvar
               </Button>
             </div>
           </Card>
         </Form>
+        <Tour
+          open={isOpenTourState[0]}
+          onClose={() => isOpenTourState[1](false)}
+          steps={steps}
+          zIndex={999999}
+        />
       </Styled.TasksFormContainer>
       <Modal
         title="Desejar cancelar a operação?"

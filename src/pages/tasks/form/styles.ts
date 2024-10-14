@@ -20,7 +20,7 @@ export const TasksFormContainer = styled.div`
       h1 {
         display: flex;
         gap: 10px;
-        font-size: 2.5rem;
+        font-size: 2rem;
 
         #info-icon {
           font-size: 1.5rem;
@@ -39,6 +39,14 @@ export const TasksFormContainer = styled.div`
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
+
+      .licensePlate input {
+        text-transform: uppercase;
+
+        &::placeholder {
+          text-transform: none;
+        }
+      }
 
       &__fields {
         width: 650px;

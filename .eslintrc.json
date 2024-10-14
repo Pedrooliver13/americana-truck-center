@@ -16,6 +16,7 @@
         "Packages": [
           { "path": "react" },
           { "path": "firebase" },
+          { "path": "moment" },
           { "path": "antd" },
           { "path": "date-fns" },
           { "path": "vite" },

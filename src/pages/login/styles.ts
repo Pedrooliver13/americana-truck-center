@@ -72,6 +72,10 @@ export const LoginContainer = styled.div`
         align-self: center;
       }
 
+      span {
+        font-weight: lighter;
+      }
+
       &__header {
         margin-bottom: 30px;
 

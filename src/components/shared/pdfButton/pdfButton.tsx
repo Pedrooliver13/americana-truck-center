@@ -43,6 +43,7 @@ export const PdfButtonBase = (
     autoTable(doc, {
       head: [Object.keys(props?.data[0])],
       body: values,
+      bodyStyles: { fontSize: 10 },
     });
 
     doc.save(`${props?.filename}-${new Date().toLocaleDateString()}.pdf`);

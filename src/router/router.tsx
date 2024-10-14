@@ -32,6 +32,7 @@ export const Router = (): ReactElement => {
       >
         <Route path="/" element={<Dashboard />} />
         <Route path="/tasks" element={<Tasks />} />
+        <Route path="/tasks/:id" element={<TasksForm />} />
         <Route path="/tasks/new" element={<TasksForm />} />
         <Route path="/clients" element={<ClientsTable />} />
         <Route path="/clients/new" element={<ClientForm />} />

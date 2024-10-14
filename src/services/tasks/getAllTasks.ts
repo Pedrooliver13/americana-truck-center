@@ -1,14 +1,18 @@
-// Services
-import { api } from 'services/axios';
+// Packages
+import { db } from 'config/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
-// Models
-import { PokemonType, GetAllPokemonResponse } from 'models/tasks/pokemon';
-
-export const getAllPokemon = async (): Promise<Array<PokemonType>> => {
+export const getAllTasks = async () => {
   try {
-    const response = await api.get<GetAllPokemonResponse>('/pokemon');
-    return response.data?.results;
+    const query = await getDocs(collection(db, 'tasks'));
+
+    const response = query.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return response;
   } catch (error) {
-    throw new Error();
+    console.error('Error getting documents: ', error);
   }
 };

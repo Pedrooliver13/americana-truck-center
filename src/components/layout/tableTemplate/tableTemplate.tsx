@@ -1,7 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 // Packages
-import { ReactElement, ChangeEvent, RefObject, useState } from 'react';
+import {
+  ReactElement,
+  ChangeEvent,
+  RefObject,
+  useState,
+  useCallback,
+  useEffect,
+} from 'react';
 import { TableProps, Tour } from 'antd';
 import { Link } from 'react-router-dom';
 import {
@@ -36,9 +43,11 @@ interface TableTemplateProps {
   exports: {
     xlsx: {
       filename: string;
+      data?: Array<any>;
     };
     pdf: {
       filename: string;
+      data?: Array<any>;
     };
   };
   tour: {
@@ -54,7 +63,7 @@ interface TableTemplateProps {
 }
 
 export const TableTemplate = (props: TableTemplateProps): ReactElement => {
-  const [filteredData, setFilteredData] = useState(props?.table?.dataSource);
+  const [filteredData, setFilteredData] = useState<Array<any> | null>(null);
 
   const { newColumns, options, checkedList, setCheckedList } =
     useGetHiddenColumns({
@@ -62,18 +71,27 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
       defaultCheckedList: props?.table?.defaultCheckedList as Array<string>,
     });
 
-  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    const search = event.target.value.toLowerCase();
-    const data = props?.table?.dataSource as Array<any>;
+  const handleSearch = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const search = event.target.value.toLowerCase();
+      const data = props?.table?.dataSource as Array<any>;
 
-    const filteredData = data.filter((item) => {
-      return Object.keys(item).some((key) => {
-        return String(item[key]).toLowerCase().includes(search);
+      const filteredData = data.filter((item) => {
+        return Object.keys(item).some((key) => {
+          return String(item[key]).toLowerCase().includes(search);
+        });
       });
-    });
 
-    setFilteredData(filteredData);
-  };
+      setFilteredData(filteredData);
+    },
+    [props.table.dataSource, setFilteredData]
+  );
+
+  useEffect(() => {
+    setFilteredData(
+      props?.table?.isLoading ? null : (props.table.dataSource as Array<any>)
+    );
+  }, [props.table.dataSource, props?.table?.isLoading]);
 
   return (
     <Styled.TableTemplateContainer className="container">
@@ -117,12 +135,12 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
           <div className="table-template-card__actions--columns">
             <XlsxButton
               filename={props?.exports?.xlsx?.filename}
-              data={props?.table?.dataSource as Array<any>}
+              data={props?.exports?.xlsx?.data as Array<any>}
               ref={props?.tour?.ref3}
             />
             <PdfButton
               filename={props?.exports?.pdf?.filename}
-              data={props?.table?.dataSource as Array<any>}
+              data={props?.exports?.pdf?.data as Array<any>}
               ref={props?.tour?.ref4}
             />
             <ButtonHideColumns
@@ -135,7 +153,7 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
         <div ref={props?.tour?.ref6}>
           <Table
             {...props?.table}
-            dataSource={filteredData}
+            dataSource={filteredData ?? props?.table?.dataSource}
             id="table-template"
             data-cy="table-template"
             columns={newColumns}

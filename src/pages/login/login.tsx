@@ -64,7 +64,7 @@ export const Login = (): ReactElement => {
           <h1>
             <strong>Olá!</strong>
           </h1>
-          <span style={{ fontWeight: 'lighter' }}>Bem-vindo de volta!</span>
+          <span>Bem-vindo de volta!</span>
         </div>
 
         <Form className="login__content" onFinish={handleSubmit(handleLogin)}>
@@ -72,6 +72,7 @@ export const Login = (): ReactElement => {
             <Col xs={24} md={24}>
               <FormItem control={control} name="email">
                 <Input
+                  id="email"
                   name="email"
                   placeholder="E-mail"
                   autoComplete="off"
@@ -83,6 +84,7 @@ export const Login = (): ReactElement => {
             <Col xs={24} md={24}>
               <FormItem control={control} name="password">
                 <InputPassword
+                  id="password"
                   name="password"
                   placeholder="Senha"
                   autoComplete="off"

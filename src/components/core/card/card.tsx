@@ -1,5 +1,5 @@
 // Packages
-import { ReactElement, ReactNode } from 'react';
+import { forwardRef, ReactElement, ReactNode } from 'react';
 import { CardProps as CardAntDesignProps } from 'antd';
 
 // Styles
@@ -9,6 +9,15 @@ interface CardProps extends CardAntDesignProps {
   children: ReactNode;
 }
 
-export const Card = (props: CardProps): ReactElement => {
-  return <Styled.CardContainer {...props} />;
+export const CardBase = (
+  props: CardProps,
+  ref:
+    | ((instance: HTMLDivElement | null) => void)
+    | React.RefObject<HTMLDivElement>
+    | null
+    | undefined
+): ReactElement => {
+  return <Styled.CardContainer {...props} ref={ref} />;
 };
+
+export const Card = forwardRef<HTMLDivElement, CardProps>(CardBase);

@@ -1,6 +1,7 @@
 // Packages
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import moment from 'moment';
 
 // Models
 import { Task } from 'models/tasks/tasks';
@@ -31,9 +32,9 @@ export const generateReceiptsPDF = (data: Task) => {
   const phoneRightMargin = 15; // Distância da margem direita
   const phoneTextX = pageWidth - phoneRightMargin; // Posição X para o texto alinhado à direita
 
-  // Número do recibo
-  doc.setFontSize(12);
-  doc.text(`Nº: ${data?.id}`, phoneTextX, marginTop + 5, { align: 'right' });
+  // // Número do recibo
+  // doc.setFontSize(12);
+  // doc.text(`Nº: ${data?.id}`, phoneTextX, marginTop + 5, { align: 'right' });
 
   // Telefones
   doc.setFontSize(10);
@@ -56,7 +57,13 @@ export const generateReceiptsPDF = (data: Task) => {
     firstColumn,
     marginTop + 45
   );
-  doc.text(`DATA: ${data?.date ?? ''}`, secondColumn, marginTop + 45);
+  doc.text(
+    `DATA: ${
+      moment(data?.createdAt.seconds * 1000).format('DD/MM/YYYY') ?? ''
+    }`,
+    secondColumn,
+    marginTop + 45
+  );
   doc.text(
     'CAVALO: ___________________________',
     firstColumn,
@@ -74,7 +81,7 @@ export const generateReceiptsPDF = (data: Task) => {
   );
 
   doc.text(
-    `PLACA: ${data?.vehicle ?? '_______________________'} `,
+    `PLACA: ${data?.licensePlate ?? '_______________________'} `,
     secondColumn,
     marginTop + 45 + 2 * lineSpacing
   );
@@ -82,8 +89,10 @@ export const generateReceiptsPDF = (data: Task) => {
   // Variável para armazenar o último Y
   let finalY;
 
+  // transforme esse service: [{  }]
+
   const body = data?.services.length
-    ? data?.services.map((service) => [service, '1x'])
+    ? data?.services.map((service) => [service?.name, '1x'])
     : [];
 
   autoTable(doc, {
@@ -114,14 +123,18 @@ export const generateReceiptsPDF = (data: Task) => {
       marginLeft,
       finalY + 40
     );
-    doc.text(`${data?.registrationNumber ?? ''}`, 147, finalY + 39);
+    doc.text(`${data?.document ?? ''}`, 147, finalY + 39);
     doc.text(
-      'Documento do Cliente: ___________________________',
+      'Documento do Cliente: _________________________',
       110,
       finalY + 40
     );
   }
 
   // Salvar o PDF
-  doc.save(`${data?.name}-${data?.date}.pdf`);
+  doc.save(
+    `${data?.name}-${moment(data.createdAt.seconds * 1000).format(
+      'DD/MM/YYYY'
+    )}.pdf`
+  );
 };
