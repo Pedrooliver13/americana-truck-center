@@ -1,5 +1,6 @@
 // Components
 export { Input } from './input';
+export { InputNumber } from './inputNumber';
 export { InputPassword } from './inputPassword';
 export { MaskedInput } from './maskedInput';
 export { Radio } from './radio';

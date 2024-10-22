@@ -7,7 +7,6 @@ import {
   CarOutlined as CarOutlinedIcon,
   UserOutlined as UserOutlinedIcon,
   DollarOutlined as DollarOutlinedIcon,
-  PieChartOutlined as PieChartOutlinedIcon,
   SettingOutlined as SettingOutlinedIcon,
   PoweroffOutlined as PoweroffOutlinedIcon,
 } from '@ant-design/icons';
@@ -100,12 +99,6 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
             key: '/prices',
             icon: <DollarOutlinedIcon />,
             label: <Link to={'/prices'}>Preços</Link>,
-          },
-          {
-            key: '/reports',
-            icon: <PieChartOutlinedIcon />,
-            label: <span>Relatórios</span>,
-            disabled: true,
           },
 
           /* FOOTER */

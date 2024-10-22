@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { RadioChangeEvent } from 'antd';
 
 type RadioList = Array<{
-  id: number;
+  id: string;
   name: string;
   value?: number;
   minValue: string;
@@ -17,7 +17,7 @@ interface UseTasksCountReturn {
   handleChangeAddNewServiceInList: (
     e: RadioChangeEvent,
     serviceItem: {
-      id: number;
+      id: string;
       name: string;
       minValue: string;
       maxValue: string;
@@ -51,28 +51,31 @@ export const useTasksCount = (serviceList: RadioList): UseTasksCountReturn => {
     (
       e: RadioChangeEvent,
       serviceItem: {
-        id: number;
+        id: string;
         name: string;
         minValue: string;
         maxValue: string;
       }
     ) => {
-      setServicesSelectedList((state) => {
+      setServicesSelectedList((state: RadioList) => {
         if (!Array.isArray(state)) {
           return [];
         }
 
         const alreadyServiceSelected = state?.find(
-          (item) => item?.id === serviceItem?.id
+          (item) => String(item?.id) === String(serviceItem?.id)
         );
 
         if (e.target.value === '0') {
-          return state.filter((item) => item.id !== serviceItem?.id);
+          return state.filter(
+            (item) => String(item.id) !== String(serviceItem?.id)
+          );
         }
 
+        // ? Para não adicionar duplicado na conta
         if (alreadyServiceSelected) {
           return state.map((item) => {
-            if (item.id !== serviceItem?.id) {
+            if (String(item.id) !== String(serviceItem?.id)) {
               return item;
             }
 

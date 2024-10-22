@@ -17,6 +17,7 @@
           { "path": "react" },
           { "path": "firebase" },
           { "path": "moment" },
+          { "path": "use-context-selector" },
           { "path": "antd" },
           { "path": "date-fns" },
           { "path": "vite" },

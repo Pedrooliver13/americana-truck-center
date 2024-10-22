@@ -33,6 +33,8 @@ interface DataType {
   document: string | number;
   vehicle: string;
   createdAt: string;
+  licensePlate: string;
+  phone: string;
   total: number;
   status: number;
   services: Array<string>;
@@ -40,11 +42,13 @@ interface DataType {
 
 export const Tasks = (): ReactElement => {
   const navigate = useNavigate();
-  const { data, isLoading } = useGetAllTasks();
+
+  const { data, isFetching } = useGetAllTasks();
   const { mutate } = useDeleteByIdTask();
 
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [removeId, setRemoveId] = useState<string | null>(null);
+
   const { getColumnSearchProps } = useGetColumnSearch<DataType>();
 
   const { isOpenTourState, steps, ref1, ref2, ref3, ref4, ref5, ref6 } =
@@ -85,7 +89,7 @@ export const Tasks = (): ReactElement => {
         }}
         table={{
           dataSource: data,
-          isLoading,
+          isLoading: isFetching,
           rowKey: 'id',
           expandable: {
             expandedRowRender: (row) => {
@@ -123,7 +127,7 @@ export const Tasks = (): ReactElement => {
               title: 'Nome',
               dataIndex: 'name',
               key: 'name',
-              width: '25%',
+              width: '20%',
               sorter: (a, b) => a.name.localeCompare(b.name),
               ...getColumnSearchProps('name', 'Nome'),
             },
@@ -135,11 +139,25 @@ export const Tasks = (): ReactElement => {
               ...getColumnSearchProps('document', 'Documento'),
             },
             {
+              title: 'Contato',
+              dataIndex: 'phone',
+              key: 'phone',
+              responsive: ['md'],
+              ...getColumnSearchProps('phone', 'Contato'),
+            },
+            {
               title: 'Veículo',
               dataIndex: 'vehicle',
               key: 'vehicle',
               responsive: ['md'],
               ...getColumnSearchProps('vehicle', 'Veículo'),
+            },
+            {
+              title: 'Placa do Veículo',
+              dataIndex: 'licensePlate',
+              key: 'licensePlate',
+              responsive: ['md'],
+              ...getColumnSearchProps('licensePlate', 'Placa do Veículo'),
             },
             {
               title: 'Total',

@@ -1,5 +1,5 @@
 // Packages
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { Divider, Empty, Tour } from 'antd';
 import { useForm } from 'react-hook-form';
 import { FormItem } from 'react-hook-form-antd';
@@ -31,6 +31,7 @@ import { useTasksCount } from 'hooks/tasks/useTasksCount';
 import { usePostTask } from 'hooks/tasks/usePostTask';
 import { useGetByIdTask } from 'hooks/tasks/useGetByIdTask';
 import { useTaskFormTour } from 'hooks/tasks/useTaskFormTour';
+import { useGetAllPrices } from 'hooks/prices/useGetAllPrices';
 
 // Utils
 import { Masks } from 'utils/masks';
@@ -53,33 +54,14 @@ const schema = zod.object({
 
 type FormValues = zod.infer<typeof schema>;
 
-const washData = [
-  {
-    id: 123,
-    name: 'Lavagem Tanque',
-    minValue: '100',
-    maxValue: '200',
-  },
-  {
-    id: 431,
-    name: 'Lavagem Tanque 2',
-    minValue: '100',
-    maxValue: '200',
-  },
-  {
-    id: 1231,
-    name: 'Lavagem Teste',
-    minValue: '100',
-    maxValue: '200',
-  },
-];
-
 export const TasksForm = (): ReactElement => {
   const navigate = useNavigate();
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
   const { id } = useParams();
   const { data } = useGetByIdTask(id);
-  const { mutate, isPending } = usePostTask();
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const { data: dataPrices } = useGetAllPrices(id);
+  const { mutateAsync, isPending } = usePostTask();
 
   const { isOpenTourState, steps, ref1, ref2, ref3 } = useTaskFormTour();
 
@@ -96,6 +78,7 @@ export const TasksForm = (): ReactElement => {
     setFocus,
     watch,
     formState: { errors },
+    setValue,
   } = useForm<FormValues>({
     defaultValues: {
       name: '',
@@ -104,11 +87,22 @@ export const TasksForm = (): ReactElement => {
       vehicle: '',
       client: null,
       licensePlate: '',
-      ...Object.fromEntries(washData.map((item) => [item.name, '0'])),
     },
     values: data,
     resolver: zodResolver(schema),
   });
+
+  const servicesOptions = useMemo(() => {
+    const services = data?.services ?? dataPrices ?? [];
+
+    if (!id) {
+      services.forEach((item) => {
+        setValue(item?.name as keyof FormValues, '0');
+      });
+    }
+
+    return services;
+  }, [data?.services, dataPrices, setValue, id]);
 
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
@@ -119,13 +113,13 @@ export const TasksForm = (): ReactElement => {
 
     const prepareData = {
       ...value,
-      licensePlate: value.licensePlate?.toUpperCase(),
+      licensePlate: value?.licensePlate?.toUpperCase(),
       total: totalPrice,
       services: listServices,
       createdAt: data?.createdAt ?? moment().format('YYYY-MM-DD'),
     };
 
-    mutate(prepareData as PostTask);
+    await mutateAsync(prepareData as PostTask);
   };
 
   useEffect(() => {
@@ -164,6 +158,7 @@ export const TasksForm = (): ReactElement => {
                     showCount
                     maxLength={150}
                     required
+                    disabled={Boolean(id)}
                   />
                 </FormItem>
               </Col>
@@ -175,6 +170,7 @@ export const TasksForm = (): ReactElement => {
                     placeholder="Documento"
                     autoComplete="off"
                     firstmasklength={11}
+                    disabled={Boolean(id)}
                     status={errors?.document ? 'error' : ''}
                     mask={[
                       {
@@ -195,6 +191,7 @@ export const TasksForm = (): ReactElement => {
                     id="phone"
                     label="Celular"
                     placeholder="Celular"
+                    disabled={Boolean(id)}
                     status={errors?.phone ? 'error' : ''}
                     mask={[
                       {
@@ -213,6 +210,7 @@ export const TasksForm = (): ReactElement => {
                     placeholder="Modelo do Veículo"
                     autoComplete="off"
                     maxLength={150}
+                    disabled={Boolean(id)}
                   />
                 </FormItem>
               </Col>
@@ -227,6 +225,7 @@ export const TasksForm = (): ReactElement => {
                     label="Placa do veículo"
                     placeholder="Placa do Veículo"
                     autoComplete="off"
+                    disabled={Boolean(id)}
                     mask={[
                       {
                         mask: 'aaa-0*00',
@@ -246,6 +245,7 @@ export const TasksForm = (): ReactElement => {
                     label="Vincular cliente"
                     allowClear
                     autoClearSearchValue
+                    disabled={Boolean(id)}
                     options={[
                       {
                         value: 'jack',
@@ -256,7 +256,7 @@ export const TasksForm = (): ReactElement => {
                 </FormItem>
               </Col>
               <Divider />
-              {washData.map((item) => (
+              {servicesOptions.map((item) => (
                 <Col
                   xs={24}
                   md={24}
@@ -269,10 +269,11 @@ export const TasksForm = (): ReactElement => {
                     name={item?.name as keyof FormValues}
                   >
                     <RadioGroup
-                      label={item?.name}
+                      label={`${item?.name}:`}
                       id={item?.name}
                       size="large"
                       buttonStyle="solid"
+                      disabled={Boolean(id)}
                     >
                       <Radio
                         value={item?.maxValue}
@@ -364,13 +365,13 @@ export const TasksForm = (): ReactElement => {
             </div>
           </Card>
         </Form>
-        <Tour
-          open={isOpenTourState[0]}
-          onClose={() => isOpenTourState[1](false)}
-          steps={steps}
-          zIndex={999999}
-        />
       </Styled.TasksFormContainer>
+      <Tour
+        open={isOpenTourState[0]}
+        onClose={() => isOpenTourState[1](false)}
+        steps={steps}
+        zIndex={999999}
+      />
       <Modal
         title="Desejar cancelar a operação?"
         open={isOpenModal}

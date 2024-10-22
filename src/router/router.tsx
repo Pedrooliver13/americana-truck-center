@@ -8,13 +8,16 @@ import { Routes, Route } from 'react-router-dom';
 import { DefaultLayout } from 'components/layout';
 
 // Pages
+import { Login } from 'pages/login';
+import { ForgotPassword } from 'pages/forgotPassword';
 import { Dashboard } from 'pages/dashboard';
 import { Tasks, TasksForm } from 'pages/tasks';
 import { ClientsTable, ClientForm } from 'pages/clients';
-import { PricesTable } from 'pages/prices';
-import { Login } from 'pages/login';
-import { ForgotPassword } from 'pages/forgotPassword';
+import { PricesTable, PricesForm } from 'pages/prices';
 import { Page404 } from 'pages/page404';
+
+// Contexts
+import { PriceContextLayout } from 'contexts/priceContext';
 
 export const Router = (): ReactElement => {
   return (
@@ -36,7 +39,12 @@ export const Router = (): ReactElement => {
         <Route path="/tasks/new" element={<TasksForm />} />
         <Route path="/clients" element={<ClientsTable />} />
         <Route path="/clients/new" element={<ClientForm />} />
-        <Route path="/prices" element={<PricesTable />} />
+
+        <Route element={<PriceContextLayout />}>
+          <Route path="/prices" element={<PricesTable />} />
+          <Route path="/prices/new" element={<PricesForm />} />
+          <Route path="/prices/:id" element={<PricesForm />} />
+        </Route>
       </Route>
 
       <Route
