@@ -15,8 +15,8 @@ import { TableTemplate } from 'components/layout';
 // Hooks
 import { useGetColumnSearch } from 'hooks/core';
 import { useTaskTableTour } from 'hooks/tasks/useTaskTableTour';
-import { useGetAllTasks } from 'hooks/tasks/useGetAllTasks';
 import { useDeleteByIdTask } from 'hooks/tasks/useDeleteTaskById';
+import { useTasksContext } from 'hooks/tasks/useTasksContext';
 
 // Models
 import { Task } from 'models/tasks/tasks';
@@ -42,8 +42,8 @@ interface DataType {
 
 export const Tasks = (): ReactElement => {
   const navigate = useNavigate();
+  const { tasksList, formatedDataToExport, isLoading } = useTasksContext();
 
-  const { data, isFetching } = useGetAllTasks();
   const { mutate } = useDeleteByIdTask();
 
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -57,17 +57,6 @@ export const Tasks = (): ReactElement => {
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
   };
-
-  const formatedDataToExport = data?.map((item) => {
-    return {
-      NOME: item?.name,
-      DOCUMENTO: item?.document,
-      PLACA: item?.licensePlate,
-      'TOTAL(R$)': item?.total ?? 0,
-      SERVIÇOS: item?.services?.map((service) => service?.name).join(', '),
-      DATA: moment(item?.createdAt?.seconds * 1000).format('DD/MM/YYYY'),
-    };
-  });
 
   return (
     <>
@@ -88,8 +77,8 @@ export const Tasks = (): ReactElement => {
           },
         }}
         table={{
-          dataSource: data,
-          isLoading: isFetching,
+          dataSource: tasksList,
+          isLoading: isLoading,
           rowKey: 'id',
           expandable: {
             expandedRowRender: (row) => {

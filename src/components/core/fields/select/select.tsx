@@ -29,9 +29,11 @@ const SelectBase = (
   return (
     <Styled.SelectContainer>
       {props.label && (
-        <Typography.Title level={5}>
-          {props.label} {props?.required && '*'}
-        </Typography.Title>
+        <label htmlFor={props.id}>
+          <Typography.Title level={5}>
+            {props.label} {props?.required && '*'}
+          </Typography.Title>
+        </label>
       )}
       <SelectAntDesign ref={ref} size="large" {...props} />
     </Styled.SelectContainer>

@@ -45,9 +45,17 @@ const schema = zod
     const minValue = convertCurrencyToNumber(values?.minValue);
     const maxValue = convertCurrencyToNumber(values?.maxValue);
 
-    if (Number(minValue) > Number(maxValue)) {
+    if (Number(minValue) >= Number(maxValue)) {
       ctx.addIssue({
-        message: 'O Preço visual não pode ser maior que o preço completo',
+        message: 'O Preço visual não pode ser maior ou igual ao preço completo',
+        code: 'custom',
+        path: ['minValue'],
+      });
+    }
+
+    if (Number(minValue) < 0 || Number(maxValue) < 0) {
+      ctx.addIssue({
+        message: 'Os valores não podem ser negativos',
         code: 'custom',
         path: ['minValue'],
       });
@@ -102,7 +110,7 @@ export const PricesForm = (): ReactElement => {
       <Styled.PriceFormContainer className="container">
         <div className="prices__header">
           <h1>
-            Adicionar Preço
+            {id ? 'Editar Preço' : 'Adicionar Preço'}
             <Tooltip title="Fazer tour da página" placement="bottom">
               <>
                 <QuestionCircleOutlinedIcon

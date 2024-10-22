@@ -23,13 +23,15 @@ export const MaskedInputBase = (
   return (
     <Styled.InputContainer>
       {props.label && (
-        <Typography.Title
-          level={5}
-          className="label"
-          disabled={props?.disabled}
-        >
-          {props.label} {props?.required && '*'}
-        </Typography.Title>
+        <label htmlFor={props?.id}>
+          <Typography.Title
+            level={5}
+            className="label"
+            disabled={props?.disabled}
+          >
+            {props.label} {props?.required && '*'}
+          </Typography.Title>
+        </label>
       )}
       <MaskInputAntDesign
         ref={ref}

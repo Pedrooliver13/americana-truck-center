@@ -19,3 +19,28 @@ export interface Task {
     maxValue: string;
   }>;
 }
+
+export interface TasksToExport {
+  NOME: string;
+  DOCUMENTO: string;
+  PLACA: string;
+  'TOTAL(R$)': number;
+  SERVIÇOS: string;
+  DATA: string;
+}
+
+export interface PostTask {
+  name: string;
+  phone: string;
+  document: string;
+  vehicle: string | null;
+  client: string;
+  licensePlate: string;
+  createdAt: string;
+  services: Array<{
+    id: string;
+    name: string;
+    minValue: string;
+    maxValue: string;
+  } | void>;
+}

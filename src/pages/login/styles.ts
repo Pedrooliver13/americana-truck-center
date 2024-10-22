@@ -57,7 +57,7 @@ export const LoginContainer = styled.div`
 
     .login {
       flex: 1;
-      max-width: 400px;
+      max-width: 400px !important;
       width: 100%;
       padding: 0 30px;
       margin-top: 60px;

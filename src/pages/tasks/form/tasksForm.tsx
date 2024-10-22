@@ -4,7 +4,6 @@ import { Divider, Empty, Tour } from 'antd';
 import { useForm } from 'react-hook-form';
 import { FormItem } from 'react-hook-form-antd';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate, useParams } from 'react-router-dom';
 import { QuestionCircleOutlined as QuestionCircleOutlinedIcon } from '@ant-design/icons';
 import moment from 'moment';
 import * as zod from 'zod';
@@ -28,17 +27,15 @@ import {
 
 // Hooks
 import { useTasksCount } from 'hooks/tasks/useTasksCount';
-import { usePostTask } from 'hooks/tasks/usePostTask';
-import { useGetByIdTask } from 'hooks/tasks/useGetByIdTask';
 import { useTaskFormTour } from 'hooks/tasks/useTaskFormTour';
-import { useGetAllPrices } from 'hooks/prices/useGetAllPrices';
+import { useTasksContext } from 'hooks/tasks/useTasksContext';
 
 // Utils
 import { Masks } from 'utils/masks';
 import { priceFormatter } from 'utils/formatter';
 
 // Models
-import { PostTask } from 'models/tasks/postTasks';
+import { PostTask } from 'models/tasks/tasks';
 
 // Styles
 import * as Styled from './styles';
@@ -55,22 +52,18 @@ const schema = zod.object({
 type FormValues = zod.infer<typeof schema>;
 
 export const TasksForm = (): ReactElement => {
-  const navigate = useNavigate();
   const [isOpenModal, setIsOpenModal] = useState(false);
-
-  const { id } = useParams();
-  const { data } = useGetByIdTask(id);
-  const { data: dataPrices } = useGetAllPrices(id);
-  const { mutateAsync, isPending } = usePostTask();
-
   const { isOpenTourState, steps, ref1, ref2, ref3 } = useTaskFormTour();
+
+  const { id, navigate, pricesList, taskItem, createTask, isLoading } =
+    useTasksContext();
 
   const {
     totalPrice,
     totalItems,
     listServices,
     handleChangeAddNewServiceInList,
-  } = useTasksCount(data?.services ?? []);
+  } = useTasksCount(taskItem?.services ?? []);
 
   const {
     control,
@@ -88,21 +81,21 @@ export const TasksForm = (): ReactElement => {
       client: null,
       licensePlate: '',
     },
-    values: data,
+    values: taskItem,
     resolver: zodResolver(schema),
   });
 
   const servicesOptions = useMemo(() => {
-    const services = data?.services ?? dataPrices ?? [];
+    const services = taskItem?.services ?? pricesList ?? [];
 
     if (!id) {
-      services.forEach((item) => {
+      services?.forEach((item) => {
         setValue(item?.name as keyof FormValues, '0');
       });
     }
 
     return services;
-  }, [data?.services, dataPrices, setValue, id]);
+  }, [taskItem?.services, pricesList, setValue, id]);
 
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
@@ -116,10 +109,10 @@ export const TasksForm = (): ReactElement => {
       licensePlate: value?.licensePlate?.toUpperCase(),
       total: totalPrice,
       services: listServices,
-      createdAt: data?.createdAt ?? moment().format('YYYY-MM-DD'),
+      createdAt: taskItem?.createdAt ?? moment().format('YYYY-MM-DD'),
     };
 
-    await mutateAsync(prepareData as PostTask);
+    createTask(prepareData as PostTask);
   };
 
   useEffect(() => {
@@ -131,7 +124,7 @@ export const TasksForm = (): ReactElement => {
       <Styled.TasksFormContainer className="container">
         <div className="tasks__header">
           <h1>
-            Adicionar serviço
+            {id ? 'Visualizar Serviço' : 'Adicionar Serviço'}
             <Tooltip title="Fazer tour da página" placement="bottom">
               <>
                 <QuestionCircleOutlinedIcon
@@ -189,6 +182,7 @@ export const TasksForm = (): ReactElement => {
                 <FormItem control={control} name="phone" status={'error'}>
                   <MaskedInput
                     id="phone"
+                    name="phone"
                     label="Celular"
                     placeholder="Celular"
                     disabled={Boolean(id)}
@@ -357,7 +351,7 @@ export const TasksForm = (): ReactElement => {
                 size="large"
                 type="primary"
                 htmlType="submit"
-                loading={isPending}
+                loading={isLoading}
                 disabled={Boolean(id)}
               >
                 Salvar

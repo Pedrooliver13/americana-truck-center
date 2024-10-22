@@ -18,6 +18,7 @@ import { Page404 } from 'pages/page404';
 
 // Contexts
 import { PriceContextLayout } from 'contexts/priceContext';
+import { TasksContextLayout } from 'contexts/tasksContext/tasksContext';
 
 export const Router = (): ReactElement => {
   return (
@@ -34,9 +35,13 @@ export const Router = (): ReactElement => {
         }
       >
         <Route path="/" element={<Dashboard />} />
-        <Route path="/tasks" element={<Tasks />} />
-        <Route path="/tasks/:id" element={<TasksForm />} />
-        <Route path="/tasks/new" element={<TasksForm />} />
+
+        <Route element={<TasksContextLayout />}>
+          <Route path="/tasks" element={<Tasks />} />
+          <Route path="/tasks/:id" element={<TasksForm />} />
+          <Route path="/tasks/new" element={<TasksForm />} />
+        </Route>
+
         <Route path="/clients" element={<ClientsTable />} />
         <Route path="/clients/new" element={<ClientForm />} />
 
