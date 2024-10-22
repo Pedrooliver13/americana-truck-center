@@ -12,7 +12,7 @@ export interface Task {
   status: number;
   phone: string;
   services: Array<{
-    id: number;
+    id: string;
     name: string;
     value?: number;
     minValue: string;

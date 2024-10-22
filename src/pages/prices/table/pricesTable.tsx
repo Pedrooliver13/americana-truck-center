@@ -1,45 +1,45 @@
 // Packages
 import { ReactElement, useState } from 'react';
-import { toast } from 'react-toastify';
 import {
   EditOutlined as EditOutlinedIcon,
   DeleteOutlined as DeleteOutlinedIcon,
 } from '@ant-design/icons';
 
 // Components
-import { Button, Modal, Tooltip } from 'components/core';
+import { Button, Modal, Tag, Tooltip } from 'components/core';
 import { TableTemplate } from 'components/layout';
 
 // Hooks
 import { useGetColumnSearch } from 'hooks/core';
 import { usePricesTableTour } from 'hooks/prices/usePricesTableTour';
+import { usePricesContext } from 'hooks/prices/usePricesContext';
 
-interface DataType {
-  id: string;
-  name: string;
-  registrationNumber: string | number;
-  date: string;
-}
-
-const data = Array(1000)
-  .fill(null)
-  .map((_, index) => ({
-    id: `${index}`,
-    name: 'John Brown',
-    visualPrice: 100,
-    completePrice: 200,
-    date: '13/08/2021',
-  }));
+// Utils
+import { priceFormatter } from 'utils/formatter';
 
 export const PricesTable = (): ReactElement => {
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [removeId, setRemoveId] = useState<string | null>(null);
+  const { getColumnSearchProps } = useGetColumnSearch();
 
-  const { getColumnSearchProps } = useGetColumnSearch<DataType>();
   const { isOpenTourState, ref1, ref2, ref3, ref4, ref5, ref6, steps } =
     usePricesTableTour();
 
+  const {
+    pricesList,
+    formatedDataToExport,
+    deletePrice,
+    onToggleModal,
+    navigate,
+    isOpenModal,
+    isLoading,
+  } = usePricesContext();
+
   const handleToggleModal = () => {
-    setIsOpenModal((state) => !state);
+    onToggleModal();
+  };
+
+  const handleDeletePrice = (id: string) => {
+    deletePrice(id);
   };
 
   return (
@@ -48,18 +48,22 @@ export const PricesTable = (): ReactElement => {
         header={{
           title: 'Preços',
           buttonLabel: 'Adicionar preço',
-          buttonLink: '/price/new',
+          buttonLink: '/prices/new',
         }}
         exports={{
           xlsx: {
-            filename: `tabela-de-clientes-${new Date().toLocaleDateString()}`,
+            filename: `tabela-de-preços`,
+            data: formatedDataToExport,
           },
           pdf: {
-            filename: `tabela-de-clientes-${new Date().toLocaleDateString()}`,
+            filename: `tabela-de-preços`,
+            data: formatedDataToExport,
           },
         }}
         table={{
-          dataSource: data,
+          rowKey: 'id',
+          dataSource: pricesList,
+          isLoading,
           columns: [
             {
               title: 'Nome',
@@ -70,11 +74,22 @@ export const PricesTable = (): ReactElement => {
               ...getColumnSearchProps('name', 'Nome'),
             },
             {
-              title: 'Data',
-              dataIndex: 'date',
-              key: 'date',
-              responsive: ['md'],
-              ...getColumnSearchProps('date', 'Documento'),
+              title: 'Valor Visual',
+              dataIndex: 'minValue',
+              key: 'minValue',
+              ...getColumnSearchProps('minValue', 'Valor Visual'),
+              render: (text) => {
+                return <Tag color="green">{priceFormatter.format(text)}</Tag>;
+              },
+            },
+            {
+              title: 'Valor Completo',
+              dataIndex: 'maxValue',
+              key: 'maxValue',
+              ...getColumnSearchProps('maxValue', 'Valor Completo'),
+              render: (text) => {
+                return <Tag color="green">{priceFormatter.format(text)}</Tag>;
+              },
             },
             {
               title: 'Ações',
@@ -82,7 +97,7 @@ export const PricesTable = (): ReactElement => {
               key: 'actions',
               align: 'center',
               width: '100px',
-              render: () => (
+              render: (_text, record) => (
                 <div className="table__actions">
                   <Tooltip title="Editar Preço">
                     <>
@@ -92,6 +107,7 @@ export const PricesTable = (): ReactElement => {
                         className="table__actions--normal"
                         icon={<EditOutlinedIcon color="#2B3034" />}
                         size="small"
+                        onClick={() => navigate(`/prices/${record?.id}`)}
                       />
                     </>
                   </Tooltip>
@@ -103,7 +119,10 @@ export const PricesTable = (): ReactElement => {
                         icon={<DeleteOutlinedIcon />}
                         type="text"
                         size="small"
-                        onClick={handleToggleModal}
+                        onClick={() => {
+                          setRemoveId(record?.id);
+                          handleToggleModal();
+                        }}
                       />
                     </>
                   </Tooltip>
@@ -111,7 +130,7 @@ export const PricesTable = (): ReactElement => {
               ),
             },
           ],
-          defaultCheckedList: ['name', 'registrationNumber', 'date', 'actions'],
+          defaultCheckedList: ['name', 'minValue', 'maxValue', 'actions'],
         }}
         tour={{
           isOpenTourState,
@@ -134,7 +153,10 @@ export const PricesTable = (): ReactElement => {
         onClose={handleToggleModal}
         onCancel={handleToggleModal}
         onOk={() => {
-          toast.success('Preço excluído com sucesso!');
+          if (removeId) {
+            handleDeletePrice(String(removeId));
+          }
+
           handleToggleModal();
         }}
         okButtonProps={{ danger: true }}

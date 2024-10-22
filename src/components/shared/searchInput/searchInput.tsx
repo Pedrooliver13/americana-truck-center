@@ -41,6 +41,7 @@ export const SearchInput = (): ReactElement => {
         { value: '/tasks', label: 'Serviços - Página' },
         { value: '/tasks/new', label: 'Serviços - Página de Cadastro' },
         { value: '/prices', label: 'Preços - Página' },
+        { value: '/prices/new', label: 'Preços - Página de Cadastro' },
       ]}
       ref={searchRef}
     />

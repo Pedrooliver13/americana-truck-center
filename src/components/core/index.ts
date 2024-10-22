@@ -14,6 +14,7 @@ export {
   Form,
   FormItem,
   Input,
+  InputNumber,
   InputPassword,
   Select,
   RadioGroup,

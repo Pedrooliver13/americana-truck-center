@@ -7,7 +7,7 @@ export interface PostTask {
   licensePlate: string;
   createdAt: string;
   services: Array<{
-    id: number;
+    id: string;
     name: string;
     minValue: string;
     maxValue: string;

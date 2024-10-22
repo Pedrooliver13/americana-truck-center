@@ -88,9 +88,12 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
   );
 
   useEffect(() => {
-    setFilteredData(
-      props?.table?.isLoading ? null : (props.table.dataSource as Array<any>)
-    );
+    if (props?.table?.isLoading) {
+      setFilteredData(null);
+      return;
+    }
+
+    setFilteredData(props.table.dataSource as Array<any>);
   }, [props.table.dataSource, props?.table?.isLoading]);
 
   return (
@@ -153,7 +156,7 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
         <div ref={props?.tour?.ref6}>
           <Table
             {...props?.table}
-            dataSource={filteredData ?? props?.table?.dataSource}
+            dataSource={filteredData ?? []}
             id="table-template"
             data-cy="table-template"
             columns={newColumns}
