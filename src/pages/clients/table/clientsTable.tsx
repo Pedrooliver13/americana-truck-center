@@ -1,44 +1,49 @@
 // Packages
 import { ReactElement, useState } from 'react';
-import { toast } from 'react-toastify';
+import moment from 'moment';
 import {
   EditOutlined as EditOutlinedIcon,
   DeleteOutlined as DeleteOutlinedIcon,
 } from '@ant-design/icons';
 
 // Components
-import { Button, Modal, Tooltip } from 'components/core';
+import { Button, Modal, Table, Tag, Tooltip } from 'components/core';
 import { TableTemplate } from 'components/layout';
 
 // Hooks
 import { useGetColumnSearch } from 'hooks/core';
 import { useClientsTableTour } from 'hooks/clients/useClientsTableTour';
+import { useClientsContext } from 'hooks/clients/useClientsContext';
 
-interface DataType {
-  id: string;
-  name: string;
-  registrationNumber: string | number;
-  date: string;
-}
+// Models
+import { Clients } from 'models/clients/clients';
 
-const data = Array(1000)
-  .fill(null)
-  .map((_, index) => ({
-    id: `${index}`,
-    name: 'John Brown',
-    registrationNumber: '638.822.570-59',
-    date: '13/08/2021',
-  }));
+// Utils
+import { priceFormatter } from 'utils/formatter';
 
 export const ClientsTable = (): ReactElement => {
+  const [removeId, setRemoveId] = useState<string | null>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
-
-  const { getColumnSearchProps } = useGetColumnSearch<DataType>();
   const { isOpenTourState, ref1, ref2, ref3, ref4, ref5, ref6, steps } =
     useClientsTableTour();
 
+  const {
+    clientsList,
+    tasksList,
+    deleteClient,
+    formatedDataToExport,
+    navigate,
+    isLoading,
+  } = useClientsContext();
+
+  const { getColumnSearchProps } = useGetColumnSearch<Clients>();
+
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
+  };
+
+  const handleDeleteClient = (id: string) => {
+    deleteClient(id);
   };
 
   return (
@@ -51,14 +56,65 @@ export const ClientsTable = (): ReactElement => {
         }}
         exports={{
           xlsx: {
-            filename: `tabela-de-clientes-${new Date().toLocaleDateString()}`,
+            filename: `tabela-de-clientes`,
+            data: formatedDataToExport,
           },
           pdf: {
-            filename: `tabela-de-clientes-${new Date().toLocaleDateString()}`,
+            filename: `tabela-de-clientes`,
+            data: formatedDataToExport,
           },
         }}
         table={{
-          dataSource: data,
+          dataSource: clientsList,
+          isLoading,
+          rowKey: 'id',
+          expandable: {
+            expandedRowRender: (row) => {
+              const data = tasksList?.filter(
+                (item) => item?.client === row?.id
+              );
+
+              return (
+                <Table
+                  dataSource={data}
+                  minHeight="0"
+                  rowKey={'id'}
+                  pagination={false}
+                  columns={[
+                    {
+                      title: 'Serviço',
+                      dataIndex: 'name',
+                      key: 'name',
+                      width: '26%',
+                    },
+                    {
+                      title: 'Total',
+                      dataIndex: 'total',
+                      key: 'total',
+                      width: '24%',
+                      render: (value) => (
+                        <Tag color="green">
+                          {priceFormatter.format(value ?? 0)}
+                        </Tag>
+                      ),
+                    },
+                    {
+                      title: 'Data',
+                      dataIndex: 'createdAt',
+                      key: 'createdAt',
+                      render: (value) => {
+                        return (
+                          moment(value.seconds * 1000).format(
+                            'DD/MM/YYYY HH:mm'
+                          ) ?? '-'
+                        );
+                      },
+                    },
+                  ]}
+                />
+              );
+            },
+          },
           columns: [
             {
               title: 'Nome',
@@ -70,17 +126,21 @@ export const ClientsTable = (): ReactElement => {
             },
             {
               title: 'Documento',
-              dataIndex: 'registrationNumber',
-              key: 'registrationNumber',
-              responsive: ['md'],
-              ...getColumnSearchProps('registrationNumber', 'Documento'),
+              dataIndex: 'document',
+              key: 'document',
+              ...getColumnSearchProps('document', 'Documento'),
             },
             {
-              title: 'Data',
-              dataIndex: 'date',
-              key: 'date',
-              responsive: ['md'],
-              ...getColumnSearchProps('date', 'Documento'),
+              title: 'Email',
+              dataIndex: 'email',
+              key: 'email',
+              ...getColumnSearchProps('email', 'Email'),
+            },
+            {
+              title: 'Contato',
+              dataIndex: 'phone',
+              key: 'phone',
+              ...getColumnSearchProps('phone', 'Contato'),
             },
             {
               title: 'Ações',
@@ -88,7 +148,7 @@ export const ClientsTable = (): ReactElement => {
               key: 'actions',
               align: 'center',
               width: '100px',
-              render: () => (
+              render: (_text, record) => (
                 <div className="table__actions">
                   <Tooltip title="Editar Serviço">
                     <>
@@ -98,6 +158,7 @@ export const ClientsTable = (): ReactElement => {
                         className="table__actions--normal"
                         icon={<EditOutlinedIcon color="#2B3034" />}
                         size="small"
+                        onClick={() => navigate(`/clients/${record?.id}`)}
                       />
                     </>
                   </Tooltip>
@@ -109,7 +170,10 @@ export const ClientsTable = (): ReactElement => {
                         icon={<DeleteOutlinedIcon />}
                         type="text"
                         size="small"
-                        onClick={handleToggleModal}
+                        onClick={() => {
+                          setRemoveId(record?.id);
+                          handleToggleModal();
+                        }}
                       />
                     </>
                   </Tooltip>
@@ -117,7 +181,7 @@ export const ClientsTable = (): ReactElement => {
               ),
             },
           ],
-          defaultCheckedList: ['name', 'registrationNumber', 'date', 'actions'],
+          defaultCheckedList: ['name', 'document', 'phone', 'email', 'actions'],
         }}
         tour={{
           isOpenTourState,
@@ -140,7 +204,10 @@ export const ClientsTable = (): ReactElement => {
         onClose={handleToggleModal}
         onCancel={handleToggleModal}
         onOk={() => {
-          toast.success('Cliente excluído com sucesso!');
+          if (removeId) {
+            handleDeleteClient(String(removeId));
+          }
+
           handleToggleModal();
         }}
         okButtonProps={{ danger: true }}

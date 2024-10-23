@@ -1,6 +1,5 @@
 // Packages
 import { ReactElement, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import {
   FileTextOutlined as FileTextOutlinedIcon,
@@ -15,7 +14,6 @@ import { TableTemplate } from 'components/layout';
 // Hooks
 import { useGetColumnSearch } from 'hooks/core';
 import { useTaskTableTour } from 'hooks/tasks/useTaskTableTour';
-import { useDeleteByIdTask } from 'hooks/tasks/useDeleteTaskById';
 import { useTasksContext } from 'hooks/tasks/useTasksContext';
 
 // Models
@@ -41,21 +39,23 @@ interface DataType {
 }
 
 export const Tasks = (): ReactElement => {
-  const navigate = useNavigate();
-  const { tasksList, formatedDataToExport, isLoading } = useTasksContext();
-
-  const { mutate } = useDeleteByIdTask();
-
-  const [isOpenModal, setIsOpenModal] = useState(false);
   const [removeId, setRemoveId] = useState<string | null>(null);
-
-  const { getColumnSearchProps } = useGetColumnSearch<DataType>();
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const { isOpenTourState, steps, ref1, ref2, ref3, ref4, ref5, ref6 } =
     useTaskTableTour();
 
+  const { tasksList, deleteTask, navigate, formatedDataToExport, isLoading } =
+    useTasksContext();
+
+  const { getColumnSearchProps } = useGetColumnSearch<DataType>();
+
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
+  };
+
+  const handleDeleteTask = (id: string) => {
+    deleteTask(id);
   };
 
   return (
@@ -255,7 +255,7 @@ export const Tasks = (): ReactElement => {
         onCancel={handleToggleModal}
         onOk={() => {
           if (removeId) {
-            mutate(String(removeId));
+            handleDeleteTask(String(removeId));
           }
 
           handleToggleModal();

@@ -13,19 +13,24 @@ import { usePostTask } from 'hooks/tasks/usePostTask';
 import { useGetAllTasks } from 'hooks/tasks/useGetAllTasks';
 import { useGetByIdTask } from 'hooks/tasks/useGetByIdTask';
 import { useGetAllPrices } from 'hooks/prices/useGetAllPrices';
+import { useDeleteByIdTask } from 'hooks/tasks/useDeleteTaskById';
+import { useGetAllClients } from 'hooks/clients/useGetAllClients';
 
 // Models
 import { Task, TasksToExport, PostTask } from 'models/tasks/tasks';
 import { Prices } from 'models/prices/prices';
+import { Clients } from 'models/clients/clients';
 
 export interface TasksContextProps {
   id?: string;
   tasksList?: Array<Task>;
   taskItem?: Task;
   pricesList?: Array<Prices>;
+  clientsList?: Array<Clients>;
   formatedDataToExport?: Array<TasksToExport>;
   navigate: NavigateFunction;
   createTask: (data: PostTask) => Promise<void>;
+  deleteTask: (id: string) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -41,6 +46,7 @@ export const TasksProvider = ({
   const { id } = useParams();
   const navigate = useNavigate();
 
+  // Get's
   const { data: tasksList, isFetching: isFetchingTasksList } =
     useGetAllTasks(id);
 
@@ -49,8 +55,15 @@ export const TasksProvider = ({
   const { data: pricesList, isFetching: isFetchingPricesList } =
     useGetAllPrices(id);
 
+  const { data: clientsList, isFetching: isFetchingClientsList } =
+    useGetAllClients(id);
+
+  // Mutate's
   const { mutateAsync: createTaskMutate, isPending: isPendingPostTask } =
     usePostTask();
+
+  const { mutateAsync: deleteTaskMutate, isPending: isPendingDeleteTask } =
+    useDeleteByIdTask();
 
   const formatedDataToExport = useMemo(() => {
     return tasksList?.map((item) => {
@@ -72,6 +85,13 @@ export const TasksProvider = ({
     [createTaskMutate]
   );
 
+  const deleteTask = useCallback(
+    async (id: string): Promise<void> => {
+      deleteTaskMutate(id);
+    },
+    [deleteTaskMutate]
+  );
+
   return (
     <TasksContext.Provider
       value={{
@@ -79,14 +99,18 @@ export const TasksProvider = ({
         tasksList,
         taskItem,
         pricesList,
+        clientsList,
         formatedDataToExport,
         navigate,
         createTask,
+        deleteTask,
         isLoading:
+          isPendingDeleteTask ||
           isPendingPostTask ||
           isFetchingTasksList ||
           isFetchingTaskItem ||
-          isFetchingPricesList,
+          isFetchingPricesList ||
+          isFetchingClientsList,
       }}
     >
       {children}

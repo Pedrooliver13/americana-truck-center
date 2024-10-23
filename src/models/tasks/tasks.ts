@@ -11,6 +11,7 @@ export interface Task {
   total: number;
   status: number;
   phone: string;
+  client?: string;
   services: Array<{
     id: string;
     name: string;

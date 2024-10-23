@@ -55,8 +55,15 @@ export const TasksForm = (): ReactElement => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { isOpenTourState, steps, ref1, ref2, ref3 } = useTaskFormTour();
 
-  const { id, navigate, pricesList, taskItem, createTask, isLoading } =
-    useTasksContext();
+  const {
+    id,
+    navigate,
+    pricesList,
+    clientsList,
+    taskItem,
+    createTask,
+    isLoading,
+  } = useTasksContext();
 
   const {
     totalPrice,
@@ -70,8 +77,8 @@ export const TasksForm = (): ReactElement => {
     handleSubmit,
     setFocus,
     watch,
-    formState: { errors },
     setValue,
+    formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
       name: '',
@@ -240,12 +247,11 @@ export const TasksForm = (): ReactElement => {
                     allowClear
                     autoClearSearchValue
                     disabled={Boolean(id)}
-                    options={[
-                      {
-                        value: 'jack',
-                        label: 'Jack',
-                      },
-                    ]}
+                    options={clientsList?.map((item) => ({
+                      ...item,
+                      label: item?.name,
+                      value: item?.id,
+                    }))}
                   />
                 </FormItem>
               </Col>
