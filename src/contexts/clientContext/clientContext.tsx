@@ -15,8 +15,14 @@ import { useGetAllTasks } from 'hooks/tasks/useGetAllTasks';
 import { useGetByIdClient } from 'hooks/clients/useGetClientById';
 
 // Models
-import { Clients, ClientsToExport, PostClient } from 'models/clients/clients';
+import {
+  Clients,
+  ClientsToExport,
+  PostClient,
+  PutClient,
+} from 'models/clients/clients';
 import { Task } from 'models/tasks/tasks';
+import { usePutClient } from 'hooks/clients/usePutClient';
 
 export interface ClientsContextProps {
   id?: string;
@@ -25,6 +31,7 @@ export interface ClientsContextProps {
   tasksList?: Array<Task>;
   formatedDataToExport: Array<ClientsToExport>;
   createClient: (data: PostClient) => void;
+  updateClient: (data: PutClient) => void;
   deleteClient: (id: string) => void;
   navigate: NavigateFunction;
   isLoading: boolean;
@@ -54,6 +61,9 @@ export const ClientsProvider = ({
   const { mutateAsync: createClientMutate, isPending: isPendingPostClient } =
     usePostClient();
 
+  const { mutateAsync: updateClientMutate, isPending: isPendingPutClient } =
+    usePutClient();
+
   const { mutateAsync: deleteClientMutate, isPending: isPendingDeleteClient } =
     useDeleteClientById();
 
@@ -76,6 +86,10 @@ export const ClientsProvider = ({
     createClientMutate(data);
   };
 
+  const updateClient = (data: PutClient) => {
+    updateClientMutate(data);
+  };
+
   const deleteClient = (id: string) => {
     deleteClientMutate(id);
   };
@@ -89,6 +103,7 @@ export const ClientsProvider = ({
         tasksList,
         formatedDataToExport,
         createClient,
+        updateClient,
         deleteClient,
         navigate,
         isLoading:
@@ -96,7 +111,8 @@ export const ClientsProvider = ({
           isPendingPostClient ||
           isFetchingClientsList ||
           isFetchingTasksList ||
-          isFetchingClientItem,
+          isFetchingClientItem ||
+          isPendingPutClient,
       }}
     >
       {children}

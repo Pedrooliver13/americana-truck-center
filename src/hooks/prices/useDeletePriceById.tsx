@@ -17,7 +17,6 @@ export const useDeletePriceById = () => {
       });
 
       queryClient.invalidateQueries({ queryKey: ['prices'] });
-      queryClient.refetchQueries({ queryKey: ['prices'] });
     },
 
     onError: () => {

@@ -6,7 +6,7 @@ import * as Styled from './styles';
 
 interface StatusCardProps {
   title: string;
-  value: string;
+  value: string | number;
   icon: ReactNode;
   bgicon?: string;
 }

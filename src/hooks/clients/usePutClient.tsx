@@ -24,7 +24,6 @@ export const usePutClient = () => {
       navigate('/clients');
 
       queryClient.invalidateQueries({ queryKey: ['clients'] });
-      queryClient.refetchQueries({ queryKey: ['clients'] });
     },
 
     onError: () => {

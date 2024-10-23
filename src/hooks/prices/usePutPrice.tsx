@@ -24,7 +24,6 @@ export const usePutPrice = () => {
       navigate('/prices');
 
       queryClient.invalidateQueries({ queryKey: ['prices'] });
-      queryClient.refetchQueries({ queryKey: ['prices'] });
     },
 
     onError: () => {

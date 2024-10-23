@@ -3,7 +3,7 @@ import { db } from 'config/firebase';
 import { addDoc, collection } from 'firebase/firestore';
 
 // Models
-import { PostTask } from 'models/tasks/postTasks';
+import { PostTask } from 'models/tasks/tasks';
 
 export const postTask = async (data: PostTask) => {
   try {

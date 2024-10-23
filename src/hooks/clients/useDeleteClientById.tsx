@@ -17,7 +17,6 @@ export const useDeleteClientById = () => {
       });
 
       queryClient.invalidateQueries({ queryKey: ['clients'] });
-      queryClient.refetchQueries({ queryKey: ['clients'] });
     },
 
     onError: () => {

@@ -24,7 +24,6 @@ export const usePostClient = () => {
       navigate('/clients');
 
       queryClient.invalidateQueries({ queryKey: ['clients'] });
-      queryClient.refetchQueries({ queryKey: ['clients'] });
     },
 
     onError: () => {

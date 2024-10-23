@@ -27,13 +27,12 @@ export const Table = (props: TableProps): ReactElement => {
           ) : (
             <Empty
               style={{
+                minWidth: '100% !important',
+                width: '100% !important',
                 height: '250px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                minWidth: '100%',
-                width: '100%',
-                flex: 1,
               }}
             />
           );

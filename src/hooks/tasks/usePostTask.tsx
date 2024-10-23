@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 // Models
-import { PostTask } from 'models/tasks/postTasks';
+import { PostTask } from 'models/tasks/tasks';
 
 // Services
 import { postTask } from 'services/tasks/postTask';
@@ -24,7 +24,6 @@ export const usePostTask = () => {
       navigate('/tasks');
 
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      queryClient.refetchQueries({ queryKey: ['tasks'] });
     },
 
     onError: () => {

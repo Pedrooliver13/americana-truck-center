@@ -17,7 +17,6 @@ export const useDeleteByIdTask = () => {
       });
 
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      queryClient.refetchQueries({ queryKey: ['tasks'] });
     },
 
     onError: () => {

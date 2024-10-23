@@ -47,7 +47,7 @@ export const ClientForm = (): ReactElement => {
 
   const { isOpenTourState, steps, ref1, ref2 } = useClientsFormTour();
 
-  const { id, clientItem, createClient, navigate, isLoading } =
+  const { id, clientItem, updateClient, createClient, navigate, isLoading } =
     useClientsContext();
 
   const {
@@ -71,6 +71,11 @@ export const ClientForm = (): ReactElement => {
   };
 
   const onSubmit = (data: FormValues) => {
+    if (id) {
+      updateClient({ ...data, id });
+      return;
+    }
+
     createClient(data);
   };
 

@@ -20,6 +20,7 @@ import { Page404 } from 'pages/page404';
 import { TasksContextLayout } from 'contexts/tasksContext';
 import { ClientsContextLayout } from 'contexts/clientContext';
 import { PriceContextLayout } from 'contexts/priceContext';
+import { DashboardContextLayout } from 'contexts/dashboardContext';
 
 export const Router = (): ReactElement => {
   return (
@@ -35,7 +36,9 @@ export const Router = (): ReactElement => {
           </PrivateRoute>
         }
       >
-        <Route path="/" element={<Dashboard />} />
+        <Route element={<DashboardContextLayout />}>
+          <Route path="/" element={<Dashboard />} />
+        </Route>
 
         <Route element={<TasksContextLayout />}>
           <Route path="/tasks" element={<Tasks />} />
