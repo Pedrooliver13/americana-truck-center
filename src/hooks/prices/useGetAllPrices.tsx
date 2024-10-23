@@ -10,7 +10,7 @@ import { getAllPrices } from 'services/prices/getAllPrices';
 
 export const useGetAllPrices = (id?: string) => {
   const location = useLocation();
-  const URLToEnableGet = ['/prices', '/tasks/new'];
+  const URLToEnableGet = ['/', '/prices', '/tasks/new'];
 
   const response = useQuery<Array<Prices>>({
     queryKey: ['prices'],
