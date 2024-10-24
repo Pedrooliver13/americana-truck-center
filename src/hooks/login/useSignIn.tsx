@@ -14,8 +14,8 @@ export const useSignIn = () => {
       singInWithEmailAndPassword(data?.email, data?.password),
 
     onSuccess: () => {
-      toast.success('Bem-vindo de volta!', {
-        position: 'top-center',
+      toast.success('Bem-vindo!', {
+        position: 'top-right',
         autoClose: 1200,
       });
 

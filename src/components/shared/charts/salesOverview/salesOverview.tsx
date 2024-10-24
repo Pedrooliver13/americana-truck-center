@@ -5,7 +5,15 @@ import Chart, { Props } from 'react-apexcharts';
 // Styles
 import * as Styled from './styles';
 
+// Hooks
+import { useDashboardContext } from 'hooks/dashboard/useDashboardContext';
+
 export const SalesOverview = (): ReactElement => {
+  const { chartDataList } = useDashboardContext();
+
+  const categories = chartDataList.map((chartData) => chartData?.createdAt);
+  const data = chartDataList.map((chartData) => chartData?.value);
+
   const optionscolumnchart = {
     chart: {
       type: 'bar',
@@ -22,7 +30,7 @@ export const SalesOverview = (): ReactElement => {
         horizontal: false,
         barHeight: '60%',
         columnWidth: '35%',
-        borderRadius: [6],
+        borderRadius: [3],
         borderRadiusApplication: 'end',
         borderRadiusWhenStacked: 'all',
       },
@@ -34,10 +42,7 @@ export const SalesOverview = (): ReactElement => {
       colors: ['transparent'],
     },
     dataLabels: {
-      enabled: false,
-    },
-    legend: {
-      show: true,
+      enabled: true,
     },
     grid: {
       borderColor: 'rgba(0,0,0,0.1)',
@@ -52,16 +57,7 @@ export const SalesOverview = (): ReactElement => {
       tickAmount: 4,
     },
     xaxis: {
-      categories: [
-        '16/08',
-        '17/08',
-        '18/08',
-        '19/08',
-        '20/08',
-        '21/08',
-        '22/08',
-        '23/08',
-      ],
+      categories,
       axisBorder: {
         show: false,
       },
@@ -77,12 +73,8 @@ export const SalesOverview = (): ReactElement => {
 
   const seriescolumnchart = [
     {
-      name: 'Ganhos deste mês',
-      data: [355, 390, 300, 350, 390, 180, 355, 390],
-    },
-    {
-      name: 'Gastos deste mês',
-      data: [280, 250, 325, 215, 250, 310, 280, 250],
+      name: 'Ganhos deste dia',
+      data,
     },
   ];
 

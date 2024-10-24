@@ -26,9 +26,6 @@ export {
 // Grids
 export { Row, Col } from './grids';
 
-// Charts
-export { SalesOverview } from './charts';
-
 // Tables
 export { Table } from './table';
 

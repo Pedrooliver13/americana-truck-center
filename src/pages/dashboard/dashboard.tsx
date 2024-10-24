@@ -2,7 +2,8 @@
 import { ReactElement } from 'react';
 
 // Components
-import { SalesOverview, StatusCard } from 'components/core';
+import { StatusCard } from 'components/core';
+import { SalesOverview } from 'components/shared';
 
 // Hooks
 import { useDashboardContext } from 'hooks/dashboard/useDashboardContext';
