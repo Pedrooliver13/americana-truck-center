@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { QuestionCircleOutlined as QuestionCircleOutlinedIcon } from '@ant-design/icons';
 import moment from 'moment';
 import * as zod from 'zod';
+import { toast } from 'react-toastify';
 
 // Components
 import {
@@ -110,6 +111,11 @@ export const TasksForm = (): ReactElement => {
 
   const handleNewItem = async (): Promise<void> => {
     const value = watch();
+
+    if (listServices.length <= 0) {
+      toast.error('Selecione ao menos um serviço!');
+      return;
+    }
 
     const prepareData = {
       ...value,
@@ -256,7 +262,13 @@ export const TasksForm = (): ReactElement => {
                 </FormItem>
               </Col>
               <Divider />
-              {servicesOptions.map((item) => (
+              {servicesOptions?.length <= 0 && (
+                <Col xs={24} md={24} lg={24}>
+                  <Empty description="Nenhum preço cadastrado!" />
+                </Col>
+              )}
+
+              {servicesOptions?.map((item) => (
                 <Col
                   xs={24}
                   md={24}

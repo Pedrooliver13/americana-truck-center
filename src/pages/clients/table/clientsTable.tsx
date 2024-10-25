@@ -150,10 +150,10 @@ export const ClientsTable = (): ReactElement => {
               width: '100px',
               render: (_text, record) => (
                 <div className="table__actions">
-                  <Tooltip title="Editar Serviço">
+                  <Tooltip title="Editar Cliente">
                     <>
                       <Button
-                        id="edit-service"
+                        id="edit-client"
                         type="text"
                         className="table__actions--normal"
                         icon={<EditOutlinedIcon color="#2B3034" />}
@@ -162,10 +162,10 @@ export const ClientsTable = (): ReactElement => {
                       />
                     </>
                   </Tooltip>
-                  <Tooltip title="Deletar Serviço">
+                  <Tooltip title="Deletar Cliente">
                     <>
                       <Button
-                        id="delete-service"
+                        id="delete-client"
                         danger
                         icon={<DeleteOutlinedIcon />}
                         type="text"

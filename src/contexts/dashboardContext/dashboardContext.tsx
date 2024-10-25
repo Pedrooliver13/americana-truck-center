@@ -66,7 +66,7 @@ export const DashboardProvider = ({
         const valueA = a.createdAt.seconds * 1000;
         const valueB = b.createdAt.seconds * 1000;
 
-        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
       })
       .reduce((acc: Task[], task) => {
         const lastTask = acc[acc.length - 1] as Task | undefined;
@@ -84,9 +84,11 @@ export const DashboardProvider = ({
 
         if (currentDate === lastTaskDate) {
           lastTask.total += task.total;
-        } else {
-          acc.push(task);
+
+          return acc;
         }
+
+        acc.push(task);
 
         return acc;
       }, [])
