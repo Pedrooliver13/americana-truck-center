@@ -44,7 +44,7 @@ export const ForgotPasswordTab = (): ReactElement => {
   }, [setFocus]);
 
   return (
-    <Card>
+    <Card style={{ width: 'fit-content' }}>
       <Styled.ForgotPasswordContainer>
         <div className="header">
           <h1>
