@@ -14,6 +14,7 @@ import { Dashboard } from 'pages/dashboard';
 import { Tasks, TasksForm } from 'pages/tasks';
 import { ClientsTable, ClientForm } from 'pages/clients';
 import { PricesTable, PricesForm } from 'pages/prices';
+import { Settings } from 'pages/settings';
 import { Page404 } from 'pages/page404';
 
 // Contexts
@@ -57,6 +58,8 @@ export const Router = (): ReactElement => {
           <Route path="/prices/new" element={<PricesForm />} />
           <Route path="/prices/:id" element={<PricesForm />} />
         </Route>
+
+        <Route path="/settings" element={<Settings />} />
       </Route>
 
       <Route

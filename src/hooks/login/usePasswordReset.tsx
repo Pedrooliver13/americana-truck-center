@@ -6,7 +6,11 @@ import { toast } from 'react-toastify';
 // Services
 import { passwordReset } from 'services/auth/auth';
 
-export const usePasswordReset = () => {
+interface PasswordResetProps {
+  notNavigate?: boolean;
+}
+
+export const usePasswordReset = (props?: PasswordResetProps) => {
   const navigate = useNavigate();
 
   const mutation = useMutation({
@@ -17,7 +21,9 @@ export const usePasswordReset = () => {
         autoClose: 5000,
       });
 
-      navigate('/login');
+      if (!props?.notNavigate) {
+        navigate('/login');
+      }
     },
 
     onError: () => {
