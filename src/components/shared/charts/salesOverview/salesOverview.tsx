@@ -87,6 +87,7 @@ export const SalesOverview = (): ReactElement => {
         <div>
           <DatePicker.RangePicker
             id="chartDate"
+            name="chartDate"
             lang="pt-br"
             format={'DD/MM/YYYY'}
             onChange={(_event, dateString) => setChartDateValue(dateString)}
