@@ -12,7 +12,17 @@ export const SalesOverviewContainer = styled.div`
       rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 
     .salesOverview__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+
       margin-bottom: 2rem;
+
+      div {
+        max-width: 300px;
+        width: 100%;
+      }
     }
   `}
 `;

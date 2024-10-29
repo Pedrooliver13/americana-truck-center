@@ -1,5 +1,6 @@
 // Packages
 import { ReactElement } from 'react';
+import { DatePicker } from 'antd';
 import Chart, { Props } from 'react-apexcharts';
 
 // Styles
@@ -9,7 +10,7 @@ import * as Styled from './styles';
 import { useDashboardContext } from 'hooks/dashboard/useDashboardContext';
 
 export const SalesOverview = (): ReactElement => {
-  const { chartDataList } = useDashboardContext();
+  const { chartDataList, setChartDateValue } = useDashboardContext();
 
   const categories = chartDataList.map((chartData) => chartData?.createdAt);
   const data = chartDataList.map((chartData) => chartData?.value);
@@ -82,6 +83,15 @@ export const SalesOverview = (): ReactElement => {
     <Styled.SalesOverviewContainer>
       <header className="salesOverview__header">
         <h2>Detalhe das vendas</h2>
+
+        <div>
+          <DatePicker.RangePicker
+            id="chartDate"
+            lang="pt-br"
+            format={'DD/MM/YYYY'}
+            onChange={(_event, dateString) => setChartDateValue(dateString)}
+          />
+        </div>
       </header>
 
       <Chart

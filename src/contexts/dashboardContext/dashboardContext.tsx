@@ -1,5 +1,5 @@
 // Packages
-import { ReactElement, createContext, useMemo } from 'react';
+import { ReactElement, createContext, useMemo, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import moment from 'moment';
 
@@ -17,6 +17,8 @@ export interface DashboardContextProps {
   totalPrices: number;
   totalTasks: number;
   chartDataList: Array<DashboardChart>;
+  chartDateValue: Array<string> | null;
+  setChartDateValue: React.Dispatch<React.SetStateAction<Array<string> | null>>;
 }
 
 interface DashboardProviderProps {
@@ -28,6 +30,11 @@ export const DashboardContext = createContext({} as DashboardContextProps);
 export const DashboardProvider = ({
   children,
 }: DashboardProviderProps): ReactElement => {
+  const [chartDateValue, setChartDateValue] = useState<Array<string> | null>([
+    moment().startOf('month').format('DD/MM/YYYY'),
+    moment().endOf('month').format('DD/MM/YYYY'),
+  ]);
+
   const { data: clientsList } = useGetAllClients();
   const { data: pricesList } = useGetAllPrices();
   const { data: tasksList } = useGetAllTasks();
@@ -61,47 +68,76 @@ export const DashboardProvider = ({
       return [];
     }
 
-    return tasksList
-      .sort((a, b) => {
-        const valueA = a.createdAt.seconds * 1000;
-        const valueB = b.createdAt.seconds * 1000;
+    return (
+      tasksList
+        // Filtrar os preços por data
+        .filter((task) => {
+          if (!chartDateValue?.length) {
+            return true;
+          }
 
-        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
-      })
-      .reduce((acc: Task[], task) => {
-        const lastTask = acc[acc.length - 1] as Task | undefined;
+          const startDate = moment(chartDateValue[0], 'DD/MM/YYYY');
+          const endDate = moment(chartDateValue[1], 'DD/MM/YYYY');
 
-        if (!lastTask) {
-          return [{ ...task, total: task.total }];
-        }
+          const currentDate = moment(task?.createdAt?.seconds * 1000).format(
+            'DD/MM/YYYY'
+          );
 
-        const currentDate = moment(task.createdAt.seconds * 1000).format(
-          'DD/MM'
-        );
-        const lastTaskDate = moment(lastTask.createdAt.seconds * 1000).format(
-          'DD/MM'
-        );
+          return (
+            moment(currentDate, 'DD/MM/YYYY').isSameOrBefore(endDate) &&
+            moment(currentDate, 'DD/MM/YYYY').isSameOrAfter(startDate)
+          );
+        })
+        // Ordenar os preços por data
+        .sort((a, b) => {
+          const valueA = a.createdAt.seconds * 1000;
+          const valueB = b.createdAt.seconds * 1000;
 
-        if (currentDate === lastTaskDate) {
-          lastTask.total += task.total;
+          return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+        })
+        // Agrupar os preços por data
+        .reduce((acc: Task[], task) => {
+          const lastTask = acc[acc.length - 1] as Task | undefined;
+
+          if (!lastTask) {
+            return [{ ...task, total: task.total }];
+          }
+
+          const currentDate = moment(task.createdAt.seconds * 1000).format(
+            'DD/MM'
+          );
+          const lastTaskDate = moment(lastTask.createdAt.seconds * 1000).format(
+            'DD/MM'
+          );
+
+          if (currentDate === lastTaskDate) {
+            lastTask.total += task.total;
+
+            return acc;
+          }
+
+          acc.push(task);
 
           return acc;
-        }
-
-        acc.push(task);
-
-        return acc;
-      }, [])
-      .map((task) => ({
-        name: task?.name,
-        value: task?.total ?? 0,
-        createdAt: moment(task.createdAt?.seconds * 1000).format('DD/MM'),
-      }));
-  }, [tasksList]);
+        }, [])
+        .map((task) => ({
+          name: task?.name,
+          value: task?.total ?? 0,
+          createdAt: moment(task.createdAt?.seconds * 1000).format('DD/MM'),
+        }))
+    );
+  }, [tasksList, chartDateValue]);
 
   return (
     <DashboardContext.Provider
-      value={{ totalClients, totalPrices, totalTasks, chartDataList }}
+      value={{
+        totalClients,
+        totalPrices,
+        totalTasks,
+        chartDataList,
+        chartDateValue,
+        setChartDateValue,
+      }}
     >
       {children}
     </DashboardContext.Provider>
