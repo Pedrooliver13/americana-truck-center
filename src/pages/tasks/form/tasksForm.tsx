@@ -5,9 +5,10 @@ import { useForm } from 'react-hook-form';
 import { FormItem } from 'react-hook-form-antd';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { QuestionCircleOutlined as QuestionCircleOutlinedIcon } from '@ant-design/icons';
+import { toast } from 'react-toastify';
+import { DefaultOptionType } from 'antd/es/select';
 import moment from 'moment';
 import * as zod from 'zod';
-import { toast } from 'react-toastify';
 
 // Components
 import {
@@ -37,6 +38,7 @@ import { priceFormatter } from 'utils/formatter';
 
 // Models
 import { PostTask } from 'models/tasks/tasks';
+import { Clients } from 'models/clients/clients';
 
 // Styles
 import * as Styled from './styles';
@@ -109,6 +111,22 @@ export const TasksForm = (): ReactElement => {
     setIsOpenModal((state) => !state);
   };
 
+  const handleChangeClient = (
+    _value: string,
+    option: DefaultOptionType | DefaultOptionType[]
+  ): void => {
+    const clientOption = option as Clients;
+
+    if (!clientOption) {
+      return;
+    }
+
+    setValue('name', clientOption?.name);
+    setValue('document', clientOption?.document);
+    setValue('phone', clientOption?.phone);
+    setFocus('vehicle');
+  };
+
   const handleNewItem = async (): Promise<void> => {
     const value = watch();
 
@@ -129,7 +147,7 @@ export const TasksForm = (): ReactElement => {
   };
 
   useEffect(() => {
-    setFocus('name');
+    setFocus('client');
   }, [setFocus]);
 
   return (
@@ -154,6 +172,26 @@ export const TasksForm = (): ReactElement => {
         <Form onFinish={handleSubmit(handleNewItem)} className="tasks-form">
           <Card className="tasks-form__fields" ref={ref1}>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+              <Col xs={24}>
+                <FormItem control={control} name="client">
+                  <Select
+                    id="client"
+                    showSearch
+                    placeholder="Selecione um cliente"
+                    optionFilterProp="label"
+                    label="Vincular cliente"
+                    allowClear
+                    autoClearSearchValue
+                    disabled={Boolean(id)}
+                    onChange={handleChangeClient}
+                    options={clientsList?.map((item) => ({
+                      ...item,
+                      label: item?.name,
+                      value: item?.id,
+                    }))}
+                  />
+                </FormItem>
+              </Col>
               <Col xs={24} md={24}>
                 <FormItem control={control} name="name">
                   <Input
@@ -200,6 +238,7 @@ export const TasksForm = (): ReactElement => {
                     placeholder="Celular"
                     disabled={Boolean(id)}
                     status={errors?.phone ? 'error' : ''}
+                    autoComplete="off"
                     mask={[
                       {
                         mask: Masks.PHONE,
@@ -239,25 +278,6 @@ export const TasksForm = (): ReactElement => {
                         lazy: true,
                       },
                     ]}
-                  />
-                </FormItem>
-              </Col>
-              <Col xs={24}>
-                <FormItem control={control} name="client">
-                  <Select
-                    id="client"
-                    showSearch
-                    placeholder="Selecione um cliente"
-                    optionFilterProp="label"
-                    label="Vincular cliente"
-                    allowClear
-                    autoClearSearchValue
-                    disabled={Boolean(id)}
-                    options={clientsList?.map((item) => ({
-                      ...item,
-                      label: item?.name,
-                      value: item?.id,
-                    }))}
                   />
                 </FormItem>
               </Col>

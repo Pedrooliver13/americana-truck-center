@@ -32,9 +32,9 @@ export const generateReceiptsPDF = (data: Task) => {
   const phoneRightMargin = 15; // Distância da margem direita
   const phoneTextX = pageWidth - phoneRightMargin; // Posição X para o texto alinhado à direita
 
-  // // Número do recibo
-  // doc.setFontSize(12);
-  // doc.text(`Nº: ${data?.id}`, phoneTextX, marginTop + 5, { align: 'right' });
+  // Número do recibo
+  doc.setFontSize(12);
+  doc.text(`Id: ${data?.id}`, phoneTextX, marginTop + 5, { align: 'right' });
 
   // Telefones
   doc.setFontSize(10);
