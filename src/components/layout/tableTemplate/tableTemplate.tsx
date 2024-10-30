@@ -42,6 +42,7 @@ interface TableTemplateProps {
   };
   exports: {
     xlsx: {
+      customComponent?: ReactElement;
       filename: string;
       data?: Array<any>;
     };
@@ -136,11 +137,16 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
           </div>
 
           <div className="table-template-card__actions--columns">
-            <XlsxButton
-              filename={props?.exports?.xlsx?.filename}
-              data={props?.exports?.xlsx?.data as Array<any>}
-              ref={props?.tour?.ref3}
-            />
+            {!props?.exports.xlsx.customComponent ? (
+              <XlsxButton
+                filename={props?.exports?.xlsx?.filename}
+                data={props?.exports?.xlsx?.data as Array<any>}
+                ref={props?.tour?.ref3}
+              />
+            ) : (
+              props?.exports.xlsx.customComponent
+            )}
+
             <PdfButton
               filename={props?.exports?.pdf?.filename}
               data={props?.exports?.pdf?.data as Array<any>}

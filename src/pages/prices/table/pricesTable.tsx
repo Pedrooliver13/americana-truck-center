@@ -77,6 +77,7 @@ export const PricesTable = (): ReactElement => {
               title: 'Valor Visual',
               dataIndex: 'minValue',
               key: 'minValue',
+              responsive: ['md'],
               ...getColumnSearchProps('minValue', 'Valor Visual'),
               render: (text) => {
                 return <Tag color="green">{priceFormatter.format(text)}</Tag>;
@@ -86,6 +87,7 @@ export const PricesTable = (): ReactElement => {
               title: 'Valor Completo',
               dataIndex: 'maxValue',
               key: 'maxValue',
+              responsive: ['md'],
               ...getColumnSearchProps('maxValue', 'Valor Completo'),
               render: (text) => {
                 return <Tag color="green">{priceFormatter.format(text)}</Tag>;

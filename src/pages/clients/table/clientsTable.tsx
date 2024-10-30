@@ -7,8 +7,9 @@ import {
 } from '@ant-design/icons';
 
 // Components
-import { Button, Modal, Table, Tag, Tooltip } from 'components/core';
 import { TableTemplate } from 'components/layout';
+import { ClientXlsxModal } from 'components/shared';
+import { Button, Modal, Table, Tag, Tooltip } from 'components/core';
 
 // Hooks
 import { useGetColumnSearch } from 'hooks/core';
@@ -24,6 +25,7 @@ import { priceFormatter } from 'utils/formatter';
 export const ClientsTable = (): ReactElement => {
   const [removeId, setRemoveId] = useState<string | null>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
+
   const { isOpenTourState, ref1, ref2, ref3, ref4, ref5, ref6, steps } =
     useClientsTableTour();
 
@@ -57,7 +59,7 @@ export const ClientsTable = (): ReactElement => {
         exports={{
           xlsx: {
             filename: `tabela-de-clientes`,
-            data: formatedDataToExport,
+            customComponent: <ClientXlsxModal />,
           },
           pdf: {
             filename: `tabela-de-clientes`,
@@ -128,18 +130,21 @@ export const ClientsTable = (): ReactElement => {
               title: 'Documento',
               dataIndex: 'document',
               key: 'document',
+              responsive: ['md'],
               ...getColumnSearchProps('document', 'Documento'),
             },
             {
               title: 'Email',
               dataIndex: 'email',
               key: 'email',
+              responsive: ['md'],
               ...getColumnSearchProps('email', 'Email'),
             },
             {
               title: 'Contato',
               dataIndex: 'phone',
               key: 'phone',
+              responsive: ['md'],
               ...getColumnSearchProps('phone', 'Contato'),
             },
             {

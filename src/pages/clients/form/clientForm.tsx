@@ -1,5 +1,6 @@
 // Packages
 import { ReactElement, useEffect, useState } from 'react';
+import { Tour } from 'antd';
 import { FormItem } from 'react-hook-form-antd';
 import { useForm } from 'react-hook-form';
 import { QuestionCircleOutlined as QuestionCircleOutlinedIcon } from '@ant-design/icons';
@@ -21,14 +22,13 @@ import {
 
 // Hooks
 import { useClientsContext } from 'hooks/clients/useClientsContext';
+import { useClientsFormTour } from 'hooks/clients/useClientsFormTour';
 
 // Utils
 import { Masks } from 'utils/masks';
 
 // Styles
 import * as Styled from './styles';
-import { useClientsFormTour } from 'hooks/clients/useClientsFormTour';
-import { Tour } from 'antd';
 
 const schema = zod.object({
   name: zod.string().min(1, { message: 'Campo obrigatório' }),
