@@ -186,7 +186,7 @@ export const ClientsTable = (): ReactElement => {
               ),
             },
           ],
-          defaultCheckedList: ['name', 'document', 'phone', 'email', 'actions'],
+          defaultCheckedList: ['name', 'document', 'email', 'phone', 'actions'],
         }}
         tour={{
           isOpenTourState,

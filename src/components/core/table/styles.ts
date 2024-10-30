@@ -18,6 +18,11 @@ export const TableAntDesign = styled(Table)<TableProps>`
       min-height: ${minHeight || '250px'};
     }
 
+    .ant-table-placeholder td {
+      min-width: 100% !important;
+      width: 100% !important;
+    }
+
     .ant-table-content.ant-table-row-hover:hover {
       background-color: ${theme.colors.background} !important;
       filter: brightness(195%);
