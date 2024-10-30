@@ -1,5 +1,5 @@
 // Packages
-import { ReactElement, useCallback, useState } from 'react';
+import { ReactElement, forwardRef, useCallback, useState } from 'react';
 import { FormItem } from 'react-hook-form-antd';
 import { useForm } from 'react-hook-form';
 import { Alert, DatePicker } from 'antd';
@@ -37,7 +37,14 @@ type FormValues = {
   dateValue?: Array<string>;
 };
 
-export const ClientXlsxModal = (): ReactElement => {
+const ClientXlsxModalBase = (
+  _props: unknown,
+  ref:
+    | ((instance: HTMLButtonElement | HTMLAnchorElement | null) => void)
+    | React.RefObject<HTMLButtonElement | HTMLAnchorElement>
+    | null
+    | undefined
+): ReactElement => {
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const { tasksList, clientsList, clientListOptions, isLoading } =
@@ -129,7 +136,12 @@ export const ClientXlsxModal = (): ReactElement => {
   return (
     <>
       <Tooltip title="Gerar EXCEL" defaultOpen={false}>
-        <Button shape="circle" size="large" onClick={handleToggleModal}>
+        <Button
+          shape="circle"
+          size="large"
+          onClick={handleToggleModal}
+          ref={ref}
+        >
           <XlsxIcon />
         </Button>
       </Tooltip>
@@ -195,3 +207,5 @@ export const ClientXlsxModal = (): ReactElement => {
     </>
   );
 };
+
+export const ClientXlsxModal = forwardRef(ClientXlsxModalBase);

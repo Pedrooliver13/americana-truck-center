@@ -144,7 +144,9 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
                 ref={props?.tour?.ref3}
               />
             ) : (
-              props?.exports.xlsx.customComponent
+              <div ref={props?.tour.ref3}>
+                {props?.exports.xlsx.customComponent}
+              </div>
             )}
 
             <PdfButton
