@@ -71,7 +71,9 @@ export const ClientXlsxModal = (): ReactElement => {
             return true;
           }
 
-          const taskDate = moment(task?.createdAt?.seconds * 1000);
+          const taskDate = moment(task?.createdAt?.seconds * 1000).format(
+            'DD/MM/YYYY'
+          );
 
           const startDate = moment(data?.dateValue[0], 'DD/MM/YYYY');
           const endDate = moment(data?.dateValue[1], 'DD/MM/YYYY');
