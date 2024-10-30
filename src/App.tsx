@@ -47,6 +47,10 @@ function App(): ReactElement {
             draggable
             pauseOnHover
             theme="colored"
+            style={{
+              fontSize: '14px',
+              zIndex: 99999,
+            }}
           />
           <FloatButton.BackTop tooltip="Voltar para o topo!" />
         </ThemeProvider>

@@ -8,5 +8,5 @@ import * as Styled from './styles';
 export interface ModalProps extends ModalAntDesignProps {}
 
 export const Modal = (props: ModalProps): ReactElement => {
-  return <Styled.ModalAntDesign {...props} zIndex={99999999} />;
+  return <Styled.ModalAntDesign {...props} zIndex={9999} />;
 };

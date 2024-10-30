@@ -62,7 +62,7 @@ export const TasksForm = (): ReactElement => {
     id,
     navigate,
     pricesList,
-    clientsList,
+    clientListOptions,
     taskItem,
     createTask,
     isLoading,
@@ -184,11 +184,7 @@ export const TasksForm = (): ReactElement => {
                     autoClearSearchValue
                     disabled={Boolean(id)}
                     onChange={handleChangeClient}
-                    options={clientsList?.map((item) => ({
-                      ...item,
-                      label: item?.name,
-                      value: item?.id,
-                    }))}
+                    options={clientListOptions}
                   />
                 </FormItem>
               </Col>

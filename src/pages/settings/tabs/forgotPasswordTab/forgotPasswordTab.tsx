@@ -3,6 +3,7 @@ import { ReactElement, useEffect } from 'react';
 import { FormItem } from 'react-hook-form-antd';
 import { useForm } from 'react-hook-form';
 import { MailOutlined as MailOutlinedIcon } from '@ant-design/icons';
+import { Alert } from 'antd';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
 
@@ -68,12 +69,19 @@ export const ForgotPasswordTab = (): ReactElement => {
               </FormItem>
             </Col>
 
-            <Col xs={24} md={24}>
+            <Col xs={24} md={24} style={{}}>
+              <Alert
+                message="O link para alterar a senha será enviado para o e-mail cadastrado."
+                type="info"
+                showIcon
+              />
+            </Col>
+
+            <Col xs={24} md={24} className="content__footer">
               <Button
                 className="button"
                 htmlType="submit"
                 type="primary"
-                block
                 size="large"
                 loading={isPending}
               >

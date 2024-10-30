@@ -13,6 +13,7 @@ import { usePostClient } from 'hooks/clients/usePostClient';
 import { useDeleteClientById } from 'hooks/clients/useDeleteClientById';
 import { useGetAllTasks } from 'hooks/tasks/useGetAllTasks';
 import { useGetByIdClient } from 'hooks/clients/useGetClientById';
+import { usePutClient } from 'hooks/clients/usePutClient';
 
 // Models
 import {
@@ -22,7 +23,6 @@ import {
   PutClient,
 } from 'models/clients/clients';
 import { Task } from 'models/tasks/tasks';
-import { usePutClient } from 'hooks/clients/usePutClient';
 
 export interface ClientsContextProps {
   id?: string;
@@ -30,6 +30,7 @@ export interface ClientsContextProps {
   clientItem?: Clients;
   tasksList?: Array<Task>;
   formatedDataToExport: Array<ClientsToExport>;
+  clientListOptions: Array<Clients>;
   createClient: (data: PostClient) => void;
   updateClient: (data: PutClient) => void;
   deleteClient: (id: string) => void;
@@ -82,6 +83,18 @@ export const ClientsProvider = ({
     });
   }, [clientsList]);
 
+  const clientListOptions = useMemo(() => {
+    if (!Array.isArray(clientsList)) {
+      return [];
+    }
+
+    return clientsList?.map((item) => ({
+      ...item,
+      label: item?.name,
+      value: item?.id,
+    }));
+  }, [clientsList]);
+
   const createClient = (data: PostClient) => {
     createClientMutate(data);
   };
@@ -102,6 +115,7 @@ export const ClientsProvider = ({
         clientItem,
         tasksList,
         formatedDataToExport,
+        clientListOptions,
         createClient,
         updateClient,
         deleteClient,

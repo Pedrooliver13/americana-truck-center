@@ -26,7 +26,7 @@ import { useClientsContext } from 'hooks/clients/useClientsContext';
 import * as Styled from './styles';
 
 const schema = zod.object({
-  clientId: zod.string().trim().min(1, { message: 'Campo obrigatório' }),
+  clientId: zod.string().min(1, { message: 'Campo obrigatório' }),
   dateField: zod.array(zod.any()).min(2, { message: 'Campo obrigatório' }),
   dateValue: zod.any(),
 });
@@ -40,7 +40,8 @@ type FormValues = {
 export const ClientXlsxModal = (): ReactElement => {
   const [isOpenModal, setIsOpenModal] = useState(false);
 
-  const { tasksList, clientsList, isLoading } = useClientsContext();
+  const { tasksList, clientsList, clientListOptions, isLoading } =
+    useClientsContext();
 
   const { control, setValue, setFocus, reset, handleSubmit } =
     useForm<FormValues>({
@@ -161,11 +162,7 @@ export const ClientXlsxModal = (): ReactElement => {
                 label="Cliente"
                 allowClear
                 autoClearSearchValue
-                options={clientsList?.map((item) => ({
-                  ...item,
-                  label: item?.name,
-                  value: item?.id,
-                }))}
+                options={clientListOptions}
               />
             </FormItem>
             <FormItem control={control} name="dateField">

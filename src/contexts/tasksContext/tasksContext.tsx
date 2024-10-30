@@ -27,6 +27,7 @@ export interface TasksContextProps {
   taskItem?: Task;
   pricesList?: Array<Prices>;
   clientsList?: Array<Clients>;
+  clientListOptions: Array<Clients>;
   formatedDataToExport?: Array<TasksToExport>;
   navigate: NavigateFunction;
   createTask: (data: PostTask) => Promise<void>;
@@ -78,6 +79,20 @@ export const TasksProvider = ({
     });
   }, [tasksList]);
 
+  const clientListOptions = useMemo(() => {
+    if (!Array.isArray(clientsList)) {
+      return [];
+    }
+
+    return clientsList?.map((item) => {
+      return {
+        ...item,
+        label: item?.name,
+        value: item?.id,
+      };
+    });
+  }, [clientsList]);
+
   const createTask = useCallback(
     async (data: PostTask): Promise<void> => {
       createTaskMutate(data);
@@ -100,6 +115,7 @@ export const TasksProvider = ({
         taskItem,
         pricesList,
         clientsList,
+        clientListOptions,
         formatedDataToExport,
         navigate,
         createTask,

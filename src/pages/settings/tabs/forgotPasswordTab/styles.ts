@@ -9,12 +9,13 @@ export const ForgotPasswordContainer = styled.div`
 
     h1 {
       font-size: 2.5rem;
-      text-align: center;
     }
   }
 
-  .content {
-    max-width: 500px;
-    margin: 0 auto;
+  .content__footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    margin-right: auto;
   }
 `;
