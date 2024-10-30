@@ -12,7 +12,6 @@ import { useDashboardContext } from 'hooks/dashboard/useDashboardContext';
 import UsersImage from 'assets/users.svg';
 import SalesImage from 'assets/sales.svg';
 import VehiclesImage from 'assets/vehicles.svg';
-import PendingImage from 'assets/pending.svg';
 
 // Styles
 import * as Styled from './styles';
@@ -39,12 +38,6 @@ export const Dashboard = (): ReactElement => {
           value={totalPrices}
           bgicon="#FFF3D6"
           icon={<img src={VehiclesImage} alt="Icon" />}
-        />
-        <StatusCard
-          title="Pendentes"
-          value="0"
-          bgicon="#FFEEF0"
-          icon={<img src={PendingImage} alt="Icon" />}
         />
       </div>
 

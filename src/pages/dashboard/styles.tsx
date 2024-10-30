@@ -14,7 +14,7 @@ export const DashboardContainer = styled.div`
     .dashboard__infos {
       display: grid;
       justify-content: space-between;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
 
       width: 90%;
       margin-bottom: 100px;
