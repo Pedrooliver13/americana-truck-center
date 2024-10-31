@@ -30,7 +30,7 @@ const SelectBase = (
     <Styled.SelectContainer>
       {props.label && (
         <label htmlFor={props.id}>
-          <Typography.Title level={5}>
+          <Typography.Title level={5} disabled={props?.disabled}>
             {props.label} {props?.required && '*'}
           </Typography.Title>
         </label>
