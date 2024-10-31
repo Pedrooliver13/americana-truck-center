@@ -7,6 +7,7 @@ export interface Prices {
   value?: number;
   minValue: string;
   maxValue: string;
+  client?: string | null;
   createdAt: Timestamp | string;
 }
 
@@ -20,6 +21,7 @@ export interface PostPrice {
   name: string;
   minValue: string | number;
   maxValue: string | number;
+  client?: string | null;
 }
 
 export interface PutPrice extends PostPrice {

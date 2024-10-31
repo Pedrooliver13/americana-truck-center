@@ -18,6 +18,7 @@ import {
   Tooltip,
   Modal,
   InputNumber,
+  Select,
 } from 'components/core';
 
 // Hooks
@@ -40,6 +41,8 @@ const schema = zod
     minValue: zod
       .string({ message: 'Campo obrigatório' })
       .min(1, { message: 'Campo obrigatório' }),
+
+    client: zod.string().optional().nullable(),
   })
   .superRefine((values, ctx) => {
     const minValue = convertCurrencyToNumber(values?.minValue);
@@ -70,6 +73,7 @@ export const PricesForm = (): ReactElement => {
   const {
     id,
     priceItem,
+    clientsListOptions,
     createPrice,
     updatePrice,
     onToggleModal,
@@ -83,6 +87,7 @@ export const PricesForm = (): ReactElement => {
       name: '',
       maxValue: '',
       minValue: '',
+      client: null,
     },
     values: priceItem,
     resolver: zodResolver(schema),
@@ -162,6 +167,20 @@ export const PricesForm = (): ReactElement => {
                     placeholder="Preço Completo"
                     autoComplete="off"
                     required
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24}>
+                <FormItem control={control} name="client">
+                  <Select
+                    id="client"
+                    showSearch
+                    placeholder="Selecione um cliente"
+                    optionFilterProp="label"
+                    label="Vincular cliente"
+                    allowClear
+                    autoClearSearchValue
+                    options={clientsListOptions}
                   />
                 </FormItem>
               </Col>

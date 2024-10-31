@@ -72,6 +72,7 @@ export const TasksForm = (): ReactElement => {
     totalPrice,
     totalItems,
     listServices,
+    setServicesSelectedList,
     handleChangeAddNewServiceInList,
   } = useTasksCount(taskItem?.services ?? []);
 
@@ -95,6 +96,8 @@ export const TasksForm = (): ReactElement => {
     resolver: zodResolver(schema),
   });
 
+  const client = watch('client');
+
   const servicesOptions = useMemo(() => {
     const services = taskItem?.services ?? pricesList ?? [];
 
@@ -104,8 +107,10 @@ export const TasksForm = (): ReactElement => {
       });
     }
 
-    return services;
-  }, [taskItem?.services, pricesList, setValue, id]);
+    return services.filter(
+      (service) => client === service?.client || !service?.client || !client
+    );
+  }, [taskItem?.services, pricesList, id, setValue, client]);
 
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
@@ -116,10 +121,15 @@ export const TasksForm = (): ReactElement => {
     option: DefaultOptionType | DefaultOptionType[]
   ): void => {
     const clientOption = option as Clients;
+    setServicesSelectedList([]);
 
     if (!clientOption) {
       return;
     }
+
+    servicesOptions?.forEach((item) => {
+      setValue(item?.name as keyof FormValues, '0');
+    });
 
     setValue('name', clientOption?.name);
     setValue('document', clientOption?.document);
@@ -262,22 +272,18 @@ export const TasksForm = (): ReactElement => {
                   name="licensePlate"
                   className="licensePlate"
                 >
-                  <MaskedInput
-                    id="licensePlate"
-                    label="Placa do veículo"
+                  <Input
+                    name="licensePlate"
+                    label="Placa / Frota"
                     placeholder="Placa do Veículo"
                     autoComplete="off"
                     disabled={Boolean(id)}
-                    mask={[
-                      {
-                        mask: 'aaa-0*00',
-                        lazy: true,
-                      },
-                    ]}
                   />
                 </FormItem>
               </Col>
+
               <Divider />
+
               {servicesOptions?.length <= 0 && (
                 <Col xs={24} md={24} lg={24}>
                   <Empty description="Nenhum preço cadastrado!" />

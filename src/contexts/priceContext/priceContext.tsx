@@ -19,8 +19,10 @@ import { usePostPrice } from 'hooks/prices/usePostPrice';
 import { usePutPrice } from 'hooks/prices/usePutPrice';
 import { useDeletePriceById } from 'hooks/prices/useDeletePriceById';
 import { useGetByIdPrice } from 'hooks/prices/useGetPriceById';
+import { useGetAllClients } from 'hooks/clients/useGetAllClients';
 
 // Models
+import { Clients } from 'models/clients/clients';
 import {
   Prices,
   PricesToExport,
@@ -35,6 +37,7 @@ export interface PricesContextProps {
   id?: string;
   pricesList?: Array<Prices>;
   priceItem?: Prices;
+  clientsListOptions: Array<Clients>;
   formatedDataToExport?: Array<PricesToExport>;
 
   createPrice: (data: PostPrice) => void;
@@ -67,6 +70,9 @@ export const PricesProvider = ({
   const { data: priceItem, isFetching: isFetchingPriceItem } =
     useGetByIdPrice(id);
 
+  const { data: clientsList, isFetching: isFetchingClientsList } =
+    useGetAllClients(id);
+
   const { mutateAsync: createPricePostMutate, isPending: isPendingPost } =
     usePostPrice();
 
@@ -89,6 +95,20 @@ export const PricesProvider = ({
       };
     });
   }, [pricesList]);
+
+  const clientsListOptions = useMemo(() => {
+    if (!Array?.isArray(clientsList)) {
+      return [];
+    }
+
+    return clientsList?.map((item) => {
+      return {
+        ...item,
+        label: item?.name,
+        value: item?.id,
+      };
+    });
+  }, [clientsList]);
 
   const createPrice = useCallback(
     async (data: PostPrice): Promise<void> => {
@@ -133,6 +153,7 @@ export const PricesProvider = ({
         id,
         pricesList: pricesList ?? [],
         priceItem: priceItem,
+        clientsListOptions,
         formatedDataToExport,
         createPrice,
         updatePrice,
@@ -145,7 +166,8 @@ export const PricesProvider = ({
           isPendingPut ||
           isPendingDelete ||
           isFetchingPriceList ||
-          isFetchingPriceItem,
+          isFetchingPriceItem ||
+          isFetchingClientsList,
       }}
     >
       {children}

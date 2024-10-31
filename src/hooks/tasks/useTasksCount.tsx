@@ -14,6 +14,7 @@ interface UseTasksCountReturn {
   totalPrice: number;
   totalItems: number;
   listServices: RadioList;
+  setServicesSelectedList: (state: RadioList) => void;
   handleChangeAddNewServiceInList: (
     e: RadioChangeEvent,
     serviceItem: {
@@ -99,6 +100,7 @@ export const useTasksCount = (serviceList: RadioList): UseTasksCountReturn => {
     totalPrice,
     totalItems,
     listServices: servicesSelectedList,
+    setServicesSelectedList,
     handleChangeAddNewServiceInList,
   };
 };

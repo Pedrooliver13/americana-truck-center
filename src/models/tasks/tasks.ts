@@ -18,6 +18,7 @@ export interface Task {
     value?: number;
     minValue: string;
     maxValue: string;
+    client?: string;
   }>;
 }
 
