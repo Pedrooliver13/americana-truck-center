@@ -30,7 +30,7 @@ export const SalesOverview = (): ReactElement => {
       bar: {
         horizontal: false,
         barHeight: '60%',
-        columnWidth: '15%',
+        columnWidth: '35%',
         borderRadius: [2],
         borderRadiusApplication: 'end',
         borderRadiusWhenStacked: 'all',
