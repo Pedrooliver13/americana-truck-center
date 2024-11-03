@@ -20,7 +20,7 @@ import { useTasksContext } from 'hooks/tasks/useTasksContext';
 import { Task } from 'models/tasks/tasks';
 
 // Pdfs
-import { generateReceiptsPDF } from 'pdfs/receiptsPdf';
+import { downloadReceiptsPDF } from 'pdfs/receiptsPdf';
 
 // Utils
 import { priceFormatter } from 'utils/formatter';
@@ -201,7 +201,7 @@ export const Tasks = (): ReactElement => {
                         icon={<FileTextOutlinedIcon color="#2B3034" />}
                         size="small"
                         onClick={() =>
-                          generateReceiptsPDF(record as unknown as Task)
+                          downloadReceiptsPDF(record as unknown as Task)
                         }
                       />
                     </>

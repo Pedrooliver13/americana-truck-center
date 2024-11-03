@@ -16,15 +16,19 @@ export const useGetAllTasks = (id?: string) => {
     enabled: Boolean(!id),
   });
 
+  if (!response?.data || !Array.isArray(response?.data)) {
+    return { ...response, data: [] };
+  }
+
   return {
     ...response,
 
     // Data sorted by createdAt
-    data: response.data?.sort((a, b) => {
-      const valueA = moment(a.createdAt.seconds * 1000).format('YYYY-MM-DD');
-      const valueB = moment(b.createdAt.seconds * 1000).format('YYYY-MM-DD');
+    data: response?.data?.sort((a, b) => {
+      const dateA = moment(a?.createdAt?.seconds * 1000);
+      const dateB = moment(b?.createdAt?.seconds * 1000);
 
-      return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      return dateB.diff(dateA);
     }),
   };
 };

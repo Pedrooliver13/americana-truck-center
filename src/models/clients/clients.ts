@@ -1,10 +1,13 @@
+// Packages
+import { Timestamp } from 'firebase/firestore';
+
 export interface Clients {
   id: string;
   name: string;
   email: string;
   document: string;
   phone: string;
-  createdAt: string;
+  createdAt: Timestamp;
 }
 
 export interface ClientsToExport {

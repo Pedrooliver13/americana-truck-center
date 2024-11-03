@@ -2,6 +2,7 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import moment from 'moment';
+import { toast } from 'react-toastify';
 
 // Models
 import { Task } from 'models/tasks/tasks';
@@ -59,7 +60,7 @@ export const generateReceiptsPDF = (data: Task) => {
   );
   doc.text(
     `DATA: ${
-      moment(data?.createdAt.seconds * 1000).format('DD/MM/YYYY') ?? ''
+      moment(data?.createdAt?.seconds * 1000).format('DD/MM/YYYY') ?? ''
     }`,
     secondColumn,
     marginTop + 45
@@ -91,7 +92,7 @@ export const generateReceiptsPDF = (data: Task) => {
 
   // transforme esse service: [{  }]
 
-  const body = data?.services.length
+  const body = data?.services?.length
     ? data?.services.map((service) => [service?.name, '1x'])
     : [];
 
@@ -104,7 +105,7 @@ export const generateReceiptsPDF = (data: Task) => {
     },
     columnStyles: { 0: { cellWidth: 120 } },
     bodyStyles: { valign: 'top' },
-    foot: [['TOTAL DE SERVIÇOS:', data?.services.length]],
+    foot: [['TOTAL DE SERVIÇOS:', body?.length]],
   });
 
   if (finalY) {
@@ -133,8 +134,20 @@ export const generateReceiptsPDF = (data: Task) => {
 
   // Salvar o PDF
   doc.save(
-    `${data?.name}-${moment(data.createdAt.seconds * 1000).format(
+    `${data?.name}-${moment(data?.createdAt?.seconds * 1000).format(
       'DD/MM/YYYY'
     )}.pdf`
   );
+};
+
+export const downloadReceiptsPDF = (data: Task) => {
+  if (!data) {
+    return toast.error('Não há dados para gerar o PDF.');
+  }
+
+  try {
+    generateReceiptsPDF(data);
+  } catch {
+    toast.error('Erro ao gerar o PDF.');
+  }
 };

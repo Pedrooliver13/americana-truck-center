@@ -29,33 +29,41 @@ export const XlsxButtonBase = (
     const body = props?.data.map((item) => {
       let formatedItem = {};
 
-      Object.keys(item).forEach((key) => {
-        if (Array.isArray(item[key])) {
+      if (item) {
+        Object.keys(item).forEach((key) => {
+          if (Array.isArray(item[key])) {
+            formatedItem = {
+              ...formatedItem,
+              [key]: (item[key] as any)?.join(', '),
+            };
+
+            return;
+          }
+
           formatedItem = {
             ...formatedItem,
-            [key]: (item[key] as any)?.join(', '),
+            [key]: item[key],
           };
-
-          return;
-        }
-
-        formatedItem = {
-          ...formatedItem,
-          [key]: item[key],
-        };
-      });
+        });
+      }
 
       return formatedItem;
     });
 
-    downloadExcel({
-      fileName: `${props?.filename}-${new Date().toLocaleDateString()}`,
-      sheet: 'react-export-table-to-excel',
-      tablePayload: {
-        header: Object.keys(props?.data[0]),
-        body,
-      },
-    });
+    try {
+      downloadExcel({
+        fileName: `${
+          props?.filename ?? 'Tabela'
+        }-${new Date().toLocaleDateString()}`,
+        sheet: 'react-export-table-to-excel',
+        tablePayload: {
+          header: Object.keys(props?.data[0]),
+          body,
+        },
+      });
+    } catch {
+      toast.error('Erro ao gerar o EXCEL.');
+    }
   };
 
   return (
