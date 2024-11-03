@@ -30,8 +30,8 @@ export const SalesOverview = (): ReactElement => {
       bar: {
         horizontal: false,
         barHeight: '60%',
-        columnWidth: '35%',
-        borderRadius: [3],
+        columnWidth: '15%',
+        borderRadius: [2],
         borderRadiusApplication: 'end',
         borderRadiusWhenStacked: 'all',
       },
@@ -89,7 +89,10 @@ export const SalesOverview = (): ReactElement => {
             id="chartDate"
             name="chartDate"
             lang="pt-br"
-            format={'DD/MM/YYYY'}
+            format={{
+              format: 'DD/MM/YYYY',
+              type: 'mask',
+            }}
             onChange={(_event, dateString) => setChartDateValue(dateString)}
           />
         </div>
