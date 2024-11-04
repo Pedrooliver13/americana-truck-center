@@ -50,15 +50,21 @@ const ClientXlsxModalBase = (
   const { tasksList, clientsList, clientListOptions, isLoading } =
     useClientsContext();
 
-  const { control, setValue, setFocus, reset, handleSubmit } =
-    useForm<FormValues>({
-      defaultValues: {
-        clientId: '',
-        dateField: [],
-        dateValue: [],
-      },
-      resolver: zodResolver(schema),
-    });
+  const {
+    control,
+    setValue,
+    setFocus,
+    reset,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<FormValues>({
+    defaultValues: {
+      clientId: '',
+      dateField: [],
+      dateValue: [],
+    },
+    resolver: zodResolver(schema),
+  });
 
   const getFormatedDataToExport = useCallback(
     (data: FormValues) => {
@@ -183,7 +189,10 @@ const ClientXlsxModalBase = (
               <DatePicker.RangePicker
                 id="dateField"
                 size="large"
-                format="DD/MM/YYYY"
+                format={{
+                  format: 'DD/MM/YYYY',
+                  type: 'mask',
+                }}
                 style={{ width: '100%' }}
                 onChange={(_event, dateString) => {
                   setValue('dateValue', dateString);
@@ -198,6 +207,7 @@ const ClientXlsxModalBase = (
               type="primary"
               size="large"
               block
+              loading={isSubmitting}
             >
               Gerar EXCEL
             </Button>
