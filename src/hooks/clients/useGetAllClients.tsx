@@ -11,7 +11,7 @@ import { getAllClients } from 'services/clients/getAllClients';
 
 export const useGetAllClients = (id?: string) => {
   const location = useLocation();
-  const URLToEnableGet = ['/', '/clients', '/tasks/new'];
+  const URLToEnableGet = ['/', '/clients', '/tasks/new', '/prices/new'];
 
   const response = useQuery<Array<Clients>>({
     queryKey: ['clients'],
