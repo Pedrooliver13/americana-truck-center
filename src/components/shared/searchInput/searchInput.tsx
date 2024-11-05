@@ -17,7 +17,7 @@ export const SearchInput = (): ReactElement => {
         searchRef.current?.focus();
       }
     });
-  }, []);
+  }, [searchRef]);
 
   return (
     <Select
