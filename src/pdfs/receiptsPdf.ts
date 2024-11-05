@@ -66,24 +66,18 @@ export const generateReceiptsPDF = (data: Task) => {
     marginTop + 45
   );
   doc.text(
-    'CAVALO: ___________________________',
+    `VEÍCULO: ${data?.vehicle ?? '___________________________'}`,
     firstColumn,
     marginTop + 45 + lineSpacing
   );
   doc.text(
-    'CARRETA: ____________________',
+    `PLACA: ${data?.licensePlate ?? '_______________________'} `,
     secondColumn,
     marginTop + 45 + lineSpacing
   );
   doc.text(
     'OUTROS: ___________________________',
     firstColumn,
-    marginTop + 45 + 2 * lineSpacing
-  );
-
-  doc.text(
-    `PLACA: ${data?.licensePlate ?? '_______________________'} `,
-    secondColumn,
     marginTop + 45 + 2 * lineSpacing
   );
 
