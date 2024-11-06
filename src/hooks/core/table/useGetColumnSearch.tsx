@@ -4,6 +4,7 @@ import { Space, type InputRef, type TableColumnType } from 'antd';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined as SearchOutlinedIcon } from '@ant-design/icons';
+import moment from 'moment';
 
 // Components
 import { Button, Input } from 'components/core';
@@ -82,6 +83,12 @@ export const useGetColumnSearch = <T extends DataType>() => {
         return false;
       }
 
+      if (dataIndex === 'createdAt') {
+        return moment(record[dataIndex]?.seconds * 1000)
+          .format('DD/MM/YYYY HH:mm')
+          .includes(value as string);
+      }
+
       return record[dataIndex]
         .toString()
         .toLowerCase()
@@ -93,6 +100,21 @@ export const useGetColumnSearch = <T extends DataType>() => {
       }
     },
     render: (text) => {
+      if (dataIndex === 'createdAt') {
+        return (
+          <Highlighter
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+            searchWords={[searchText]}
+            autoEscape
+            textToHighlight={
+              text
+                ? moment(text?.seconds * 1000).format('DD/MM/YYYY HH:mm')
+                : '-'
+            }
+          />
+        );
+      }
+
       return (
         <Highlighter
           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}

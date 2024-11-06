@@ -1,6 +1,5 @@
 // Packages
 import { ReactElement, useState } from 'react';
-import moment from 'moment';
 import {
   FileTextOutlined as FileTextOutlinedIcon,
   DeleteOutlined as DeleteOutlinedIcon,
@@ -167,11 +166,6 @@ export const Tasks = (): ReactElement => {
                 return a?.createdAt?.seconds - b?.createdAt?.seconds;
               },
               ...getColumnSearchProps('createdAt', 'Data'),
-              render: (value) => {
-                return (
-                  moment(value.seconds * 1000).format('DD/MM/YYYY HH:mm') ?? '-'
-                );
-              },
             },
             {
               title: 'Ações',
