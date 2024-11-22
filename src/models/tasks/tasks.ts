@@ -12,6 +12,7 @@ export interface Task {
   status: number;
   phone: string;
   client?: string;
+  observation?: string;
   services: Array<{
     id: string;
     name: string;
@@ -38,6 +39,7 @@ export interface PostTask {
   vehicle: string | null;
   client: string;
   licensePlate: string;
+  observation?: string;
   createdAt: string;
   services: Array<{
     id: string;

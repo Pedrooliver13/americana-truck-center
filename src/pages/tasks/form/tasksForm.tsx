@@ -25,6 +25,7 @@ import {
   Modal,
   Tooltip,
   MaskedInput,
+  TextArea,
 } from 'components/core';
 
 // Hooks
@@ -50,6 +51,7 @@ const schema = zod.object({
   vehicle: zod.string().nullable(),
   client: zod.string().optional().nullable(),
   licensePlate: zod.string().nullable(),
+  observation: zod.string().optional().nullable(),
 });
 
 type FormValues = zod.infer<typeof schema>;
@@ -91,6 +93,7 @@ export const TasksForm = (): ReactElement => {
       vehicle: '',
       client: null,
       licensePlate: '',
+      observation: '',
     },
     values: taskItem,
     resolver: zodResolver(schema),
@@ -222,6 +225,7 @@ export const TasksForm = (): ReactElement => {
                     firstmasklength={11}
                     disabled={Boolean(id)}
                     status={errors?.document ? 'error' : ''}
+                    required
                     mask={[
                       {
                         mask: Masks.CPF,
@@ -245,6 +249,7 @@ export const TasksForm = (): ReactElement => {
                     disabled={Boolean(id)}
                     status={errors?.phone ? 'error' : ''}
                     autoComplete="off"
+                    required
                     mask={[
                       {
                         mask: Masks.PHONE,
@@ -276,6 +281,22 @@ export const TasksForm = (): ReactElement => {
                     name="licensePlate"
                     label="Placa / Frota"
                     placeholder="Placa do Veículo"
+                    autoComplete="off"
+                    disabled={Boolean(id)}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={24}>
+                <FormItem
+                  control={control}
+                  name="observation"
+                  className="observation"
+                >
+                  <TextArea
+                    name="observation"
+                    label="Observação"
+                    rows={4}
+                    placeholder="Observação"
                     autoComplete="off"
                     disabled={Boolean(id)}
                   />

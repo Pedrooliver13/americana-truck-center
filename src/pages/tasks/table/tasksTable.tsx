@@ -1,5 +1,6 @@
 // Packages
 import { ReactElement, useState } from 'react';
+import moment from 'moment';
 import {
   FileTextOutlined as FileTextOutlinedIcon,
   DeleteOutlined as DeleteOutlinedIcon,
@@ -31,6 +32,7 @@ interface DataType {
   vehicle: string;
   createdAt: string;
   licensePlate: string;
+  observation: string;
   phone: string;
   total: number;
   status: number;
@@ -152,10 +154,19 @@ export const Tasks = (): ReactElement => {
               dataIndex: 'total',
               key: 'total',
               sorter: (a, b) => a.total - b.total,
-              ...getColumnSearchProps('total', 'Total'),
+              ...getColumnSearchProps('total', 'Total', (record) => {
+                return priceFormatter.format(record ?? 0);
+              }),
               render: (value) => (
                 <Tag color="green">{priceFormatter.format(value ?? 0)}</Tag>
               ),
+            },
+            {
+              title: 'Observações',
+              dataIndex: 'observation',
+              key: 'observation',
+              responsive: ['md'],
+              ...getColumnSearchProps('observation', 'Observações'),
             },
             {
               title: 'Data',
@@ -165,7 +176,11 @@ export const Tasks = (): ReactElement => {
               sorter: (a, b) => {
                 return a?.createdAt?.seconds - b?.createdAt?.seconds;
               },
-              ...getColumnSearchProps('createdAt', 'Data'),
+              ...getColumnSearchProps('createdAt', 'Data', (record) => {
+                return moment(record?.seconds * 1000).format(
+                  'DD/MM/YYYY HH:mm'
+                );
+              }),
             },
             {
               title: 'Ações',
@@ -223,6 +238,7 @@ export const Tasks = (): ReactElement => {
             'name',
             'document',
             'total',
+            'observation',
             'createdAt',
             'actions',
           ],

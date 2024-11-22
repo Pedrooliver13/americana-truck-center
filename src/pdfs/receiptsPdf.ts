@@ -80,6 +80,11 @@ export const generateReceiptsPDF = (data: Task) => {
     firstColumn,
     marginTop + 45 + 2 * lineSpacing
   );
+  doc.text(
+    `OBSERVAÇÃO: ${data?.observation ?? '_______________________'}`,
+    firstColumn,
+    marginTop + 55 + 2 * lineSpacing
+  );
 
   // Variável para armazenar o último Y
   let finalY;
@@ -93,7 +98,7 @@ export const generateReceiptsPDF = (data: Task) => {
   autoTable(doc, {
     head: [['SERVIÇOS', 'QTD']],
     body,
-    startY: marginTop + 35 + 3 * lineSpacing + 10, // Ajustar a posição de início da tabela
+    startY: marginTop + 55 + 3 * lineSpacing + 10, // Ajustar a posição de início da tabela
     didDrawCell: (data) => {
       finalY = data.cell.y + data.cell.height;
     },

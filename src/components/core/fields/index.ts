@@ -2,6 +2,7 @@
 export { Input } from './input';
 export { InputNumber } from './inputNumber';
 export { InputPassword } from './inputPassword';
+export { TextArea } from './textArea';
 export { MaskedInput } from './maskedInput';
 export { Radio } from './radio';
 export { RadioGroup } from './radioGroup';

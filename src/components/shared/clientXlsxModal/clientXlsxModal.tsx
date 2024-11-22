@@ -103,6 +103,7 @@ const ClientXlsxModalBase = (
           CELULAR: task?.phone,
           PREÇO: task?.total,
           SERVIÇOS: task?.services?.map((service) => service?.name).join(', '),
+          OBSERVAÇÕES: task?.observation ?? '',
           DATA: moment(task?.createdAt?.seconds * 1000).format('DD/MM/YYYY'),
         };
       });

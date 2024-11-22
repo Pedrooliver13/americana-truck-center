@@ -128,6 +128,7 @@ export const ClientForm = (): ReactElement => {
                     autoComplete="off"
                     firstmasklength={11}
                     status={errors?.document ? 'error' : ''}
+                    required
                     mask={[
                       {
                         mask: Masks.CPF,
@@ -149,6 +150,7 @@ export const ClientForm = (): ReactElement => {
                     label="Celular"
                     placeholder="Celular"
                     status={errors?.phone ? 'error' : ''}
+                    required
                     mask={[
                       {
                         mask: Masks.PHONE,
@@ -165,6 +167,7 @@ export const ClientForm = (): ReactElement => {
                     name="email"
                     label="E-mail"
                     placeholder="E-mail"
+                    required
                   />
                 </FormItem>
               </Col>

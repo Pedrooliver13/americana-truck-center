@@ -16,6 +16,7 @@ export {
   Input,
   InputNumber,
   InputPassword,
+  TextArea,
   Select,
   RadioGroup,
   Radio,
