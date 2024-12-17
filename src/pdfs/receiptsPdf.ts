@@ -50,7 +50,7 @@ export const generateReceiptsPDF = (data: Task) => {
   // Linhas para dados do cliente, agora alinhados em duas colunas
   doc.setFontSize(10);
   const firstColumn = marginLeft;
-  const secondColumn = 135; // Posição horizontal da segunda coluna
+  const secondColumn = 125; // Posição horizontal da segunda coluna
   const lineSpacing = 10; // Espaçamento vertical entre linhas
 
   doc.text(
@@ -71,7 +71,7 @@ export const generateReceiptsPDF = (data: Task) => {
     marginTop + 45 + lineSpacing
   );
   doc.text(
-    `PLACA: ${data?.licensePlate ?? '_______________________'} `,
+    `PLACA/FROTA: ${data?.licensePlate ?? '_______________________'} `,
     secondColumn,
     marginTop + 45 + lineSpacing
   );
@@ -123,7 +123,7 @@ export const generateReceiptsPDF = (data: Task) => {
       marginLeft,
       finalY + 40
     );
-    doc.text(`${data?.document ?? ''}`, 147, finalY + 39);
+    doc.text(`${data?.driverDocument ?? ''}`, 147, finalY + 39);
     doc.text(
       'Documento do Cliente: _________________________',
       110,

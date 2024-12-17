@@ -1,11 +1,12 @@
 // Packages
+import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
 interface StatusCardContainerProps {
   $bgicon?: string;
 }
 
-export const StatusCardContainer = styled.div<StatusCardContainerProps>`
+export const StatusCardContainer = styled(Link)<StatusCardContainerProps>`
   ${({ theme, $bgicon }) => css`
     display: flex;
     justify-content: space-between;
@@ -18,6 +19,11 @@ export const StatusCardContainer = styled.div<StatusCardContainerProps>`
     height: 100px;
     padding: 1.5rem;
     border-radius: 14px;
+    transition: all 0.3s ease-in;
+
+    &:hover {
+      transform: scale(1.02);
+    }
 
     .status-card__infos {
       display: flex;

@@ -18,6 +18,7 @@ export const Settings = (): ReactElement => {
             label: `Alterar senha`,
             key: '1',
             children: <ForgotPasswordTab />,
+            animated: true,
           },
         ]}
       />

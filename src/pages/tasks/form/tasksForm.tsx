@@ -40,16 +40,22 @@ import { priceFormatter } from 'utils/formatter';
 // Models
 import { PostTask } from 'models/tasks/tasks';
 import { Clients } from 'models/clients/clients';
+import { Drivers } from 'models/drivers/drivers';
 
 // Styles
 import * as Styled from './styles';
 
 const schema = zod.object({
   name: zod.string().min(1, { message: 'Campo obrigatório' }),
-  phone: zod.string().min(1, { message: 'Campo obrigatório' }).nullable(),
+  phone: zod.string().nullable(),
+  driverDocument: zod
+    .string()
+    .min(1, { message: 'Campo obrigatório' })
+    .nullable(),
   document: zod.string().min(1, { message: 'Campo obrigatório' }).nullable(),
   vehicle: zod.string().nullable(),
   client: zod.string().optional().nullable(),
+  driver: zod.string().optional().nullable(),
   licensePlate: zod.string().nullable(),
   observation: zod.string().optional().nullable(),
 });
@@ -65,6 +71,7 @@ export const TasksForm = (): ReactElement => {
     navigate,
     pricesList,
     clientListOptions,
+    driverListOptions,
     taskItem,
     createTask,
     isLoading,
@@ -89,9 +96,11 @@ export const TasksForm = (): ReactElement => {
     defaultValues: {
       name: '',
       phone: '',
+      driverDocument: '',
       document: '',
       vehicle: '',
       client: null,
+      driver: null,
       licensePlate: '',
       observation: '',
     },
@@ -105,9 +114,14 @@ export const TasksForm = (): ReactElement => {
     const services = taskItem?.services ?? pricesList ?? [];
 
     if (!id) {
+      // ? preenche os campos com 0 quando for adicionar uma nova tarefa
       services?.forEach((item) => {
         setValue(item?.name as keyof FormValues, '0');
       });
+    }
+
+    if (!client) {
+      return services.filter((service) => !service?.client);
     }
 
     return services.filter(
@@ -127,17 +141,31 @@ export const TasksForm = (): ReactElement => {
     setServicesSelectedList([]);
 
     if (!clientOption) {
-      return;
+      return setValue('client', '');
     }
 
     servicesOptions?.forEach((item) => {
       setValue(item?.name as keyof FormValues, '0');
     });
 
-    setValue('name', clientOption?.name);
     setValue('document', clientOption?.document);
-    setValue('phone', clientOption?.phone);
     setFocus('vehicle');
+  };
+
+  const handleChangeDriver = (
+    _value: string,
+    option: DefaultOptionType | DefaultOptionType[]
+  ): void => {
+    const driverOption = option as Drivers;
+
+    if (!driverOption) {
+      return setValue('driver', '');
+    }
+
+    setValue('name', driverOption?.name);
+    setValue('phone', driverOption?.phone);
+    setValue('driverDocument', driverOption?.document);
+    setFocus('client');
   };
 
   const handleNewItem = async (): Promise<void> => {
@@ -160,7 +188,7 @@ export const TasksForm = (): ReactElement => {
   };
 
   useEffect(() => {
-    setFocus('client');
+    setFocus('driver');
   }, [setFocus]);
 
   return (
@@ -185,14 +213,32 @@ export const TasksForm = (): ReactElement => {
         <Form onFinish={handleSubmit(handleNewItem)} className="tasks-form">
           <Card className="tasks-form__fields" ref={ref1}>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+              {!id && (
+                <Col xs={24}>
+                  <FormItem control={control} name="driver">
+                    <Select
+                      id="driver"
+                      showSearch
+                      placeholder="Selecione um Motorista"
+                      optionFilterProp="label"
+                      label="Vincular Motorista"
+                      allowClear
+                      autoClearSearchValue
+                      disabled={Boolean(id)}
+                      onChange={handleChangeDriver}
+                      options={driverListOptions}
+                    />
+                  </FormItem>
+                </Col>
+              )}
               <Col xs={24}>
                 <FormItem control={control} name="client">
                   <Select
                     id="client"
                     showSearch
-                    placeholder="Selecione um cliente"
+                    placeholder="Selecione um Cliente"
                     optionFilterProp="label"
-                    label="Vincular cliente"
+                    label="Vincular Cliente"
                     allowClear
                     autoClearSearchValue
                     disabled={Boolean(id)}
@@ -205,8 +251,8 @@ export const TasksForm = (): ReactElement => {
                 <FormItem control={control} name="name">
                   <Input
                     name="name"
-                    label="Nome"
-                    placeholder="Nome do Cliente"
+                    label="Nome do Motorista"
+                    placeholder="Nome do Motorista"
                     autoComplete="off"
                     showCount
                     maxLength={150}
@@ -216,10 +262,30 @@ export const TasksForm = (): ReactElement => {
                 </FormItem>
               </Col>
               <Col xs={24} md={12}>
+                <FormItem control={control} name="driverDocument">
+                  <MaskedInput
+                    id="driverDocument"
+                    label="RG do Motorista"
+                    placeholder="Documento"
+                    autoComplete="off"
+                    firstmasklength={11}
+                    disabled={Boolean(id)}
+                    status={errors?.document ? 'error' : ''}
+                    required
+                    mask={[
+                      {
+                        mask: Masks.RG,
+                        lazy: true,
+                      },
+                    ]}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
                 <FormItem control={control} name="document">
                   <MaskedInput
                     id="document"
-                    label="Documento"
+                    label="CPF / CNPJ da Empresa"
                     placeholder="Documento"
                     autoComplete="off"
                     firstmasklength={11}
@@ -249,7 +315,6 @@ export const TasksForm = (): ReactElement => {
                     disabled={Boolean(id)}
                     status={errors?.phone ? 'error' : ''}
                     autoComplete="off"
-                    required
                     mask={[
                       {
                         mask: Masks.PHONE,
@@ -286,6 +351,7 @@ export const TasksForm = (): ReactElement => {
                   />
                 </FormItem>
               </Col>
+
               <Col xs={24} md={24}>
                 <FormItem
                   control={control}

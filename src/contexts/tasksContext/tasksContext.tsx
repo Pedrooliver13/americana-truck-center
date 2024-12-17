@@ -15,18 +15,22 @@ import { useGetByIdTask } from 'hooks/tasks/useGetByIdTask';
 import { useGetAllPrices } from 'hooks/prices/useGetAllPrices';
 import { useDeleteByIdTask } from 'hooks/tasks/useDeleteTaskById';
 import { useGetAllClients } from 'hooks/clients/useGetAllClients';
+import { useGetAllDrivers } from 'hooks/drivers/useGetAllDrivers';
 
 // Models
 import { Task, TasksToExport, PostTask } from 'models/tasks/tasks';
 import { Prices } from 'models/prices/prices';
 import { Clients } from 'models/clients/clients';
+import { Drivers } from 'models/drivers/drivers';
 
 export interface TasksContextProps {
   id?: string;
   tasksList?: Array<Task>;
   taskItem?: Task;
+  driversList?: Array<Drivers>;
   pricesList?: Array<Prices>;
   clientsList?: Array<Clients>;
+  driverListOptions: Array<Drivers>;
   clientListOptions: Array<Clients>;
   formatedDataToExport?: Array<TasksToExport>;
   navigate: NavigateFunction;
@@ -59,6 +63,9 @@ export const TasksProvider = ({
   const { data: clientsList, isFetching: isFetchingClientsList } =
     useGetAllClients(id);
 
+  const { data: driversList, isFetching: isFetchingDriversList } =
+    useGetAllDrivers();
+
   // Mutate's
   const { mutateAsync: createTaskMutate, isPending: isPendingPostTask } =
     usePostTask();
@@ -70,7 +77,8 @@ export const TasksProvider = ({
     return tasksList?.map((item) => {
       return {
         NOME: item?.name,
-        DOCUMENTO: item?.document,
+        'DOCUMENTO DO MOTORISTA': item?.driverDocument,
+        'DOCUMENTO DO CLIENTE': item?.document,
         PLACA: item?.licensePlate,
         'TOTAL(R$)': item?.total ?? 0,
         SERVIÇOS: item?.services?.map((service) => service?.name).join(', '),
@@ -78,6 +86,20 @@ export const TasksProvider = ({
       };
     });
   }, [tasksList]);
+
+  const driverListOptions = useMemo(() => {
+    if (!Array.isArray(driversList)) {
+      return [];
+    }
+
+    return driversList?.map((item) => {
+      return {
+        ...item,
+        label: item?.name,
+        value: item?.id,
+      };
+    });
+  }, [driversList]);
 
   const clientListOptions = useMemo(() => {
     if (!Array.isArray(clientsList)) {
@@ -115,7 +137,9 @@ export const TasksProvider = ({
         taskItem,
         pricesList,
         clientsList,
+        driversList,
         clientListOptions,
+        driverListOptions,
         formatedDataToExport,
         navigate,
         createTask,
@@ -126,7 +150,8 @@ export const TasksProvider = ({
           isFetchingTasksList ||
           isFetchingTaskItem ||
           isFetchingPricesList ||
-          isFetchingClientsList,
+          isFetchingClientsList ||
+          isFetchingDriversList,
       }}
     >
       {children}

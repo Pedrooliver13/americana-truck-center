@@ -9,11 +9,12 @@ interface StatusCardProps {
   value: string | number;
   icon: ReactNode;
   bgicon?: string;
+  to: string;
 }
 
 export const StatusCard = (props: StatusCardProps): ReactElement => {
   return (
-    <Styled.StatusCardContainer $bgicon={props.bgicon}>
+    <Styled.StatusCardContainer to={props?.to} $bgicon={props.bgicon}>
       <div className="status-card__infos">
         <h3 className="status-card__infos--title">{props.title}</h3>
         <p className="status-card__infos--value">{props.value}</p>

@@ -40,6 +40,8 @@ export const SearchInput = (): ReactElement => {
         { value: '/clients/new', label: 'Clientes - Página de Cadastro' },
         { value: '/tasks', label: 'Serviços - Página' },
         { value: '/tasks/new', label: 'Serviços - Página de Cadastro' },
+        { value: '/drivers', label: 'Motoristas - Página' },
+        { value: '/drivers/new', label: 'Motoristas - Página de Cadastro' },
         { value: '/prices', label: 'Preços - Página' },
         { value: '/prices/new', label: 'Preços - Página de Cadastro' },
         { value: '/settings', label: 'Configurações - Página' },
