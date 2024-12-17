@@ -12,12 +12,14 @@ import { useDashboardContext } from 'hooks/dashboard/useDashboardContext';
 import UsersImage from 'assets/users.svg';
 import SalesImage from 'assets/sales.svg';
 import VehiclesImage from 'assets/vehicles.svg';
+import PendingImage from 'assets/pending.svg';
 
 // Styles
 import * as Styled from './styles';
 
 export const Dashboard = (): ReactElement => {
-  const { totalClients, totalTasks, totalPrices } = useDashboardContext();
+  const { totalClients, totalTasks, totalPrices, totalDrivers } =
+    useDashboardContext();
 
   return (
     <Styled.DashboardContainer>
@@ -25,19 +27,29 @@ export const Dashboard = (): ReactElement => {
         <StatusCard
           title="Nº de clientes"
           value={totalClients}
+          to="/clients"
           icon={<img src={UsersImage} alt="Icon" />}
         />
         <StatusCard
           title="Nº de serviços"
           value={totalTasks}
           bgicon="#D9F7E8"
+          to="/tasks"
           icon={<img src={SalesImage} alt="Icon" />}
         />
         <StatusCard
           title="Nº de Preços"
           value={totalPrices}
           bgicon="#FFF3D6"
+          to="/prices"
           icon={<img src={VehiclesImage} alt="Icon" />}
+        />
+        <StatusCard
+          title="Nº de motoristas"
+          value={totalDrivers}
+          bgicon="#FFF3D6"
+          to="/drivers"
+          icon={<img src={PendingImage} alt="Icon" />}
         />
       </div>
 

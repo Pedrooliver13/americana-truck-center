@@ -123,7 +123,7 @@ export const generateReceiptsPDF = (data: Task) => {
       marginLeft,
       finalY + 40
     );
-    doc.text(`${data?.document ?? ''}`, 147, finalY + 39);
+    doc.text(`${data?.driverDocument ?? ''}`, 147, finalY + 39);
     doc.text(
       'Documento do Cliente: _________________________',
       110,

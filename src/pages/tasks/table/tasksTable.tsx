@@ -29,6 +29,7 @@ interface DataType {
   id: string;
   name: string;
   document: string | number;
+  driverDocument: string | number;
   vehicle: string;
   createdAt: string;
   licensePlate: string;
@@ -123,10 +124,10 @@ export const Tasks = (): ReactElement => {
             },
             {
               title: 'Documento',
-              dataIndex: 'document',
-              key: 'document',
+              dataIndex: 'driverDocument',
+              key: 'driverDocument',
               responsive: ['md'],
-              ...getColumnSearchProps('document', 'Documento'),
+              ...getColumnSearchProps('driverDocument', 'Documento'),
             },
             {
               title: 'Contato',
@@ -236,7 +237,7 @@ export const Tasks = (): ReactElement => {
           ],
           defaultCheckedList: [
             'name',
-            'document',
+            'driverDocument',
             'total',
             'observation',
             'createdAt',

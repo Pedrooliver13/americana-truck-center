@@ -12,6 +12,8 @@ export interface Task {
   status: number;
   phone: string;
   client?: string;
+  driver?: string;
+  driverDocument: string;
   observation?: string;
   services: Array<{
     id: string;
@@ -38,6 +40,8 @@ export interface PostTask {
   document: string;
   vehicle: string | null;
   client: string;
+  driverDocument: string;
+  driver: string;
   licensePlate: string;
   observation?: string;
   createdAt: string;

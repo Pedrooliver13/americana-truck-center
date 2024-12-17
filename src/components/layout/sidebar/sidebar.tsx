@@ -9,6 +9,7 @@ import {
   DollarOutlined as DollarOutlinedIcon,
   SettingOutlined as SettingOutlinedIcon,
   PoweroffOutlined as PoweroffOutlinedIcon,
+  IdcardOutlined as IdcardOutlinedIcon,
 } from '@ant-design/icons';
 
 // Hooks
@@ -94,6 +95,11 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
             key: '/clients',
             icon: <UserOutlinedIcon />,
             label: <Link to={'/clients'}>Clientes</Link>,
+          },
+          {
+            key: '/drivers',
+            icon: <IdcardOutlinedIcon />,
+            label: <Link to={'/drivers'}>Motoristas</Link>,
           },
           {
             key: '/prices',
