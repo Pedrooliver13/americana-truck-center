@@ -77,7 +77,8 @@ export const TasksProvider = ({
     return tasksList?.map((item) => {
       return {
         NOME: item?.name,
-        DOCUMENTO: item?.driverDocument,
+        'DOCUMENTO DO MOTORISTA': item?.driverDocument,
+        'DOCUMENTO DO CLIENTE': item?.document,
         PLACA: item?.licensePlate,
         'TOTAL(R$)': item?.total ?? 0,
         SERVIÇOS: item?.services?.map((service) => service?.name).join(', '),

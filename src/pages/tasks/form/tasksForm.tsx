@@ -274,11 +274,7 @@ export const TasksForm = (): ReactElement => {
                     required
                     mask={[
                       {
-                        mask: Masks.CPF,
-                        lazy: true,
-                      },
-                      {
-                        mask: Masks.CNPJ,
+                        mask: Masks.RG,
                         lazy: true,
                       },
                     ]}

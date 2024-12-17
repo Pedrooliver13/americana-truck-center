@@ -27,7 +27,8 @@ export interface Task {
 
 export interface TasksToExport {
   NOME: string;
-  DOCUMENTO: string;
+  'DOCUMENTO DO MOTORISTA': string;
+  'DOCUMENTO DO CLIENTE': string;
   PLACA: string;
   'TOTAL(R$)': number;
   SERVIÇOS: string;
