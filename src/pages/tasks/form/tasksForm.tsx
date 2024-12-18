@@ -57,6 +57,7 @@ const schema = zod.object({
   client: zod.string().optional().nullable(),
   driver: zod.string().optional().nullable(),
   licensePlate: zod.string().nullable(),
+  fleet: zod.string().nullable(),
   observation: zod.string().optional().nullable(),
 });
 
@@ -102,6 +103,7 @@ export const TasksForm = (): ReactElement => {
       client: null,
       driver: null,
       licensePlate: '',
+      fleet: '',
       observation: '',
     },
     values: taskItem,
@@ -171,6 +173,10 @@ export const TasksForm = (): ReactElement => {
   const handleNewItem = async (): Promise<void> => {
     const value = watch();
 
+    const currentClient = clientListOptions?.find(
+      (clientOption) => clientOption?.id === client
+    );
+
     if (listServices.length <= 0) {
       toast.error('Selecione ao menos um serviço!');
       return;
@@ -178,6 +184,7 @@ export const TasksForm = (): ReactElement => {
 
     const prepareData = {
       ...value,
+      currentClient: currentClient ?? '',
       licensePlate: value?.licensePlate?.toUpperCase(),
       total: totalPrice,
       services: listServices,
@@ -342,10 +349,27 @@ export const TasksForm = (): ReactElement => {
                   name="licensePlate"
                   className="licensePlate"
                 >
-                  <Input
+                  <MaskedInput
                     name="licensePlate"
-                    label="Placa / Frota"
+                    label="Placa"
                     placeholder="Placa do Veículo"
+                    autoComplete="off"
+                    disabled={Boolean(id)}
+                    mask={[
+                      {
+                        mask: Masks.PLATE,
+                        lazy: true,
+                      },
+                    ]}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="fleet" className="fleet">
+                  <Input
+                    name="fleet"
+                    label="Frota"
+                    placeholder="Frota de Veículos"
                     autoComplete="off"
                     disabled={Boolean(id)}
                   />

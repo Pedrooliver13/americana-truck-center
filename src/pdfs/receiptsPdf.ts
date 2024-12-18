@@ -10,6 +10,9 @@ import { Task } from 'models/tasks/tasks';
 // Assets
 import LogoImage from 'assets/americana-truck-center.png';
 
+// Utils
+import { abbreviatesStrings } from 'utils/formatter';
+
 export const generateReceiptsPDF = (data: Task) => {
   // Criar um novo documento PDF
   const doc = new jsPDF();
@@ -54,7 +57,9 @@ export const generateReceiptsPDF = (data: Task) => {
   const lineSpacing = 10; // Espaçamento vertical entre linhas
 
   doc.text(
-    `CLIENTE: ${data?.name?.toUpperCase() ?? ''}`,
+    `CLIENTE: ${
+      data?.currentClient?.name?.toUpperCase() ?? '___________________________'
+    }`,
     firstColumn,
     marginTop + 45
   );
@@ -71,7 +76,7 @@ export const generateReceiptsPDF = (data: Task) => {
     marginTop + 45 + lineSpacing
   );
   doc.text(
-    `PLACA/FROTA: ${data?.licensePlate ?? '_______________________'} `,
+    `PLACA: ${data?.licensePlate ?? '_______________________'} `,
     secondColumn,
     marginTop + 45 + lineSpacing
   );
@@ -79,6 +84,11 @@ export const generateReceiptsPDF = (data: Task) => {
     'OUTROS: ___________________________',
     firstColumn,
     marginTop + 45 + 2 * lineSpacing
+  );
+  doc.text(
+    `FROTA: ${data?.fleet ?? '_______________________'} `,
+    secondColumn,
+    marginTop + 55 + lineSpacing
   );
   doc.text(
     `OBSERVAÇÃO: ${data?.observation ?? '_______________________'}`,
@@ -117,6 +127,11 @@ export const generateReceiptsPDF = (data: Task) => {
       'nem por objetos deixados no interior dos caminhões/veículos.',
       marginLeft,
       finalY + 15
+    );
+    doc.text(
+      `${abbreviatesStrings(data?.name) ?? ''}`,
+      marginLeft + 35,
+      finalY + 39
     );
     doc.text(
       'Assinatura do Cliente: ___________________________',

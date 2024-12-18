@@ -23,6 +23,9 @@ import { Prices } from 'models/prices/prices';
 import { Clients } from 'models/clients/clients';
 import { Drivers } from 'models/drivers/drivers';
 
+// Utils
+import { convertCurrencyToNumber } from 'utils/formatter';
+
 export interface TasksContextProps {
   id?: string;
   tasksList?: Array<Task>;
@@ -80,7 +83,8 @@ export const TasksProvider = ({
         'DOCUMENTO DO MOTORISTA': item?.driverDocument,
         'DOCUMENTO DO CLIENTE': item?.document,
         PLACA: item?.licensePlate,
-        'TOTAL(R$)': item?.total ?? 0,
+        FROTA: item?.fleet,
+        'TOTAL(R$)': convertCurrencyToNumber(String(item?.total)) ?? 0,
         SERVIÇOS: item?.services?.map((service) => service?.name).join(', '),
         DATA: moment(item?.createdAt?.seconds * 1000).format('DD/MM/YYYY'),
       };
