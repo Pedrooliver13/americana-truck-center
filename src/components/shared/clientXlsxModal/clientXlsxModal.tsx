@@ -109,6 +109,7 @@ const ClientXlsxModalBase = (
           'DOCUMENTO DO CLIENTE': task?.document,
           CELULAR: task?.phone,
           PREÇO: task?.total,
+          FROTA: task?.fleet,
           SERVIÇOS: task?.services?.map((service) => service?.name).join(', '),
           OBSERVAÇÕES: task?.observation ?? '',
           DATA: moment(task?.createdAt?.seconds * 1000).format('DD/MM/YYYY'),

@@ -38,7 +38,7 @@ export const Dashboard = (): ReactElement => {
           icon={<img src={SalesImage} alt="Icon" />}
         />
         <StatusCard
-          title="Nº de Preços"
+          title="Nº de preços"
           value={totalPrices}
           bgicon="#FFF3D6"
           to="/prices"
