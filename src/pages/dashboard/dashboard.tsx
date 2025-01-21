@@ -8,6 +8,9 @@ import { SalesOverview } from 'components/shared';
 // Hooks
 import { useDashboardContext } from 'hooks/dashboard/useDashboardContext';
 
+// Contexts
+import { useAuth } from 'contexts/authContext';
+
 // Assets
 import UsersImage from 'assets/users.svg';
 import SalesImage from 'assets/sales.svg';
@@ -18,6 +21,8 @@ import PendingImage from 'assets/pending.svg';
 import * as Styled from './styles';
 
 export const Dashboard = (): ReactElement => {
+  const { isAdmin } = useAuth();
+
   const { totalClients, totalTasks, totalPrices, totalDrivers } =
     useDashboardContext();
 
@@ -53,9 +58,11 @@ export const Dashboard = (): ReactElement => {
         />
       </div>
 
-      <div className="container dashboard__charts">
-        <SalesOverview />
-      </div>
+      {isAdmin && (
+        <div className="container dashboard__charts">
+          <SalesOverview />
+        </div>
+      )}
     </Styled.DashboardContainer>
   );
 };
