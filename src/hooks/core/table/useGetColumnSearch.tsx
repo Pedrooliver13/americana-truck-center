@@ -102,14 +102,14 @@ export const useGetColumnSearch = <T extends DataType>() => {
       }
     },
     render: (text) => {
-      const currentRender = customRender ? customRender(text) : text ?? '-';
+      const currentRender = customRender ? customRender(text) : text;
 
       return (
         <Highlighter
           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={currentRender}
+          textToHighlight={currentRender ? currentRender : '-'}
         />
       );
     },

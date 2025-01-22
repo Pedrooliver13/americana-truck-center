@@ -10,6 +10,9 @@ import { Task } from 'models/tasks/tasks';
 // Assets
 import LogoImage from 'assets/americana-truck-center.png';
 
+// Utils
+import { abbreviatesStrings } from 'utils/formatter';
+
 export const generateReceiptsPDF = (data: Task) => {
   // Criar um novo documento PDF
   const doc = new jsPDF();
@@ -50,11 +53,13 @@ export const generateReceiptsPDF = (data: Task) => {
   // Linhas para dados do cliente, agora alinhados em duas colunas
   doc.setFontSize(10);
   const firstColumn = marginLeft;
-  const secondColumn = 135; // Posição horizontal da segunda coluna
+  const secondColumn = 125; // Posição horizontal da segunda coluna
   const lineSpacing = 10; // Espaçamento vertical entre linhas
 
   doc.text(
-    `CLIENTE: ${data?.name?.toUpperCase() ?? ''}`,
+    `CLIENTE: ${
+      data?.currentClient?.name?.toUpperCase() ?? '___________________________'
+    }`,
     firstColumn,
     marginTop + 45
   );
@@ -79,6 +84,11 @@ export const generateReceiptsPDF = (data: Task) => {
     'OUTROS: ___________________________',
     firstColumn,
     marginTop + 45 + 2 * lineSpacing
+  );
+  doc.text(
+    `FROTA: ${data?.fleet ?? '_______________________'} `,
+    secondColumn,
+    marginTop + 55 + lineSpacing
   );
   doc.text(
     `OBSERVAÇÃO: ${data?.observation ?? '_______________________'}`,
@@ -119,11 +129,16 @@ export const generateReceiptsPDF = (data: Task) => {
       finalY + 15
     );
     doc.text(
+      `${abbreviatesStrings(data?.name) ?? ''}`,
+      marginLeft + 35,
+      finalY + 39
+    );
+    doc.text(
       'Assinatura do Cliente: ___________________________',
       marginLeft,
       finalY + 40
     );
-    doc.text(`${data?.document ?? ''}`, 147, finalY + 39);
+    doc.text(`${data?.driverDocument ?? ''}`, 147, finalY + 39);
     doc.text(
       'Documento do Cliente: _________________________',
       110,

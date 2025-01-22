@@ -7,6 +7,7 @@ import moment from 'moment';
 import { useGetAllClients } from 'hooks/clients/useGetAllClients';
 import { useGetAllPrices } from 'hooks/prices/useGetAllPrices';
 import { useGetAllTasks } from 'hooks/tasks/useGetAllTasks';
+import { useGetAllDrivers } from 'hooks/drivers/useGetAllDrivers';
 
 // Models
 import { DashboardChart } from 'models/dashboard/dashboard';
@@ -16,6 +17,7 @@ export interface DashboardContextProps {
   totalClients: number;
   totalPrices: number;
   totalTasks: number;
+  totalDrivers: number;
   chartDataList: Array<DashboardChart>;
   chartDateValue: Array<string> | null;
   setChartDateValue: React.Dispatch<React.SetStateAction<Array<string> | null>>;
@@ -38,6 +40,7 @@ export const DashboardProvider = ({
   const { data: clientsList } = useGetAllClients();
   const { data: pricesList } = useGetAllPrices();
   const { data: tasksList } = useGetAllTasks();
+  const { data: driversList } = useGetAllDrivers();
 
   const totalClients = useMemo(() => {
     if (!Array.isArray(clientsList)) {
@@ -62,6 +65,14 @@ export const DashboardProvider = ({
 
     return tasksList?.length;
   }, [tasksList]);
+
+  const totalDrivers = useMemo(() => {
+    if (!Array.isArray(driversList)) {
+      return 0;
+    }
+
+    return driversList?.length;
+  }, [driversList]);
 
   const chartDataList = useMemo(() => {
     if (!Array.isArray(tasksList)) {
@@ -134,6 +145,7 @@ export const DashboardProvider = ({
         totalClients,
         totalPrices,
         totalTasks,
+        totalDrivers,
         chartDataList,
         chartDateValue,
         setChartDateValue,

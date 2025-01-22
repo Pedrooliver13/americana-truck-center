@@ -9,6 +9,7 @@ import {
   DollarOutlined as DollarOutlinedIcon,
   SettingOutlined as SettingOutlinedIcon,
   PoweroffOutlined as PoweroffOutlinedIcon,
+  IdcardOutlined as IdcardOutlinedIcon,
 } from '@ant-design/icons';
 
 // Hooks
@@ -60,7 +61,7 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
       onBreakpoint={handleBreakpoint}
     >
       <a href="/" className="sidebar__logo">
-        <img src={TruckCenterLogo} alt="Logo marca" loading="lazy" />
+        <img src={TruckCenterLogo} alt="Logo marca" />
       </a>
       <Menu
         className="sidebar__menu"
@@ -94,6 +95,11 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
             key: '/clients',
             icon: <UserOutlinedIcon />,
             label: <Link to={'/clients'}>Clientes</Link>,
+          },
+          {
+            key: '/drivers',
+            icon: <IdcardOutlinedIcon />,
+            label: <Link to={'/drivers'}>Motoristas</Link>,
           },
           {
             key: '/prices',

@@ -98,16 +98,21 @@ export const PricesForm = (): ReactElement => {
   };
 
   const onSubmit = (data: FormValues) => {
+    const preparedData = {
+      ...data,
+      client: data?.client || '',
+    };
+
     if (id) {
-      updatePrice({ ...data, id });
+      updatePrice({ ...preparedData, id });
       return;
     }
 
-    createPrice(data);
+    createPrice(preparedData);
   };
 
   useEffect(() => {
-    setFocus('name');
+    setFocus('client');
   }, [setFocus]);
 
   return (
@@ -132,6 +137,20 @@ export const PricesForm = (): ReactElement => {
         <Form onFinish={handleSubmit(onSubmit)} className="prices-form">
           <Card className="prices-form__fields" ref={ref1}>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+              <Col xs={24}>
+                <FormItem control={control} name="client">
+                  <Select
+                    id="client"
+                    showSearch
+                    placeholder="Selecione um Cliente"
+                    optionFilterProp="label"
+                    label="Vincular Cliente"
+                    allowClear
+                    autoClearSearchValue
+                    options={clientsListOptions}
+                  />
+                </FormItem>
+              </Col>
               <Col xs={24} md={24}>
                 <FormItem control={control} name="name">
                   <Input
@@ -167,20 +186,6 @@ export const PricesForm = (): ReactElement => {
                     placeholder="Preço Completo"
                     autoComplete="off"
                     required
-                  />
-                </FormItem>
-              </Col>
-              <Col xs={24}>
-                <FormItem control={control} name="client">
-                  <Select
-                    id="client"
-                    showSearch
-                    placeholder="Selecione um cliente"
-                    optionFilterProp="label"
-                    label="Vincular cliente"
-                    allowClear
-                    autoClearSearchValue
-                    options={clientsListOptions}
                   />
                 </FormItem>
               </Col>

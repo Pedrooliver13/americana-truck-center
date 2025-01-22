@@ -72,6 +72,10 @@ const ClientXlsxModalBase = (
         return [];
       }
 
+      const currentClient = clientsList?.find(
+        (item) => item?.id === data?.clientId
+      );
+
       const clientTasksList = tasksList
         ?.filter((task) => {
           return task?.client === data?.clientId;
@@ -99,16 +103,20 @@ const ClientXlsxModalBase = (
 
       return clientTasksList?.map((task) => {
         return {
-          NOME: task?.name,
+          CLIENTE: currentClient?.name ?? '',
+          'NOME DO MOTORISTA': task?.name,
+          'DOCUMENTO DO MOTORISTA': task?.driverDocument,
+          'DOCUMENTO DO CLIENTE': task?.document,
           CELULAR: task?.phone,
           PREÇO: task?.total,
+          FROTA: task?.fleet,
           SERVIÇOS: task?.services?.map((service) => service?.name).join(', '),
           OBSERVAÇÕES: task?.observation ?? '',
           DATA: moment(task?.createdAt?.seconds * 1000).format('DD/MM/YYYY'),
         };
       });
     },
-    [tasksList]
+    [tasksList, clientsList]
   );
 
   const handleGenerateExcel = (data: FormValues): void => {

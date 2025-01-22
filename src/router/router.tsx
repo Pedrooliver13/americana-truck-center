@@ -13,6 +13,7 @@ import { ForgotPassword } from 'pages/forgotPassword';
 import { Dashboard } from 'pages/dashboard';
 import { Tasks, TasksForm } from 'pages/tasks';
 import { ClientsTable, ClientForm } from 'pages/clients';
+import { DriversTable, DriversForm } from 'pages/drivers';
 import { PricesTable, PricesForm } from 'pages/prices';
 import { Settings } from 'pages/settings';
 import { Page404 } from 'pages/page404';
@@ -22,6 +23,7 @@ import { TasksContextLayout } from 'contexts/tasksContext';
 import { ClientsContextLayout } from 'contexts/clientContext';
 import { PriceContextLayout } from 'contexts/priceContext';
 import { DashboardContextLayout } from 'contexts/dashboardContext';
+import { DriverContextLayout } from 'contexts/driversContext';
 
 export const Router = (): ReactElement => {
   return (
@@ -51,6 +53,12 @@ export const Router = (): ReactElement => {
           <Route path="/clients" element={<ClientsTable />} />
           <Route path="/clients/new" element={<ClientForm />} />
           <Route path="/clients/:id" element={<ClientForm />} />
+        </Route>
+
+        <Route element={<DriverContextLayout />}>
+          <Route path="/drivers" element={<DriversTable />} />
+          <Route path="/drivers/new" element={<DriversForm />} />
+          <Route path="/drivers/:id" element={<DriversForm />} />
         </Route>
 
         <Route element={<PriceContextLayout />}>
