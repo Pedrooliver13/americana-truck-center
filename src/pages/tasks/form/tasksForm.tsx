@@ -1,14 +1,8 @@
 // Packages
-import { ReactElement, useEffect, useMemo, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { Divider, Empty, Tour } from 'antd';
-import { useForm } from 'react-hook-form';
 import { FormItem } from 'react-hook-form-antd';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { QuestionCircleOutlined as QuestionCircleOutlinedIcon } from '@ant-design/icons';
-import { toast } from 'react-toastify';
-import { DefaultOptionType } from 'antd/es/select';
-import moment from 'moment';
-import * as zod from 'zod';
 
 // Components
 import {
@@ -29,39 +23,15 @@ import {
 } from 'components/core';
 
 // Hooks
-import { useTasksCount } from 'hooks/tasks/useTasksCount';
 import { useTaskFormTour } from 'hooks/tasks/useTaskFormTour';
-import { useTasksContext } from 'hooks/tasks/useTasksContext';
+import { FormValues, useTaskForm } from 'hooks/tasks/useTaskForm';
 
 // Utils
 import { Masks } from 'utils/masks';
 import { priceFormatter } from 'utils/formatter';
 
-// Models
-import { PostTask } from 'models/tasks/tasks';
-import { Clients } from 'models/clients/clients';
-import { Drivers } from 'models/drivers/drivers';
-
 // Styles
 import * as Styled from './styles';
-
-const schema = zod.object({
-  name: zod.string().min(1, { message: 'Campo obrigatório' }),
-  phone: zod.string().nullable(),
-  driverDocument: zod
-    .string()
-    .min(1, { message: 'Campo obrigatório' })
-    .nullable(),
-  document: zod.string().min(1, { message: 'Campo obrigatório' }).nullable(),
-  vehicle: zod.string().nullable(),
-  client: zod.string().optional().nullable(),
-  driver: zod.string().optional().nullable(),
-  licensePlate: zod.string().nullable(),
-  fleet: zod.string().nullable(),
-  observation: zod.string().optional().nullable(),
-});
-
-type FormValues = zod.infer<typeof schema>;
 
 export const TasksForm = (): ReactElement => {
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -69,134 +39,31 @@ export const TasksForm = (): ReactElement => {
 
   const {
     id,
-    navigate,
-    pricesList,
     clientListOptions,
     driverListOptions,
-    taskItem,
-    createTask,
-    isLoading,
-  } = useTasksContext();
 
-  const {
     totalPrice,
     totalItems,
     listServices,
-    setServicesSelectedList,
-    handleChangeAddNewServiceInList,
-  } = useTasksCount(taskItem?.services ?? []);
 
-  const {
-    control,
-    handleSubmit,
-    setFocus,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useForm<FormValues>({
-    defaultValues: {
-      name: '',
-      phone: '',
-      driverDocument: '',
-      document: '',
-      vehicle: '',
-      client: null,
-      driver: null,
-      licensePlate: '',
-      fleet: '',
-      observation: '',
+    selects: { servicesOptions },
+    handlers: {
+      handleChangeClient,
+      handleChangeDriver,
+      handleNewItem,
+      handleChangeAddNewServiceInList,
     },
-    values: taskItem,
-    resolver: zodResolver(schema),
-  });
 
-  const client = watch('client');
-
-  const servicesOptions = useMemo(() => {
-    const services = taskItem?.services ?? pricesList ?? [];
-
-    if (!id) {
-      // ? preenche os campos com 0 quando for adicionar uma nova tarefa
-      services?.forEach((item) => {
-        setValue(item?.name as keyof FormValues, '0');
-      });
-    }
-
-    if (!client) {
-      return services.filter((service) => !service?.client);
-    }
-
-    return services.filter(
-      (service) => client === service?.client || !service?.client || !client
-    );
-  }, [taskItem?.services, pricesList, id, setValue, client]);
+    control,
+    errors,
+    navigate,
+    isLoading,
+    handleSubmit,
+  } = useTaskForm();
 
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
   };
-
-  const handleChangeClient = (
-    _value: string,
-    option: DefaultOptionType | DefaultOptionType[]
-  ): void => {
-    const clientOption = option as Clients;
-    setServicesSelectedList([]);
-
-    if (!clientOption) {
-      return setValue('client', '');
-    }
-
-    servicesOptions?.forEach((item) => {
-      setValue(item?.name as keyof FormValues, '0');
-    });
-
-    setValue('document', clientOption?.document);
-    setFocus('vehicle');
-  };
-
-  const handleChangeDriver = (
-    _value: string,
-    option: DefaultOptionType | DefaultOptionType[]
-  ): void => {
-    const driverOption = option as Drivers;
-
-    if (!driverOption) {
-      return setValue('driver', '');
-    }
-
-    setValue('name', driverOption?.name);
-    setValue('phone', driverOption?.phone);
-    setValue('driverDocument', driverOption?.document);
-    setFocus('client');
-  };
-
-  const handleNewItem = async (): Promise<void> => {
-    const value = watch();
-
-    const currentClient = clientListOptions?.find(
-      (clientOption) => clientOption?.id === client
-    );
-
-    if (listServices.length <= 0) {
-      toast.error('Selecione ao menos um serviço!');
-      return;
-    }
-
-    const prepareData = {
-      ...value,
-      currentClient: currentClient ?? '',
-      licensePlate: value?.licensePlate?.toUpperCase(),
-      total: totalPrice,
-      services: listServices,
-      createdAt: taskItem?.createdAt ?? moment().format('YYYY-MM-DD'),
-    };
-
-    createTask(prepareData as PostTask);
-  };
-
-  useEffect(() => {
-    setFocus('driver');
-  }, [setFocus]);
 
   return (
     <>
@@ -225,6 +92,7 @@ export const TasksForm = (): ReactElement => {
                   <FormItem control={control} name="driver">
                     <Select
                       id="driver"
+                      autoFocus
                       showSearch
                       placeholder="Selecione um Motorista"
                       optionFilterProp="label"
@@ -242,6 +110,7 @@ export const TasksForm = (): ReactElement => {
                 <FormItem control={control} name="client">
                   <Select
                     id="client"
+                    autoFocus={Boolean(id)}
                     showSearch
                     placeholder="Selecione um Cliente"
                     optionFilterProp="label"
@@ -426,7 +295,7 @@ export const TasksForm = (): ReactElement => {
                           handleChangeAddNewServiceInList(e, item)
                         }
                       >
-                        Completo:{' '}
+                        COMPLETO:{' '}
                         {priceFormatter
                           .format(+item?.maxValue)
                           .replace('R$ ', '')}
@@ -448,7 +317,7 @@ export const TasksForm = (): ReactElement => {
                           handleChangeAddNewServiceInList(e, item)
                         }
                       >
-                        Nenhum
+                        NENHUM
                       </Radio>
                     </RadioGroup>
                   </FormItem>

@@ -18,7 +18,7 @@ import { useAuth } from 'contexts/authContext';
 
 export const Avatar = (): ReactElement => {
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
+  const { currentUser, isAdmin } = useAuth();
   const { mutate } = useSignOut();
 
   return (
@@ -54,7 +54,7 @@ export const Avatar = (): ReactElement => {
 
         <div className="avatar__infos">
           <p>{currentUser?.email}</p>
-          <span>Admin</span>
+          <span>{isAdmin ? 'admin' : 'usuário'}</span>
         </div>
 
         <Button shape="circle" size="small">
