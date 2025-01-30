@@ -1,5 +1,5 @@
 // Packages
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { singOut } from 'services/auth/auth';
 
 export const useSignOut = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const mutation = useMutation({
@@ -14,6 +15,8 @@ export const useSignOut = () => {
 
     onSuccess: () => {
       toast.success('Sessão encerrada com sucesso!');
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+
       navigate('/login');
     },
 
