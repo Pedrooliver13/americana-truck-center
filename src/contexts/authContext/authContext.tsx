@@ -4,6 +4,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { auth } from 'config/firebase';
@@ -19,11 +20,13 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
+type currentUser = {
+  email: string;
+  uid: string;
+};
+
 interface AuthContextProps {
-  currentUser: {
-    email: string;
-    uid: string;
-  } | null;
+  currentUser: currentUser | null;
 
   isAdmin: boolean;
   isUserLoggedIn: boolean;
@@ -43,10 +46,20 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { data: allUsers } = useGetAllUsers();
 
-  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isUserLoggedIn, setUserLoggedIn] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState<currentUser | null>(null);
+
+  const isAdmin = useMemo(() => {
+    if (!currentUser?.email || !allUsers) {
+      return false;
+    }
+
+    return allUsers.some(
+      (user) =>
+        currentUser?.email === user?.email && user?.roles.includes(ERoles.ADMIN)
+    );
+  }, [allUsers, currentUser]);
 
   const initializeUser = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,19 +72,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUserLoggedIn(false);
       }
 
-      if (Array.isArray(allUsers)) {
-        const isAdmin = allUsers.some(
-          (user) =>
-            userParam?.email === user?.email &&
-            user?.roles.includes(ERoles.ADMIN)
-        );
-
-        setIsAdmin(isAdmin);
-      }
-
       setIsLoading(false);
     },
-    [allUsers]
+    []
   );
 
   useEffect(() => {
