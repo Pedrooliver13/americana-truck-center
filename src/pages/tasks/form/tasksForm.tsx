@@ -146,7 +146,7 @@ export const TasksForm = (): ReactElement => {
                     autoComplete="off"
                     firstmasklength={11}
                     disabled={Boolean(id)}
-                    status={errors?.document ? 'error' : ''}
+                    status={errors?.driverDocument ? 'error' : ''}
                     required
                     mask={[
                       {
