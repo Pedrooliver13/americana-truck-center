@@ -52,6 +52,7 @@ export const useTaskForm = () => {
     setFocus,
     watch,
     setValue,
+    clearErrors,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -110,6 +111,9 @@ export const useTaskForm = () => {
         return setValue('driver', '');
       }
 
+      clearErrors('name');
+      clearErrors('phone');
+      clearErrors('driverDocument');
       setValue('name', driverOption?.name);
       setValue('phone', driverOption?.phone);
       setValue('driverDocument', driverOption?.document);

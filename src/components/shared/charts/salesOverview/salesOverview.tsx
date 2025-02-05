@@ -3,19 +3,26 @@ import { ReactElement } from 'react';
 import { DatePicker } from 'antd';
 import Chart, { Props } from 'react-apexcharts';
 
-// Styles
-import * as Styled from './styles';
-
 // Hooks
 import { useDashboardContext } from 'hooks/dashboard/useDashboardContext';
 
+// Contexts
+import { useGlobalContext } from 'contexts/globalContext';
+
+// Styles
+import * as Styled from './styles';
+
 export const SalesOverview = (): ReactElement => {
+  const { theme } = useGlobalContext();
   const { chartDataList, setChartDateValue } = useDashboardContext();
 
   const categories = chartDataList.map((chartData) => chartData?.createdAt);
   const data = chartDataList.map((chartData) => chartData?.value);
 
   const optionscolumnchart = {
+    theme: {
+      mode: theme,
+    },
     chart: {
       type: 'bar',
       fontFamily: "'Plus Jakarta Sans', sans-serif;",
@@ -46,8 +53,7 @@ export const SalesOverview = (): ReactElement => {
       enabled: true,
     },
     grid: {
-      borderColor: 'rgba(0,0,0,0.1)',
-      strokeDashArray: 3,
+      strokeDashArray: 10,
       xaxis: {
         lines: {
           show: false,
@@ -60,15 +66,12 @@ export const SalesOverview = (): ReactElement => {
     xaxis: {
       categories,
       axisBorder: {
-        show: false,
+        show: true,
       },
     },
     tooltip: {
       theme: 'dark',
       fillSeriesColor: false,
-    },
-    options: {
-      theme: 'dark',
     },
   };
 

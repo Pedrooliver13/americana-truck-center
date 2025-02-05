@@ -14,11 +14,11 @@ import * as Styled from './styles';
 import { useSignOut } from 'hooks/login/useSignOut';
 
 // Contexts
-import { useAuth } from 'contexts/authContext';
+import { useGlobalContext } from 'contexts/globalContext';
 
 export const Avatar = (): ReactElement => {
   const navigate = useNavigate();
-  const { currentUser, isAdmin } = useAuth();
+  const { currentUser, isAdmin } = useGlobalContext();
   const { mutate } = useSignOut();
 
   return (

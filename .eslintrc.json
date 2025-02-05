@@ -46,6 +46,7 @@
         "Models": [{ "path": "models" }],
         "Services": [{ "path": "services" }],
         "Pdfs": [{ "path": "pdfs" }],
+        "Libs": [{ "path": "libs" }],
         "Styles": [
           { "path": "styles" },
           { "path": ".css" },

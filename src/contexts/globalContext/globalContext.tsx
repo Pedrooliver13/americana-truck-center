@@ -16,7 +16,7 @@ import { useGetAllUsers } from 'hooks/users/useGetAllUsers';
 // Models
 import { ERoles } from 'models/auth/auth';
 
-interface AuthProviderProps {
+interface GlobalProviderProps {
   children: React.ReactNode;
 }
 
@@ -25,27 +25,34 @@ type currentUser = {
   uid: string;
 };
 
-interface AuthContextProps {
+interface GlobalContextProps {
   currentUser: currentUser | null;
+  theme: 'light' | 'dark';
+  setTheme: (theme: 'light' | 'dark') => void;
 
   isAdmin: boolean;
   isUserLoggedIn: boolean;
   isLoading: boolean;
 }
 
-const AuthContext = createContext({
+const GlobalContext = createContext({
   currentUser: null,
   isUserLoggedIn: false,
   isLoading: true,
-} as AuthContextProps);
+} as GlobalContextProps);
 
-export const useAuth = () => {
-  return useContext(AuthContext);
+export const useGlobalContext = () => {
+  return useContext(GlobalContext);
 };
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+export const GlobalProvider = ({ children }: GlobalProviderProps) => {
   const { data: allUsers } = useGetAllUsers();
 
+  const currentTheme = localStorage.getItem(
+    '@americana-truck-center:theme-state-1.0.0'
+  ) as 'light' | 'dark';
+
+  const [theme, setTheme] = useState(currentTheme);
   const [isLoading, setIsLoading] = useState(true);
   const [isUserLoggedIn, setUserLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState<currentUser | null>(null);
@@ -83,10 +90,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [initializeUser]);
 
   return (
-    <AuthContext.Provider
-      value={{ currentUser, isAdmin, isUserLoggedIn, isLoading }}
+    <GlobalContext.Provider
+      value={{
+        currentUser,
+        theme,
+        setTheme,
+
+        isAdmin,
+        isUserLoggedIn,
+        isLoading,
+      }}
     >
       {!isLoading && children}
-    </AuthContext.Provider>
+    </GlobalContext.Provider>
   );
 };

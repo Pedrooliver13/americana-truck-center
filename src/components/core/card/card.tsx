@@ -5,6 +5,9 @@ import { CardProps as CardAntDesignProps } from 'antd';
 // Styles
 import * as Styled from './styles';
 
+// Contexts
+import { useGlobalContext } from 'contexts/globalContext';
+
 interface CardProps extends CardAntDesignProps {
   children: ReactNode;
 }
@@ -17,7 +20,9 @@ export const CardBase = (
     | null
     | undefined
 ): ReactElement => {
-  return <Styled.CardContainer {...props} ref={ref} />;
+  const { theme } = useGlobalContext();
+
+  return <Styled.CardContainer $currentTheme={theme} {...props} ref={ref} />;
 };
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(CardBase);

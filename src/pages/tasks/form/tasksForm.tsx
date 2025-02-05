@@ -126,6 +126,7 @@ export const TasksForm = (): ReactElement => {
               <Col xs={24} md={24}>
                 <FormItem control={control} name="name">
                   <Input
+                    id="name"
                     name="name"
                     label="Nome do Motorista"
                     placeholder="Nome do Motorista"
@@ -203,6 +204,7 @@ export const TasksForm = (): ReactElement => {
               <Col xs={24} md={12}>
                 <FormItem control={control} name="vehicle">
                   <Input
+                    id="vehicle"
                     name="vehicle"
                     label="Veículo"
                     placeholder="Modelo do Veículo"
@@ -252,6 +254,7 @@ export const TasksForm = (): ReactElement => {
                   className="observation"
                 >
                   <TextArea
+                    id="observation"
                     name="observation"
                     label="Observação"
                     rows={4}

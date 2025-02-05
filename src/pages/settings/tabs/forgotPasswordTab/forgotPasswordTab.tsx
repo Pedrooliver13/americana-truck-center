@@ -14,7 +14,7 @@ import { Button, Card, Col, Form, Input, Row } from 'components/core';
 import { usePasswordReset } from 'hooks/login/usePasswordReset';
 
 // Contexts
-import { useAuth } from 'contexts/authContext';
+import { useGlobalContext } from 'contexts/globalContext';
 
 // Styles
 import * as Styled from './styles';
@@ -26,7 +26,7 @@ const schema = zod.object({
 type FormValues = zod.infer<typeof schema>;
 
 export const ForgotPasswordTab = (): ReactElement => {
-  const { currentUser } = useAuth();
+  const { currentUser } = useGlobalContext();
   const { mutate, isPending } = usePasswordReset({ notNavigate: true });
 
   const { control, handleSubmit, setFocus } = useForm<FormValues>({

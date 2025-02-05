@@ -9,7 +9,7 @@ import { SalesOverview } from 'components/shared';
 import { useDashboardContext } from 'hooks/dashboard/useDashboardContext';
 
 // Contexts
-import { useAuth } from 'contexts/authContext';
+import { useGlobalContext } from 'contexts/globalContext';
 
 // Assets
 import UsersImage from 'assets/users.svg';
@@ -21,7 +21,7 @@ import PendingImage from 'assets/pending.svg';
 import * as Styled from './styles';
 
 export const Dashboard = (): ReactElement => {
-  const { isAdmin } = useAuth();
+  const { isAdmin } = useGlobalContext();
 
   const { totalClients, totalTasks, totalPrices, totalDrivers } =
     useDashboardContext();
