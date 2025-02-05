@@ -7,6 +7,9 @@ import autoTable from 'jspdf-autotable';
 // Components
 import { Button, Tooltip, PdfIcon } from 'components/core';
 
+// Contexts
+import { useGlobalContext } from 'contexts/globalContext';
+
 interface PdfButtonProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: Array<{ [key: string]: any }>;
@@ -21,6 +24,8 @@ export const PdfButtonBase = (
     | null
     | undefined
 ): ReactElement => {
+  const { theme } = useGlobalContext();
+
   const handleDownloadPdf = () => {
     if (!props?.data || (Array.isArray(props?.data) && !props?.data.length)) {
       return toast.error('Não há dados para gerar o PDF.');
@@ -58,7 +63,7 @@ export const PdfButtonBase = (
           ref={ref}
           onClick={handleDownloadPdf}
         >
-          <PdfIcon />
+          <PdfIcon fill={theme === 'dark' ? '#ffffffd8' : '#616161'} />
         </Button>
       </>
     </Tooltip>

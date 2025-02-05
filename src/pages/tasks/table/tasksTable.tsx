@@ -154,6 +154,7 @@ export const Tasks = (): ReactElement => {
               title: 'Total',
               dataIndex: 'total',
               key: 'total',
+              responsive: ['md'],
               sorter: (a, b) => a.total - b.total,
               ...getColumnSearchProps('total', 'Total', (record) => {
                 return priceFormatter.format(record ?? 0);
@@ -208,6 +209,7 @@ export const Tasks = (): ReactElement => {
                       <Button
                         id="print-service"
                         type="text"
+                        className="table__actions--normal"
                         icon={<FileTextOutlinedIcon color="#2B3034" />}
                         size="small"
                         onClick={() =>

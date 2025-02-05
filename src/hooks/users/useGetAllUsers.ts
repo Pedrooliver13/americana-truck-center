@@ -14,7 +14,7 @@ export const useGetAllUsers = () => {
   const response = useQuery<Array<Users>>({
     queryKey: ['users'],
     queryFn: () => getAllUsers() as Promise<Array<Users>>,
-    staleTime: 1000 * 60 * 30, // 30 minutes
+    staleTime: 0,
     enabled: !URLToDisableGet.includes(location),
   });
 

@@ -14,6 +14,7 @@ export const useSignOut = () => {
 
     onSuccess: () => {
       toast.success('Sessão encerrada com sucesso!');
+
       navigate('/login');
     },
 
