@@ -3,6 +3,9 @@ import { ReactElement, forwardRef } from 'react';
 import { MaskedInput as MaskInputAntDesign } from 'antd-mask-input';
 import { InputRef, Typography, InputProps as InputAntDesignProps } from 'antd';
 
+// Contexts
+import { useGlobalContext } from 'contexts/globalContext';
+
 // Styles
 import * as Styled from './styles';
 
@@ -20,8 +23,10 @@ export const MaskedInputBase = (
   props: MaskednputProps,
   ref: React.LegacyRef<InputRef> | undefined
 ): ReactElement => {
+  const { theme } = useGlobalContext();
+
   return (
-    <Styled.InputContainer>
+    <Styled.InputContainer $currentTheme={theme}>
       {props.label && (
         <label htmlFor={props?.id}>
           <Typography.Title

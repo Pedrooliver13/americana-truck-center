@@ -13,8 +13,6 @@ export const TableAntDesign = styled(Table)<TableProps>`
     border-radius: 16px;
 
     .ant-table-content {
-      background-color: ${theme.colors.background};
-      color: ${theme.colors.text};
       min-height: ${minHeight || '250px'};
     }
 
@@ -41,13 +39,13 @@ export const TableAntDesign = styled(Table)<TableProps>`
       max-width: 100px;
       width: fit-content;
       margin: 0 auto;
-      background-color: ${theme.colors['gray-200']} !important;
-      color: ${theme.colors['gray-400']};
+      background-color: ${theme.colors['background']} !important;
+      color: ${theme.colors['text']} !important;
       border: 1px dashed ${theme.colors['gray-300']};
       border-radius: 8px;
 
       &--normal {
-        color: ${theme.colors['gray-400']};
+        color: ${theme.colors['text']};
       }
 
       button {

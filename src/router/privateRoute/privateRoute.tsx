@@ -2,14 +2,14 @@
 import { Navigate } from 'react-router-dom';
 
 // Contexts
-import { useAuth } from 'contexts/authContext';
+import { useGlobalContext } from 'contexts/globalContext';
 
 interface PrivateRouteProps {
   children: React.ReactNode;
 }
 
 export const PrivateRoute = (props: PrivateRouteProps) => {
-  const { isUserLoggedIn } = useAuth();
+  const { isUserLoggedIn } = useGlobalContext();
 
   if (isUserLoggedIn) {
     return props.children;

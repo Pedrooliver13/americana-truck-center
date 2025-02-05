@@ -8,6 +8,9 @@ import { toast } from 'react-toastify';
 // Components
 import { Button, Tooltip, XlsxIcon } from 'components/core';
 
+// Contexts
+import { useGlobalContext } from 'contexts/globalContext';
+
 interface XlsxButtonProps {
   data?: Array<any> | undefined | null;
   filename: string;
@@ -21,6 +24,8 @@ export const XlsxButtonBase = (
     | null
     | undefined
 ): ReactElement => {
+  const { theme } = useGlobalContext();
+
   const handleDownloadExcel = () => {
     if (!props?.data || (Array.isArray(props?.data) && !props?.data.length)) {
       return toast.error('Não há dados para gerar o EXCEL.');
@@ -75,7 +80,7 @@ export const XlsxButtonBase = (
           ref={ref}
           onClick={handleDownloadExcel}
         >
-          <XlsxIcon />
+          <XlsxIcon fill={theme === 'dark' ? '#ffffffd8' : '#616161'} />
         </Button>
       </>
     </Tooltip>

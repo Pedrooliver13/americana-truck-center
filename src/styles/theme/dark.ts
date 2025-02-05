@@ -1,13 +1,15 @@
 export const darkTheme = {
   colors: {
-    body: '#1B2431',
+    body: '#141414',
     primary: '#5D87FF',
     secondary: '#49BEFF',
     text: '#FFFFFF',
-    background: '#273142',
-    border: '#1B2431',
-    inputBackground: '#323d4e',
-    placeholder: '#eeee',
+    background: '#1f1f1f',
+    border: '#434343',
+    inputBackground: '#1f1f1f',
+    inputHover: '#2a2a2a',
+    inputBorder: '#434343',
+    placeholder: '#8c8c8c',
 
     white: '#FFFFFF',
     green: '#4AD991',

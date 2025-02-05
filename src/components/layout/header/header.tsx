@@ -4,7 +4,7 @@ import { MenuOutlined as MenuOutlinedIcon } from '@ant-design/icons';
 
 // Components
 import { Avatar } from 'components/core';
-import { SearchInput } from 'components/shared';
+import { SearchInput, ButtonTheme } from 'components/shared';
 
 // Styles
 import * as Styled from './styles';
@@ -24,6 +24,7 @@ export const Header = (props: HeaderProps): ReactElement => {
           <SearchInput />
         </div>
         <div className="content__avatar">
+          <ButtonTheme />
           <Avatar />
         </div>
       </div>

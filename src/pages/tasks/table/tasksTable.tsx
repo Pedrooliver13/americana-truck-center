@@ -209,6 +209,7 @@ export const Tasks = (): ReactElement => {
                       <Button
                         id="print-service"
                         type="text"
+                        className="table__actions--normal"
                         icon={<FileTextOutlinedIcon color="#2B3034" />}
                         size="small"
                         onClick={() =>
