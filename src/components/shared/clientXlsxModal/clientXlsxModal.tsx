@@ -22,6 +22,9 @@ import {
 // Hooks
 import { useClientsContext } from 'hooks/clients/useClientsContext';
 
+// Contexts
+import { useGlobalContext } from 'contexts/globalContext';
+
 // Styles
 import * as Styled from './styles';
 
@@ -45,6 +48,7 @@ const ClientXlsxModalBase = (
     | null
     | undefined
 ): ReactElement => {
+  const { theme } = useGlobalContext();
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const { tasksList, clientsList, clientListOptions, isLoading } =
@@ -157,7 +161,7 @@ const ClientXlsxModalBase = (
           onClick={handleToggleModal}
           ref={ref}
         >
-          <XlsxIcon />
+          <XlsxIcon fill={theme === 'dark' ? '#ffffffd8' : '#616161'} />
         </Button>
       </Tooltip>
 

@@ -90,8 +90,8 @@ export const PricesProvider = ({
     return pricesList?.map((item) => {
       return {
         NOME: item?.name,
-        'VALOR VISUAL': priceFormatter.format(Number(item?.minValue)),
-        'VALOR COMPLETO': priceFormatter.format(Number(item?.maxValue)),
+        TIPO: item?.type,
+        VALOR: priceFormatter.format(Number(item?.value)),
       };
     });
   }, [pricesList]);
@@ -114,8 +114,7 @@ export const PricesProvider = ({
     async (data: PostPrice): Promise<void> => {
       const payload = {
         ...data,
-        minValue: convertCurrencyToNumber(String(data?.minValue)),
-        maxValue: convertCurrencyToNumber(String(data?.maxValue)),
+        value: convertCurrencyToNumber(String(data?.value)),
       };
 
       createPricePostMutate(payload);
@@ -127,8 +126,7 @@ export const PricesProvider = ({
     async (data: PutPrice): Promise<void> => {
       const payload = {
         ...data,
-        minValue: convertCurrencyToNumber(String(data?.minValue)),
-        maxValue: convertCurrencyToNumber(String(data?.maxValue)),
+        value: convertCurrencyToNumber(String(data?.value)),
       };
 
       updatePriceMutate(payload);

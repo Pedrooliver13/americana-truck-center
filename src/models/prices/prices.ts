@@ -4,23 +4,22 @@ import { Timestamp } from 'firebase/firestore';
 export interface Prices {
   id: string;
   name: string;
-  value?: number;
-  minValue: string;
-  maxValue: string;
+  type: string;
+  value: string;
   client?: string | null;
   createdAt: Timestamp | string;
 }
 
 export interface PricesToExport {
   NOME: string;
-  'VALOR VISUAL': string;
-  'VALOR COMPLETO': string;
+  TIPO: string;
+  VALOR: string;
 }
 
 export interface PostPrice {
   name: string;
-  minValue: string | number;
-  maxValue: string | number;
+  type: string;
+  value: string | number;
   client?: string | null;
 }
 

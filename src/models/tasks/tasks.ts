@@ -8,6 +8,7 @@ export interface Task {
   id: string;
   name: string;
   document: string;
+  code: string;
   vehicle: string;
   licensePlate: string;
   fleet: string;
@@ -23,14 +24,14 @@ export interface Task {
   services: Array<{
     id: string;
     name: string;
-    value?: number;
-    minValue: string;
-    maxValue: string;
+    type: string;
+    value: number;
     client?: string;
   }>;
 }
 
 export interface TasksToExport {
+  CLIENTE: string;
   NOME: string;
   'DOCUMENTO DO MOTORISTA': string;
   'DOCUMENTO DO CLIENTE': string;
@@ -45,6 +46,7 @@ export interface PostTask {
   name: string;
   phone: string;
   document: string;
+  code: string;
   vehicle: string | null;
   client: string;
   currentClient: Clients | void;
@@ -57,7 +59,7 @@ export interface PostTask {
   services: Array<{
     id: string;
     name: string;
-    minValue: string;
-    maxValue: string;
+    type: string;
+    value: string;
   } | void>;
 }

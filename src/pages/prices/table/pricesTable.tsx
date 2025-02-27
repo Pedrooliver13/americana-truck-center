@@ -66,6 +66,20 @@ export const PricesTable = (): ReactElement => {
           isLoading,
           columns: [
             {
+              title: 'Cliente',
+              dataIndex: 'clientName',
+              key: 'clientName',
+              width: '25%',
+              sorter: (a, b) => {
+                if (a?.clientName === b?.clientName) {
+                  return 0;
+                }
+
+                return a?.clientName?.localeCompare(b?.clientName);
+              },
+              ...getColumnSearchProps('clientName', 'Cliente'),
+            },
+            {
               title: 'Nome',
               dataIndex: 'name',
               key: 'name',
@@ -74,21 +88,23 @@ export const PricesTable = (): ReactElement => {
               ...getColumnSearchProps('name', 'Nome'),
             },
             {
-              title: 'Valor Visual',
-              dataIndex: 'minValue',
-              key: 'minValue',
-              responsive: ['md'],
-              ...getColumnSearchProps('minValue', 'Valor Visual'),
-              render: (text) => {
-                return <Tag color="green">{priceFormatter.format(text)}</Tag>;
+              title: 'Tipo',
+              dataIndex: 'type',
+              key: 'type',
+              width: '25%',
+              sorter: (a, b) => {
+                if (a?.type === b?.type) return 0;
+
+                a.type.localeCompare(b.type);
               },
+              ...getColumnSearchProps('type', 'Nome'),
             },
             {
-              title: 'Valor Completo',
-              dataIndex: 'maxValue',
-              key: 'maxValue',
+              title: 'Valor',
+              dataIndex: 'value',
+              key: 'value',
               responsive: ['md'],
-              ...getColumnSearchProps('maxValue', 'Valor Completo'),
+              ...getColumnSearchProps('value', 'Valor'),
               render: (text) => {
                 return <Tag color="green">{priceFormatter.format(text)}</Tag>;
               },
@@ -132,7 +148,13 @@ export const PricesTable = (): ReactElement => {
               ),
             },
           ],
-          defaultCheckedList: ['name', 'minValue', 'maxValue', 'actions'],
+          defaultCheckedList: [
+            'clientName',
+            'name',
+            'type',
+            'value',
+            'actions',
+          ],
         }}
         tour={{
           isOpenTourState,

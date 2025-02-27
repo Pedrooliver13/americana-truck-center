@@ -2,7 +2,10 @@
 import { ReactElement, useState } from 'react';
 import { Divider, Empty, Tour } from 'antd';
 import { FormItem } from 'react-hook-form-antd';
-import { QuestionCircleOutlined as QuestionCircleOutlinedIcon } from '@ant-design/icons';
+import {
+  SearchOutlined as SearchOutlinedIcon,
+  QuestionCircleOutlined as QuestionCircleOutlinedIcon,
+} from '@ant-design/icons';
 
 // Components
 import {
@@ -142,10 +145,10 @@ export const TasksForm = (): ReactElement => {
                 <FormItem control={control} name="driverDocument">
                   <MaskedInput
                     id="driverDocument"
-                    label="RG do Motorista"
+                    label="Documento"
                     placeholder="Documento"
                     autoComplete="off"
-                    firstmasklength={11}
+                    firstmasklength={9}
                     disabled={Boolean(id)}
                     status={errors?.driverDocument ? 'error' : ''}
                     required
@@ -154,7 +157,25 @@ export const TasksForm = (): ReactElement => {
                         mask: Masks.RG,
                         lazy: true,
                       },
+                      {
+                        mask: Masks.CPF,
+                        lazy: true,
+                      },
                     ]}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="code">
+                  <Input
+                    id="code"
+                    name="code"
+                    label="Matrícula"
+                    placeholder="Matrícula"
+                    autoComplete="off"
+                    showCount
+                    maxLength={150}
+                    disabled={Boolean(id)}
                   />
                 </FormItem>
               </Col>
@@ -235,7 +256,7 @@ export const TasksForm = (): ReactElement => {
                   />
                 </FormItem>
               </Col>
-              <Col xs={24} md={12}>
+              <Col xs={24} md={24}>
                 <FormItem control={control} name="fleet" className="fleet">
                   <Input
                     name="fleet"
@@ -267,6 +288,21 @@ export const TasksForm = (): ReactElement => {
 
               <Divider />
 
+              <Col xs={24} md={24} lg={24}>
+                <FormItem control={control} name="search" className="search">
+                  <Input
+                    id="search"
+                    name="search"
+                    size="large"
+                    placeholder="Pesquisar Serviço"
+                    allowClear
+                    autoComplete="off"
+                    prefix={<SearchOutlinedIcon />}
+                    onChange={() => {}}
+                  />
+                </FormItem>
+              </Col>
+
               {servicesOptions?.length <= 0 && (
                 <Col xs={24} md={24} lg={24}>
                   <Empty description="Nenhum preço cadastrado!" />
@@ -274,45 +310,25 @@ export const TasksForm = (): ReactElement => {
               )}
 
               {servicesOptions?.map((item) => (
-                <Col
-                  xs={24}
-                  md={24}
-                  lg={24}
-                  key={item?.name}
-                  style={{ marginBottom: '5px' }}
-                >
+                <Col xs={24} md={24} lg={24} key={item?.name}>
                   <FormItem
                     control={control}
                     name={item?.name as keyof FormValues}
                   >
                     <RadioGroup
-                      label={`${item?.name}:`}
                       id={item?.name}
+                      label={`${item?.name} - (${item?.type}):`}
                       size="large"
                       buttonStyle="solid"
                       disabled={Boolean(id)}
                     >
                       <Radio
-                        value={item?.maxValue}
+                        value={item?.value}
                         onChange={(e) =>
                           handleChangeAddNewServiceInList(e, item)
                         }
                       >
-                        COMPLETO:{' '}
-                        {priceFormatter
-                          .format(+item?.maxValue)
-                          .replace('R$ ', '')}
-                      </Radio>
-                      <Radio
-                        value={item?.minValue}
-                        onChange={(e) =>
-                          handleChangeAddNewServiceInList(e, item)
-                        }
-                      >
-                        VISUAL:{' '}
-                        {priceFormatter
-                          .format(+item?.minValue)
-                          .replace('R$ ', '')}
+                        {priceFormatter.format(+item?.value).replace('R$ ', '')}
                       </Radio>
                       <Radio
                         value={'0'}

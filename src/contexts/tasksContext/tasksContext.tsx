@@ -79,6 +79,7 @@ export const TasksProvider = ({
   const formatedDataToExport = useMemo(() => {
     return tasksList?.map((item) => {
       return {
+        CLIENTE: item?.currentClient?.name ?? '',
         NOME: item?.name,
         'DOCUMENTO DO MOTORISTA': item?.driverDocument,
         'DOCUMENTO DO CLIENTE': item?.document,

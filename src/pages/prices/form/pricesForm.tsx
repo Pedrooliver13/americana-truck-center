@@ -25,45 +25,18 @@ import {
 import { usePricesFormTour } from 'hooks/prices/usePricesFormTour';
 import { usePricesContext } from 'hooks/prices/usePricesContext';
 
-// Utils
-import { convertCurrencyToNumber } from 'utils/formatter';
-
 // Styles
 import * as Styled from './styles';
 
-const schema = zod
-  .object({
-    name: zod.string().min(1, { message: 'Campo obrigatório' }),
-    maxValue: zod
-      .string({ message: 'Campo obrigatório' })
-      .min(1, { message: 'Campo obrigatório' }),
+const schema = zod.object({
+  name: zod.string().min(1, { message: 'Campo obrigatório' }),
+  type: zod.string().min(1, { message: 'Campo obrigatório' }),
+  value: zod
+    .string({ message: 'Campo obrigatório' })
+    .min(1, { message: 'Campo obrigatório' }),
 
-    minValue: zod
-      .string({ message: 'Campo obrigatório' })
-      .min(1, { message: 'Campo obrigatório' }),
-
-    client: zod.string().optional().nullable(),
-  })
-  .superRefine((values, ctx) => {
-    const minValue = convertCurrencyToNumber(values?.minValue);
-    const maxValue = convertCurrencyToNumber(values?.maxValue);
-
-    if (Number(minValue) >= Number(maxValue)) {
-      ctx.addIssue({
-        message: 'O Preço visual não pode ser maior ou igual ao preço completo',
-        code: 'custom',
-        path: ['minValue'],
-      });
-    }
-
-    if (Number(minValue) < 0 || Number(maxValue) < 0) {
-      ctx.addIssue({
-        message: 'Os valores não podem ser negativos',
-        code: 'custom',
-        path: ['minValue'],
-      });
-    }
-  });
+  client: zod.string().optional().nullable(),
+});
 
 type FormValues = zod.infer<typeof schema>;
 
@@ -85,8 +58,8 @@ export const PricesForm = (): ReactElement => {
   const { control, handleSubmit, setFocus } = useForm<FormValues>({
     defaultValues: {
       name: '',
-      maxValue: '',
-      minValue: '',
+      type: '',
+      value: '',
       client: null,
     },
     values: priceItem,
@@ -98,9 +71,15 @@ export const PricesForm = (): ReactElement => {
   };
 
   const onSubmit = (data: FormValues) => {
+    const currentClient = clientsListOptions.find(
+      (client) => client?.id === data?.client
+    );
+
     const preparedData = {
       ...data,
       client: data?.client || '',
+      clientName: currentClient?.name || '',
+      currentClient,
     };
 
     if (id) {
@@ -166,24 +145,26 @@ export const PricesForm = (): ReactElement => {
                 </FormItem>
               </Col>
               <Col xs={24} md={12}>
-                <FormItem control={control} name="minValue">
-                  <InputNumber
-                    id="minValue"
-                    name="minValue"
-                    label="Preço Visual"
-                    placeholder="Preço Visual"
+                <FormItem control={control} name="type">
+                  <Input
+                    id="type"
+                    name="type"
+                    label="Tipo"
+                    placeholder="Tipo de Serviço"
                     autoComplete="off"
+                    showCount
+                    maxLength={150}
                     required
                   />
                 </FormItem>
               </Col>
               <Col xs={24} md={12}>
-                <FormItem control={control} name="maxValue">
+                <FormItem control={control} name="value">
                   <InputNumber
-                    id="maxValue"
-                    name="maxValue"
-                    label="Preço Completo"
-                    placeholder="Preço Completo"
+                    id="value"
+                    name="Value"
+                    label="Valor"
+                    placeholder="Valor"
                     autoComplete="off"
                     required
                   />

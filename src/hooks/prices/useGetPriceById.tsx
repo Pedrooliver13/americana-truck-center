@@ -20,8 +20,8 @@ export const useGetByIdPrice = (id?: string) => {
       ? {
           id: response.data?.id ?? '',
           name: response.data?.name ?? '',
-          minValue: String(response.data?.minValue ?? ''),
-          maxValue: String(response.data?.maxValue ?? ''),
+          type: response.data?.type ?? '',
+          value: String(response.data?.value ?? ''),
           client: response.data?.client ?? null,
           createdAt: response.data?.createdAt ?? '',
         }

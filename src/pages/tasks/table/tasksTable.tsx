@@ -95,7 +95,6 @@ export const Tasks = (): ReactElement => {
                       title: 'Serviço',
                       dataIndex: 'name',
                       key: 'name',
-                      width: '25%',
                       render: (value) => <Tag color="blue">{value}</Tag>,
                     },
                     {
@@ -114,6 +113,14 @@ export const Tasks = (): ReactElement => {
             },
           },
           columns: [
+            {
+              title: 'CNPJ / CPF do Cliente',
+              dataIndex: 'document',
+              key: 'document',
+              width: '20%',
+              sorter: (a, b) => a.document.localeCompare(b.document),
+              ...getColumnSearchProps('document', 'CNPJ do Cliente'),
+            },
             {
               title: 'Nome',
               dataIndex: 'name',
@@ -239,9 +246,8 @@ export const Tasks = (): ReactElement => {
           ],
           defaultCheckedList: [
             'name',
-            'driverDocument',
+            'document',
             'total',
-            'observation',
             'createdAt',
             'actions',
           ],

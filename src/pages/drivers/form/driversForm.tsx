@@ -32,7 +32,8 @@ import * as Styled from './styles';
 
 const schema = zod.object({
   name: zod.string().min(1, { message: 'Campo obrigatório' }),
-  document: zod.string().min(1, { message: 'Campo obrigatório' }),
+  document: zod.string(),
+  code: zod.string(),
   email: zod
     .string()
     .email({ message: 'E-mail inválido' })
@@ -66,6 +67,7 @@ export const DriversForm = (): ReactElement => {
     defaultValues: {
       name: '',
       document: '',
+      code: '',
       email: '',
       phone: '',
     },
@@ -130,17 +132,34 @@ export const DriversForm = (): ReactElement => {
                 <FormItem control={control} name="document">
                   <MaskedInput
                     id="document"
-                    label="RG"
+                    label="Documento"
                     placeholder="Documento"
+                    firstmasklength={9}
                     autoComplete="off"
                     status={errors?.document ? 'error' : ''}
-                    required
                     mask={[
                       {
                         mask: Masks.RG,
                         lazy: true,
                       },
+                      {
+                        mask: Masks.CPF,
+                        lazy: true,
+                      },
                     ]}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="code">
+                  <Input
+                    id="code"
+                    name="code"
+                    label="Matrícula"
+                    placeholder="Matrícula"
+                    autoComplete="off"
+                    showCount
+                    maxLength={150}
                   />
                 </FormItem>
               </Col>

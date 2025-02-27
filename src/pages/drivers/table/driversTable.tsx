@@ -71,6 +71,20 @@ export const DriversTable = (): ReactElement => {
               ...getColumnSearchProps('name', 'Nome'),
             },
             {
+              title: 'Matrícula',
+              dataIndex: 'code',
+              key: 'code',
+              width: '25%',
+              sorter: (a, b) => {
+                if (a?.code === b?.code) {
+                  return 0;
+                }
+
+                a?.code.localeCompare(b?.code);
+              },
+              ...getColumnSearchProps('code', 'Matrícula'),
+            },
+            {
               title: 'Documento',
               dataIndex: 'document',
               key: 'document',
@@ -130,7 +144,7 @@ export const DriversTable = (): ReactElement => {
               ),
             },
           ],
-          defaultCheckedList: ['name', 'document', 'phone', 'actions'],
+          defaultCheckedList: ['name', 'code', 'document', 'phone', 'actions'],
         }}
         tour={{
           isOpenTourState,

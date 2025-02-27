@@ -5,9 +5,8 @@ import { RadioChangeEvent } from 'antd';
 type RadioList = Array<{
   id: string;
   name: string;
-  value?: number;
-  minValue: string;
-  maxValue: string;
+  type: string;
+  value: number | string;
 }>;
 
 interface UseTasksCountReturn {
@@ -20,8 +19,8 @@ interface UseTasksCountReturn {
     serviceItem: {
       id: string;
       name: string;
-      minValue: string;
-      maxValue: string;
+      type: string;
+      value: string | number;
     }
   ) => void;
 }
@@ -54,8 +53,8 @@ export const useTasksCount = (serviceList: RadioList): UseTasksCountReturn => {
       serviceItem: {
         id: string;
         name: string;
-        minValue: string;
-        maxValue: string;
+        type: string;
+        value: string | number;
       }
     ) => {
       setServicesSelectedList((state: RadioList) => {

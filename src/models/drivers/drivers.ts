@@ -2,6 +2,7 @@ export interface Drivers {
   id: string;
   name: string;
   document: string;
+  code: string;
   phone: string;
   email?: string | undefined;
 }

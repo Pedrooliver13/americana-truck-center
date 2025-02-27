@@ -19,6 +19,7 @@ import { PostTask } from 'models/tasks/tasks';
 const schema = zod.object({
   name: zod.string().min(1, { message: 'Campo obrigatório' }),
   phone: zod.string().nullable(),
+  code: zod.string(),
   driverDocument: zod
     .string()
     .min(1, { message: 'Campo obrigatório' })
@@ -30,6 +31,7 @@ const schema = zod.object({
   licensePlate: zod.string().nullable(),
   fleet: zod.string().nullable(),
   observation: zod.string().optional().nullable(),
+  search: zod.string().optional().nullable(),
 });
 
 export type FormValues = zod.infer<typeof schema>;
@@ -60,6 +62,7 @@ export const useTaskForm = () => {
       phone: '',
       driverDocument: '',
       document: '',
+      code: '',
       vehicle: '',
       client: null,
       driver: null,
@@ -71,6 +74,7 @@ export const useTaskForm = () => {
     resolver: zodResolver(schema),
   });
 
+  const searchValue = watch('search');
   const client = watch('client');
 
   const {
@@ -116,6 +120,7 @@ export const useTaskForm = () => {
       clearErrors('driverDocument');
       setValue('name', driverOption?.name);
       setValue('phone', driverOption?.phone);
+      setValue('code', driverOption?.code);
       setValue('driverDocument', driverOption?.document);
       setFocus('client');
     },
@@ -129,6 +134,8 @@ export const useTaskForm = () => {
         toast.error('Selecione ao menos um serviço!');
         return;
       }
+
+      delete value.search;
 
       const prepareData = {
         ...value,
@@ -150,18 +157,56 @@ export const useTaskForm = () => {
       if (!id) {
         // ? preenche os campos com 0 quando for adicionar uma nova tarefa
         services?.forEach((item) => {
-          setValue(item?.name as keyof FormValues, '0');
+          !watch(item?.name as keyof FormValues)
+            ? setValue(item?.name as keyof FormValues, '0')
+            : null;
         });
       }
 
       if (!client) {
-        return services.filter((service) => !service?.client);
+        return services
+          .filter((service) => {
+            const isSameName =
+              searchValue &&
+              service?.name.toLowerCase() === String(searchValue).toLowerCase();
+
+            const isSameType =
+              searchValue &&
+              service?.type.toLowerCase() === String(searchValue).toLowerCase();
+
+            return !searchValue || isSameName || isSameType;
+          })
+          .filter((service) => !service?.client);
       }
 
-      return services.filter(
-        (service) => client === service?.client || !service?.client || !client
-      );
-    }, [taskItem?.services, pricesList, id, setValue, client]),
+      return services
+        .filter((service) => {
+          const isSameName =
+            searchValue &&
+            service?.name
+              .toLowerCase()
+              .includes(String(searchValue).toLowerCase());
+
+          const isSameType =
+            searchValue &&
+            service?.type
+              .toLowerCase()
+              .includes(String(searchValue).toLowerCase());
+
+          return !searchValue || isSameName || isSameType;
+        })
+        .filter(
+          (service) => client === service?.client || !service?.client || !client
+        );
+    }, [
+      taskItem?.services,
+      pricesList,
+      id,
+      setValue,
+      client,
+      searchValue,
+      watch,
+    ]),
   };
 
   return {
