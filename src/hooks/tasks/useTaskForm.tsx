@@ -103,6 +103,7 @@ export const useTaskForm = () => {
       });
 
       setValue('document', clientOption?.document);
+      clearErrors('document');
       setFocus('vehicle');
     },
     handleChangeDriver: (
