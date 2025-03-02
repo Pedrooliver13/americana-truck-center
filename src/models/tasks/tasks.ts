@@ -18,6 +18,7 @@ export interface Task {
   phone: string;
   client?: string;
   currentClient: Clients | null;
+  clientName: string;
   driver?: string;
   driverDocument: string;
   observation?: string;
@@ -49,6 +50,7 @@ export interface PostTask {
   code: string;
   vehicle: string | null;
   client: string;
+  clientName: string;
   currentClient: Clients | void;
   driverDocument: string;
   driver: string;

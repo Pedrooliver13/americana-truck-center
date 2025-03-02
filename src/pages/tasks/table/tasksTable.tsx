@@ -29,6 +29,7 @@ interface DataType {
   id: string;
   name: string;
   document: string | number;
+  clientName?: string;
   driverDocument: string | number;
   vehicle: string;
   createdAt: string;
@@ -113,6 +114,14 @@ export const Tasks = (): ReactElement => {
             },
           },
           columns: [
+            {
+              title: 'Cliente',
+              dataIndex: 'clientName',
+              key: 'clientName',
+              width: '20%',
+              sorter: (a, b) => a?.clientName?.localeCompare(b.clientName),
+              ...getColumnSearchProps('clientName', 'Cliente'),
+            },
             {
               title: 'CNPJ / CPF do Cliente',
               dataIndex: 'document',
@@ -245,8 +254,9 @@ export const Tasks = (): ReactElement => {
             },
           ],
           defaultCheckedList: [
-            'name',
+            'clientName',
             'document',
+            'name',
             'total',
             'createdAt',
             'actions',
