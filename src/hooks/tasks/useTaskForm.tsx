@@ -141,6 +141,7 @@ export const useTaskForm = () => {
       const prepareData = {
         ...value,
         currentClient: currentClient ?? '',
+        clientName: currentClient?.name,
         licensePlate: value?.licensePlate?.toUpperCase(),
         total: totalPrice,
         services: listServices,
