@@ -310,13 +310,13 @@ export const TasksForm = (): ReactElement => {
               )}
 
               {servicesOptions?.map((item) => (
-                <Col xs={24} md={24} lg={24} key={item?.name}>
+                <Col xs={24} md={24} lg={24} key={item?.id}>
                   <FormItem
                     control={control}
-                    name={item?.name as keyof FormValues}
+                    name={item?.id as keyof FormValues}
                   >
                     <RadioGroup
-                      id={item?.name}
+                      id={item?.id}
                       label={`${item?.name} - (${item?.type}):`}
                       size="large"
                       buttonStyle="solid"

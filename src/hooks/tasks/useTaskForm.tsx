@@ -99,7 +99,7 @@ export const useTaskForm = () => {
       }
 
       selects.servicesOptions?.forEach((item) => {
-        setValue(item?.name as keyof FormValues, '0');
+        setValue(item?.id as keyof FormValues, '0');
       });
 
       setValue('document', clientOption?.document);
@@ -159,8 +159,8 @@ export const useTaskForm = () => {
       if (!id) {
         // ? preenche os campos com 0 quando for adicionar uma nova tarefa
         services?.forEach((item) => {
-          !watch(item?.name as keyof FormValues)
-            ? setValue(item?.name as keyof FormValues, '0')
+          !watch(item?.id as keyof FormValues)
+            ? setValue(item?.id as keyof FormValues, '0')
             : null;
         });
       }
@@ -204,10 +204,10 @@ export const useTaskForm = () => {
       taskItem?.services,
       pricesList,
       id,
-      setValue,
       client,
-      searchValue,
       watch,
+      setValue,
+      searchValue,
     ]),
   };
 
