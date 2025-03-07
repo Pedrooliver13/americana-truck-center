@@ -38,7 +38,12 @@ export const generateReceiptsPDF = (data: Task) => {
 
   // Número do recibo
   doc.setFontSize(12);
-  doc.text(`Id: ${data?.id}`, phoneTextX, marginTop + 5, { align: 'right' });
+  doc.text(
+    `Id: ${String(data?.id).substring(data?.id.length - 5)}`,
+    phoneTextX,
+    marginTop + 5,
+    { align: 'right' }
+  );
 
   // Telefones
   doc.setFontSize(10);

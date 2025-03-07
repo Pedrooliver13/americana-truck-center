@@ -151,7 +151,6 @@ export const TasksForm = (): ReactElement => {
                     firstmasklength={9}
                     disabled={Boolean(id)}
                     status={errors?.driverDocument ? 'error' : ''}
-                    required
                     mask={[
                       {
                         mask: Masks.RG,
@@ -189,7 +188,6 @@ export const TasksForm = (): ReactElement => {
                     firstmasklength={11}
                     disabled={Boolean(id)}
                     status={errors?.document ? 'error' : ''}
-                    required
                     mask={[
                       {
                         mask: Masks.CPF,
