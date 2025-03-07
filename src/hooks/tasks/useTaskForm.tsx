@@ -20,11 +20,8 @@ const schema = zod.object({
   name: zod.string().min(1, { message: 'Campo obrigatório' }),
   phone: zod.string().nullable(),
   code: zod.string(),
-  driverDocument: zod
-    .string()
-    .min(1, { message: 'Campo obrigatório' })
-    .nullable(),
-  document: zod.string().min(1, { message: 'Campo obrigatório' }).nullable(),
+  driverDocument: zod.string().nullable(),
+  document: zod.string().nullable(),
   vehicle: zod.string().nullable(),
   client: zod.string().optional().nullable(),
   driver: zod.string().optional().nullable(),
