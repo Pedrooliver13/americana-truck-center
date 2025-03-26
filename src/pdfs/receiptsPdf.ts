@@ -112,7 +112,7 @@ export const generateReceiptsPDF = (data: Task, isShowValue = false) => {
     : [];
 
   autoTable(doc, {
-    head: [['SERVIÇOS', 'QTD']],
+    head: [['SERVIÇOS', isShowValue ? 'VALORES' : 'QTD']],
     body,
     startY: marginTop + 55 + 3 * lineSpacing + 10, // Ajustar a posição de início da tabela
     didDrawCell: (data) => {
