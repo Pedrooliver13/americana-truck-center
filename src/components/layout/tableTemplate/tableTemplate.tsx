@@ -126,7 +126,7 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
             ref={props?.tour?.ref2}
           >
             <Input
-              id="task-search"
+              id="table-search"
               size="large"
               placeholder="Pesquisar"
               allowClear

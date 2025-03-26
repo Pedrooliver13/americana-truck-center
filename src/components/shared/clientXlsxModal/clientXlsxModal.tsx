@@ -25,6 +25,9 @@ import { useClientsContext } from 'hooks/clients/useClientsContext';
 // Contexts
 import { useGlobalContext } from 'contexts/globalContext';
 
+// Models
+import { statusName } from 'models/tasks/tasks';
+
 // Styles
 import * as Styled from './styles';
 
@@ -117,6 +120,7 @@ const ClientXlsxModalBase = (
           SERVIÇOS: task?.services?.map((service) => service?.name).join(', '),
           OBSERVAÇÕES: task?.observation ?? '',
           DATA: moment(task?.createdAt?.seconds * 1000).format('DD/MM/YYYY'),
+          STATUS: statusName[task.status],
         };
       });
     },

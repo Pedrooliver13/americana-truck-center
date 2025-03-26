@@ -11,14 +11,13 @@ import { useGetAllDrivers } from 'hooks/drivers/useGetAllDrivers';
 
 // Models
 import { DashboardChart } from 'models/dashboard/dashboard';
-import { Task } from 'models/tasks/tasks';
 
 export interface DashboardContextProps {
   totalClients: number;
   totalPrices: number;
   totalTasks: number;
   totalDrivers: number;
-  chartDataList: Array<DashboardChart>;
+  chartData: DashboardChart;
   chartDateValue: Array<string> | null;
   setChartDateValue: React.Dispatch<React.SetStateAction<Array<string> | null>>;
 }
@@ -74,69 +73,64 @@ export const DashboardProvider = ({
     return driversList?.length;
   }, [driversList]);
 
-  const chartDataList = useMemo(() => {
+  const chartData = useMemo(() => {
     if (!Array.isArray(tasksList)) {
-      return [];
+      return { categories: [], series: [] };
     }
 
-    return (
-      tasksList
-        // Filtrar os preços por data
-        .filter((task) => {
-          if (!chartDateValue?.length) {
-            return true;
-          }
+    const groupedData = tasksList
+      // Filtrar os preços por data
+      .filter((task) => {
+        if (!chartDateValue?.length) {
+          return true;
+        }
 
-          const startDate = moment(chartDateValue[0], 'DD/MM/YYYY');
-          const endDate = moment(chartDateValue[1], 'DD/MM/YYYY');
+        const startDate = moment(chartDateValue[0], 'DD/MM/YYYY');
+        const endDate = moment(chartDateValue[1], 'DD/MM/YYYY');
 
-          const currentDate = moment(task?.createdAt?.seconds * 1000).format(
-            'DD/MM/YYYY'
-          );
+        const currentDate = moment(task?.createdAt?.seconds * 1000).format(
+          'DD/MM/YYYY'
+        );
 
-          return (
-            moment(currentDate, 'DD/MM/YYYY').isSameOrBefore(endDate) &&
-            moment(currentDate, 'DD/MM/YYYY').isSameOrAfter(startDate)
-          );
-        })
-        // Ordenar os preços por data
-        .sort((a, b) => {
-          const valueA = a.createdAt.seconds * 1000;
-          const valueB = b.createdAt.seconds * 1000;
+        return (
+          moment(currentDate, 'DD/MM/YYYY').isSameOrBefore(endDate) &&
+          moment(currentDate, 'DD/MM/YYYY').isSameOrAfter(startDate)
+        );
+      })
+      // Ordenar por data
+      .sort((a, b) => a.createdAt.seconds - b.createdAt.seconds)
+      // Agrupar os preços por data e status
+      .reduce((acc: Record<string, Record<string, number>>, task) => {
+        const formattedDate = moment(task.createdAt.seconds * 1000).format(
+          'DD/MM'
+        );
+        const status = task.status || 'Sem Status';
 
-          return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
-        })
-        // Agrupar os preços por data
-        .reduce((acc: Task[], task) => {
-          const lastTask = acc[acc.length - 1] as Task | undefined;
+        if (!acc[formattedDate]) {
+          acc[formattedDate] = {};
+        }
+        if (!acc[formattedDate][status]) {
+          acc[formattedDate][status] = 0;
+        }
 
-          if (!lastTask) {
-            return [{ ...task, total: task.total }];
-          }
+        acc[formattedDate][status] += task.total;
 
-          const currentDate = moment(task.createdAt.seconds * 1000).format(
-            'DD/MM'
-          );
-          const lastTaskDate = moment(lastTask.createdAt.seconds * 1000).format(
-            'DD/MM'
-          );
+        return acc;
+      }, {});
 
-          if (currentDate === lastTaskDate) {
-            lastTask.total += task.total;
-
-            return acc;
-          }
-
-          acc.push(task);
-
-          return acc;
-        }, [])
-        .map((task) => ({
-          name: task?.name,
-          value: task?.total ?? 0,
-          createdAt: moment(task.createdAt?.seconds * 1000).format('DD/MM'),
-        }))
+    const seriesNames = Array.from(
+      new Set(tasksList.map((task) => task.status || 'Sem Status'))
     );
+
+    return {
+      categories: Object.keys(groupedData),
+      series: seriesNames.map((status) => ({
+        name: status,
+        data: Object.keys(groupedData).map(
+          (date) => groupedData[date][status] || 0
+        ),
+      })),
+    };
   }, [tasksList, chartDateValue]);
 
   return (
@@ -146,7 +140,7 @@ export const DashboardProvider = ({
         totalPrices,
         totalTasks,
         totalDrivers,
-        chartDataList,
+        chartData,
         chartDateValue,
         setChartDateValue,
       }}

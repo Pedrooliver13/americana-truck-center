@@ -18,7 +18,7 @@ import { useGetAllClients } from 'hooks/clients/useGetAllClients';
 import { useGetAllDrivers } from 'hooks/drivers/useGetAllDrivers';
 
 // Models
-import { Task, TasksToExport, PostTask } from 'models/tasks/tasks';
+import { Task, TasksToExport, PostTask, statusName } from 'models/tasks/tasks';
 import { Prices } from 'models/prices/prices';
 import { Clients } from 'models/clients/clients';
 import { Drivers } from 'models/drivers/drivers';
@@ -88,6 +88,7 @@ export const TasksProvider = ({
         'TOTAL(R$)': convertCurrencyToNumber(String(item?.total)) ?? 0,
         SERVIÇOS: item?.services?.map((service) => service?.name).join(', '),
         DATA: moment(item?.createdAt?.seconds * 1000).format('DD/MM/YYYY'),
+        STATUS: statusName[item?.status],
       };
     });
   }, [tasksList]);
