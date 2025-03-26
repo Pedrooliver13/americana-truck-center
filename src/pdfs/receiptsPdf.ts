@@ -11,9 +11,9 @@ import { Task } from 'models/tasks/tasks';
 import LogoImage from 'assets/americana-truck-center.png';
 
 // Utils
-import { abbreviatesStrings } from 'utils/formatter';
+import { abbreviatesStrings, priceFormatter } from 'utils/formatter';
 
-export const generateReceiptsPDF = (data: Task) => {
+export const generateReceiptsPDF = (data: Task, isShowValue = false) => {
   // Criar um novo documento PDF
   const doc = new jsPDF();
 
@@ -104,10 +104,11 @@ export const generateReceiptsPDF = (data: Task) => {
   // Variável para armazenar o último Y
   let finalY;
 
-  // transforme esse service: [{  }]
-
   const body = data?.services?.length
-    ? data?.services.map((service) => [service?.name, '1x'])
+    ? data?.services.map((service) => [
+        service?.name,
+        isShowValue ? priceFormatter.format(Number(service.value)) : '1x',
+      ])
     : [];
 
   autoTable(doc, {
@@ -119,7 +120,9 @@ export const generateReceiptsPDF = (data: Task) => {
     },
     columnStyles: { 0: { cellWidth: 120 } },
     bodyStyles: { valign: 'top' },
-    foot: [['TOTAL DE SERVIÇOS:', body?.length]],
+    foot: isShowValue
+      ? [['TOTAL:', priceFormatter.format(Number(data.total))]]
+      : [['TOTAL DE SERVIÇOS:', body?.length]],
   });
 
   if (finalY) {
@@ -159,13 +162,13 @@ export const generateReceiptsPDF = (data: Task) => {
   );
 };
 
-export const downloadReceiptsPDF = (data: Task) => {
+export const downloadReceiptsPDF = (data: Task, isShowValue: boolean) => {
   if (!data) {
     return toast.error('Não há dados para gerar o PDF.');
   }
 
   try {
-    generateReceiptsPDF(data);
+    generateReceiptsPDF(data, isShowValue);
   } catch {
     toast.error('Erro ao gerar o PDF.');
   }

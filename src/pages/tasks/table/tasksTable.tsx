@@ -2,14 +2,14 @@
 import { ReactElement, useState } from 'react';
 import moment from 'moment';
 import {
-  FileTextOutlined as FileTextOutlinedIcon,
   DeleteOutlined as DeleteOutlinedIcon,
   EyeOutlined as EyeOutlinedIcon,
 } from '@ant-design/icons';
 
 // Components
-import { Button, Modal, Table, Tag, Tooltip } from 'components/core';
 import { TableTemplate } from 'components/layout';
+import { ButtonPrintTaskReport, ButtonTaskStatus } from 'components/shared';
+import { Button, Modal, Table, Tag, Tooltip } from 'components/core';
 
 // Hooks
 import { useGetColumnSearch } from 'hooks/core';
@@ -19,27 +19,8 @@ import { useTasksContext } from 'hooks/tasks/useTasksContext';
 // Models
 import { Task } from 'models/tasks/tasks';
 
-// Pdfs
-import { downloadReceiptsPDF } from 'pdfs/receiptsPdf';
-
 // Utils
 import { priceFormatter } from 'utils/formatter';
-
-interface DataType {
-  id: string;
-  name: string;
-  document: string | number;
-  clientName?: string;
-  driverDocument: string | number;
-  vehicle: string;
-  createdAt: string;
-  licensePlate: string;
-  observation: string;
-  phone: string;
-  total: number;
-  status: number;
-  services: Array<string>;
-}
 
 export const Tasks = (): ReactElement => {
   const [removeId, setRemoveId] = useState<string | null>(null);
@@ -51,7 +32,7 @@ export const Tasks = (): ReactElement => {
   const { tasksList, deleteTask, navigate, formatedDataToExport, isLoading } =
     useTasksContext();
 
-  const { getColumnSearchProps } = useGetColumnSearch<DataType>();
+  const { getColumnSearchProps } = useGetColumnSearch<Task>();
 
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
@@ -127,6 +108,7 @@ export const Tasks = (): ReactElement => {
               dataIndex: 'document',
               key: 'document',
               width: '20%',
+              responsive: ['md'],
               sorter: (a, b) => a.document.localeCompare(b.document),
               ...getColumnSearchProps('document', 'CNPJ do Cliente'),
             },
@@ -135,6 +117,7 @@ export const Tasks = (): ReactElement => {
               dataIndex: 'name',
               key: 'name',
               width: '20%',
+              responsive: ['md'],
               sorter: (a, b) => a.name.localeCompare(b.name),
               ...getColumnSearchProps('name', 'Nome'),
             },
@@ -201,6 +184,19 @@ export const Tasks = (): ReactElement => {
               }),
             },
             {
+              title: 'Status',
+              dataIndex: 'status',
+              key: 'status',
+              responsive: ['md'],
+              sorter: (a, b) => {
+                return a?.status - b?.status;
+              },
+              ...getColumnSearchProps('statusName', 'Status'),
+              render: (value, record) => {
+                return <ButtonTaskStatus status={value} record={record} />;
+              },
+            },
+            {
               title: 'Ações',
               dataIndex: 'actions',
               key: 'actions',
@@ -222,16 +218,7 @@ export const Tasks = (): ReactElement => {
                   </Tooltip>
                   <Tooltip title="Gerar Recibo">
                     <>
-                      <Button
-                        id="print-service"
-                        type="text"
-                        className="table__actions--normal"
-                        icon={<FileTextOutlinedIcon color="#2B3034" />}
-                        size="small"
-                        onClick={() =>
-                          downloadReceiptsPDF(record as unknown as Task)
-                        }
-                      />
+                      <ButtonPrintTaskReport record={record} />
                     </>
                   </Tooltip>
                   <Tooltip title="Deletar Serviço">
@@ -255,10 +242,10 @@ export const Tasks = (): ReactElement => {
           ],
           defaultCheckedList: [
             'clientName',
-            'document',
             'name',
             'total',
             'createdAt',
+            'status',
             'actions',
           ],
         }}

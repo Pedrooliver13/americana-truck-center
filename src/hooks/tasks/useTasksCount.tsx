@@ -1,5 +1,5 @@
 // Packages
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { RadioChangeEvent } from 'antd';
 
 type RadioList = Array<{
@@ -15,7 +15,7 @@ interface UseTasksCountReturn {
   listServices: RadioList;
   setServicesSelectedList: (state: RadioList) => void;
   handleChangeAddNewServiceInList: (
-    e: RadioChangeEvent,
+    e: RadioChangeEvent | ChangeEvent<HTMLInputElement>,
     serviceItem: {
       id: string;
       name: string;
@@ -49,7 +49,7 @@ export const useTasksCount = (serviceList: RadioList): UseTasksCountReturn => {
 
   const handleChangeAddNewServiceInList = useCallback(
     (
-      e: RadioChangeEvent,
+      e: RadioChangeEvent | ChangeEvent<HTMLInputElement>,
       serviceItem: {
         id: string;
         name: string;
@@ -66,7 +66,7 @@ export const useTasksCount = (serviceList: RadioList): UseTasksCountReturn => {
           (item) => String(item?.id) === String(serviceItem?.id)
         );
 
-        if (e.target.value === '0') {
+        if (e.target.value === '0' || !e.target.value) {
           return state.filter(
             (item) => String(item.id) !== String(serviceItem?.id)
           );

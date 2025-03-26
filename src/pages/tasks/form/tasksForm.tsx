@@ -44,11 +44,15 @@ export const TasksForm = (): ReactElement => {
     id,
     clientListOptions,
     driverListOptions,
-
     totalPrice,
     totalItems,
     listServices,
-
+    control,
+    errors,
+    navigate,
+    isLoading,
+    handleSubmit,
+    watch,
     selects: { servicesOptions },
     handlers: {
       handleChangeClient,
@@ -56,12 +60,6 @@ export const TasksForm = (): ReactElement => {
       handleNewItem,
       handleChangeAddNewServiceInList,
     },
-
-    control,
-    errors,
-    navigate,
-    isLoading,
-    handleSubmit,
   } = useTaskForm();
 
   const handleToggleModal = () => {
@@ -239,18 +237,14 @@ export const TasksForm = (): ReactElement => {
                   name="licensePlate"
                   className="licensePlate"
                 >
-                  <MaskedInput
+                  <Input
+                    id="licensePlate"
                     name="licensePlate"
                     label="Placa"
                     placeholder="Placa do Veículo"
                     autoComplete="off"
+                    maxLength={150}
                     disabled={Boolean(id)}
-                    mask={[
-                      {
-                        mask: Masks.PLATE,
-                        lazy: true,
-                      },
-                    ]}
                   />
                 </FormItem>
               </Col>
@@ -265,7 +259,6 @@ export const TasksForm = (): ReactElement => {
                   />
                 </FormItem>
               </Col>
-
               <Col xs={24} md={24}>
                 <FormItem
                   control={control}
@@ -280,6 +273,38 @@ export const TasksForm = (): ReactElement => {
                     placeholder="Observação"
                     autoComplete="off"
                     disabled={Boolean(id)}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="serviceName">
+                  <Input
+                    name="serviceName"
+                    label="Nome do Serviço (opcional)"
+                    placeholder="Nome do Serviço"
+                    autoComplete="off"
+                    disabled={Boolean(id) || Boolean(watch('serviceValue'))}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="serviceValue">
+                  <Input
+                    id="serviceValue"
+                    name="serviceValue"
+                    label="Valor do Serviço (opcional)"
+                    placeholder="Valor do Serviço"
+                    type="number"
+                    autoComplete="off"
+                    disabled={Boolean(id) || !watch('serviceName')}
+                    onChange={(e) => {
+                      handleChangeAddNewServiceInList(e, {
+                        id: watch('serviceName') + 'Manual',
+                        name: watch('serviceName') || '',
+                        type: 'Manual',
+                        value: '12312',
+                      });
+                    }}
                   />
                 </FormItem>
               </Col>

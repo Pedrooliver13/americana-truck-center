@@ -3,7 +3,7 @@ import moment from 'moment';
 import { useQuery } from '@tanstack/react-query';
 
 // Models
-import { Task } from 'models/tasks/tasks';
+import { statusName, Task } from 'models/tasks/tasks';
 
 // Services
 import { getAllTasks } from 'services/tasks/getAllTasks';
@@ -24,11 +24,13 @@ export const useGetAllTasks = (id?: string) => {
     ...response,
 
     // Data sorted by createdAt
-    data: response?.data?.sort((a, b) => {
-      const dateA = moment(a?.createdAt?.seconds * 1000);
-      const dateB = moment(b?.createdAt?.seconds * 1000);
+    data: response?.data
+      ?.map((task) => ({ ...task, statusName: statusName[task.status] }))
+      .sort((a, b) => {
+        const dateA = moment(a?.createdAt?.seconds * 1000);
+        const dateB = moment(b?.createdAt?.seconds * 1000);
 
-      return dateB.diff(dateA);
-    }),
+        return dateB.diff(dateA);
+      }),
   };
 };

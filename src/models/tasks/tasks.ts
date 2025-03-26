@@ -4,6 +4,18 @@ import { Timestamp } from 'firebase/firestore';
 // Models
 import { Clients } from 'models/clients/clients';
 
+export enum ETaskStatus {
+  PAID_OFF = 1,
+  INVOICE = 2,
+  RECEIVABLE = 3,
+}
+
+export const statusName = {
+  [ETaskStatus.PAID_OFF]: 'Pago',
+  [ETaskStatus.INVOICE]: 'Faturar',
+  [ETaskStatus.RECEIVABLE]: 'A Receber',
+};
+
 export interface Task {
   id: string;
   name: string;
@@ -14,10 +26,11 @@ export interface Task {
   fleet: string;
   createdAt: Timestamp;
   total: number;
-  status: number;
+  status: ETaskStatus.INVOICE | ETaskStatus.PAID_OFF | ETaskStatus.RECEIVABLE;
+  statusName?: string;
   phone: string;
   client?: string;
-  currentClient: Clients | null;
+  currentClient?: Clients | null | void;
   clientName: string;
   driver?: string;
   driverDocument: string;
@@ -26,7 +39,7 @@ export interface Task {
     id: string;
     name: string;
     type: string;
-    value: number;
+    value: number | string;
     client?: string;
   }>;
 }
@@ -41,6 +54,7 @@ export interface TasksToExport {
   'TOTAL(R$)': number;
   SERVIÇOS: string;
   DATA: string;
+  STATUS: string;
 }
 
 export interface PostTask {
@@ -49,19 +63,25 @@ export interface PostTask {
   document: string;
   code: string;
   vehicle: string | null;
-  client: string;
+  client?: string;
   clientName: string;
-  currentClient: Clients | void;
+  currentClient?: Clients | void | null;
   driverDocument: string;
-  driver: string;
+  driver?: string;
   licensePlate: string;
   fleet: string;
   observation?: string;
-  createdAt: string;
+  createdAt: Timestamp;
+  status: ETaskStatus.INVOICE;
   services: Array<{
     id: string;
     name: string;
     type: string;
-    value: string;
+    value: string | number;
+    client?: string;
   } | void>;
+}
+
+export interface PutTask extends PostTask {
+  id: string;
 }

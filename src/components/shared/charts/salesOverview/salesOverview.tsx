@@ -12,12 +12,18 @@ import { useGlobalContext } from 'contexts/globalContext';
 // Styles
 import * as Styled from './styles';
 
+// Models
+import { ETaskStatus } from 'models/tasks/tasks';
+
 export const SalesOverview = (): ReactElement => {
   const { theme } = useGlobalContext();
-  const { chartDataList, setChartDateValue } = useDashboardContext();
+  const { chartData, setChartDateValue } = useDashboardContext();
 
-  const categories = chartDataList.map((chartData) => chartData?.createdAt);
-  const data = chartDataList.map((chartData) => chartData?.value);
+  const getValues = (currentStatus: ETaskStatus) => {
+    return (
+      chartData.series.find((task) => task.name === currentStatus)?.data || []
+    );
+  };
 
   const optionscolumnchart = {
     theme: {
@@ -27,25 +33,20 @@ export const SalesOverview = (): ReactElement => {
       type: 'bar',
       fontFamily: "'Plus Jakarta Sans', sans-serif;",
       foreColor: '#adb0bb',
-      toolbar: {
-        show: true,
-      },
-      height: 370,
     },
-    colors: ['#5D87FF', '#49BEFF'],
+    colors: ['#5D87FF', '#FEC53D', '#EF3826'],
     plotOptions: {
       bar: {
         horizontal: false,
-        barHeight: '60%',
-        columnWidth: '35%',
-        borderRadius: [2],
+        barHeight: '100%',
+        columnWidth: '70%',
+        borderRadius: [8],
         borderRadiusApplication: 'end',
         borderRadiusWhenStacked: 'all',
       },
     },
     stroke: {
       show: true,
-      width: 5,
       lineCap: 'butt',
       colors: ['transparent'],
     },
@@ -53,7 +54,6 @@ export const SalesOverview = (): ReactElement => {
       enabled: true,
     },
     grid: {
-      strokeDashArray: 10,
       xaxis: {
         lines: {
           show: false,
@@ -61,13 +61,10 @@ export const SalesOverview = (): ReactElement => {
       },
     },
     yaxis: {
-      tickAmount: 4,
+      tickAmount: 3,
     },
     xaxis: {
-      categories,
-      axisBorder: {
-        show: true,
-      },
+      categories: chartData?.categories,
     },
     tooltip: {
       theme: 'dark',
@@ -77,8 +74,16 @@ export const SalesOverview = (): ReactElement => {
 
   const seriescolumnchart = [
     {
-      name: 'Ganhos deste dia',
-      data,
+      name: 'Pago',
+      data: getValues(ETaskStatus.PAID_OFF),
+    },
+    {
+      name: 'Faturar',
+      data: getValues(ETaskStatus.INVOICE),
+    },
+    {
+      name: 'A Receber',
+      data: getValues(ETaskStatus.RECEIVABLE),
     },
   ];
 

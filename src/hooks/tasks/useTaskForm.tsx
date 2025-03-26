@@ -14,22 +14,42 @@ import { useTasksContext } from 'hooks/tasks/useTasksContext';
 // Models
 import { Clients } from 'models/clients/clients';
 import { Drivers } from 'models/drivers/drivers';
-import { PostTask } from 'models/tasks/tasks';
+import { ETaskStatus, PostTask } from 'models/tasks/tasks';
 
-const schema = zod.object({
-  name: zod.string().min(1, { message: 'Campo obrigatório' }),
-  phone: zod.string().nullable(),
-  code: zod.string(),
-  driverDocument: zod.string().nullable(),
-  document: zod.string().nullable(),
-  vehicle: zod.string().nullable(),
-  client: zod.string().optional().nullable(),
-  driver: zod.string().optional().nullable(),
-  licensePlate: zod.string().nullable(),
-  fleet: zod.string().nullable(),
-  observation: zod.string().optional().nullable(),
-  search: zod.string().optional().nullable(),
-});
+const schema = zod
+  .object({
+    name: zod.string().min(1, { message: 'Campo obrigatório' }),
+    phone: zod.string().nullable(),
+    code: zod.string(),
+    driverDocument: zod.string().nullable(),
+    document: zod.string().nullable(),
+    vehicle: zod.string().nullable(),
+    client: zod.string().optional().nullable(),
+    driver: zod.string().optional().nullable(),
+    licensePlate: zod.string().nullable(),
+    fleet: zod.string().nullable(),
+    observation: zod.string().optional().nullable(),
+    serviceName: zod.string().optional().nullable(),
+    serviceValue: zod.string().optional().nullable(),
+    search: zod.string().optional().nullable(),
+  })
+  .superRefine((values, ctx) => {
+    if (values.serviceName && !values.serviceValue) {
+      ctx.addIssue({
+        code: zod.ZodIssueCode.custom,
+        message: `Adicione um valor para o serviço`,
+        path: ['serviceValue'],
+      });
+    }
+
+    if (!values.serviceName && values.serviceValue) {
+      ctx.addIssue({
+        code: zod.ZodIssueCode.custom,
+        message: `Adicione um nome para o serviço`,
+        path: ['serviceName'],
+      });
+    }
+  });
 
 export type FormValues = zod.infer<typeof schema>;
 
@@ -66,6 +86,8 @@ export const useTaskForm = () => {
       licensePlate: '',
       fleet: '',
       observation: '',
+      serviceName: '',
+      serviceValue: '',
     },
     values: taskItem,
     resolver: zodResolver(schema),
@@ -138,10 +160,11 @@ export const useTaskForm = () => {
       const prepareData = {
         ...value,
         currentClient: currentClient ?? '',
-        clientName: currentClient?.name,
+        clientName: currentClient?.name ?? '',
         licensePlate: value?.licensePlate?.toUpperCase(),
         total: totalPrice,
         services: listServices,
+        status: ETaskStatus.INVOICE,
         createdAt: taskItem?.createdAt ?? moment().format('YYYY-MM-DD'),
       };
 
