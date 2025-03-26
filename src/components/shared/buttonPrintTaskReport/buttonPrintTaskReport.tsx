@@ -46,8 +46,8 @@ export const ButtonPrintTaskReport = (
         centered
         okText="Mostrar"
         cancelText="Não Mostrar"
-        onClose={handleToggleModal}
-        onCancel={() => handleDownloadPDF(false)}
+        onCancel={handleToggleModal}
+        cancelButtonProps={{ onClick: () => handleDownloadPDF(false) }}
         onOk={() => handleDownloadPDF(true)}
       >
         <p>Ao selecionar "Mostrar", os valores vão ser exibidos no recibo!</p>
