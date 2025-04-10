@@ -10,9 +10,17 @@ import { useGetAllTasks } from 'hooks/tasks/useGetAllTasks';
 import { useGetAllDrivers } from 'hooks/drivers/useGetAllDrivers';
 
 // Models
+import { ETaskStatus } from 'models/tasks/tasks';
 import { DashboardChart } from 'models/dashboard/dashboard';
 
 export interface DashboardContextProps {
+  tasksPendingList?: Array<{
+    id: string;
+    clientName: string;
+    totalPaidOff: number;
+    totalInvoice: number;
+    totalReceivable: number;
+  }>;
   totalClients: number;
   totalPrices: number;
   totalTasks: number;
@@ -133,9 +141,64 @@ export const DashboardProvider = ({
     };
   }, [tasksList, chartDateValue]);
 
+  const tasksPendingList = useMemo(() => {
+    if (!Array.isArray(tasksList)) {
+      return [];
+    }
+
+    const result = tasksList.reduce(
+      (
+        acc: Record<
+          string,
+          {
+            id: string;
+            clientName: string;
+            totalPaidOff: number;
+            totalInvoice: number;
+            totalReceivable: number;
+          }
+        >,
+        task
+      ) => {
+        const clientId = task.client || task.name;
+
+        if (!acc[clientId]) {
+          acc[clientId] = {
+            id: String(Math.random()),
+            clientName: 'Desconhecido',
+            totalPaidOff: 0,
+            totalInvoice: 0,
+            totalReceivable: 0,
+          };
+        }
+
+        const totalServices = task.services.reduce((sum, service) => {
+          return sum + Number(service.value);
+        }, 0);
+
+        acc[clientId].id = task?.client ?? '';
+        acc[clientId].clientName = task?.clientName || task?.name;
+
+        if (task.status === ETaskStatus.PAID_OFF) {
+          acc[clientId].totalPaidOff += totalServices;
+        } else if (task.status === ETaskStatus.INVOICE) {
+          acc[clientId].totalInvoice += totalServices;
+        } else if (task.status === ETaskStatus.RECEIVABLE) {
+          acc[clientId].totalReceivable += totalServices;
+        }
+
+        return acc;
+      },
+      {}
+    );
+
+    return Object.values(result);
+  }, [tasksList]);
+
   return (
     <DashboardContext.Provider
       value={{
+        tasksPendingList,
         totalClients,
         totalPrices,
         totalTasks,

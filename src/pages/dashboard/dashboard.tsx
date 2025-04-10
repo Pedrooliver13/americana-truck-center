@@ -4,6 +4,7 @@ import { ReactElement } from 'react';
 // Components
 import { StatusCard } from 'components/core';
 import { SalesOverview } from 'components/shared';
+import { TasksStatusCard } from 'components/shared/tasksStatusCard';
 
 // Hooks
 import { useDashboardContext } from 'hooks/dashboard/useDashboardContext';
@@ -61,6 +62,7 @@ export const Dashboard = (): ReactElement => {
       {isAdmin && (
         <div className="container dashboard__charts">
           <SalesOverview />
+          <TasksStatusCard />
         </div>
       )}
     </Styled.DashboardContainer>

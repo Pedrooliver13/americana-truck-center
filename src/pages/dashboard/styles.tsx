@@ -17,7 +17,7 @@ export const DashboardContainer = styled.div`
       grid-template-columns: repeat(4, 1fr);
 
       width: 90%;
-      margin-bottom: 100px;
+      margin-bottom: 40px;
       gap: 10px;
 
       @media (max-width: ${theme.breakpoints.XL}) {
@@ -30,8 +30,10 @@ export const DashboardContainer = styled.div`
     }
 
     .dashboard__charts {
-      margin-top: auto;
       width: 90%;
+      gap: 30px;
+      display: flex;
+      flex-direction: column;
     }
   `}
 `;
