@@ -108,7 +108,6 @@ export const Tasks = (): ReactElement => {
               dataIndex: 'document',
               key: 'document',
               width: '20%',
-              responsive: ['md'],
               sorter: (a, b) => a.document.localeCompare(b.document),
               ...getColumnSearchProps('document', 'CNPJ do Cliente'),
             },
@@ -117,7 +116,6 @@ export const Tasks = (): ReactElement => {
               dataIndex: 'name',
               key: 'name',
               width: '20%',
-              responsive: ['md'],
               sorter: (a, b) => a.name.localeCompare(b.name),
               ...getColumnSearchProps('name', 'Nome'),
             },
@@ -125,35 +123,30 @@ export const Tasks = (): ReactElement => {
               title: 'Documento',
               dataIndex: 'driverDocument',
               key: 'driverDocument',
-              responsive: ['md'],
               ...getColumnSearchProps('driverDocument', 'Documento'),
             },
             {
               title: 'Contato',
               dataIndex: 'phone',
               key: 'phone',
-              responsive: ['md'],
               ...getColumnSearchProps('phone', 'Contato'),
             },
             {
               title: 'Veículo',
               dataIndex: 'vehicle',
               key: 'vehicle',
-              responsive: ['md'],
               ...getColumnSearchProps('vehicle', 'Veículo'),
             },
             {
               title: 'Placa do Veículo',
               dataIndex: 'licensePlate',
               key: 'licensePlate',
-              responsive: ['md'],
               ...getColumnSearchProps('licensePlate', 'Placa do Veículo'),
             },
             {
               title: 'Total',
               dataIndex: 'total',
               key: 'total',
-              responsive: ['md'],
               sorter: (a, b) => a.total - b.total,
               ...getColumnSearchProps('total', 'Total', (record) => {
                 return priceFormatter.format(record ?? 0);
@@ -166,14 +159,12 @@ export const Tasks = (): ReactElement => {
               title: 'Observações',
               dataIndex: 'observation',
               key: 'observation',
-              responsive: ['md'],
               ...getColumnSearchProps('observation', 'Observações'),
             },
             {
               title: 'Data',
               dataIndex: 'createdAt',
               key: 'createdAt',
-              responsive: ['md'],
               sorter: (a, b) => {
                 return a?.createdAt?.seconds - b?.createdAt?.seconds;
               },
@@ -187,7 +178,6 @@ export const Tasks = (): ReactElement => {
               title: 'Status',
               dataIndex: 'status',
               key: 'status',
-              responsive: ['md'],
               sorter: (a, b) => {
                 return a?.status - b?.status;
               },

@@ -23,6 +23,7 @@ import { ButtonHideColumns, PdfButton, XlsxButton } from 'components/shared';
 
 // Hooks
 import { useGetHiddenColumns } from 'hooks/core';
+import { useIsMobile } from 'hooks/core/useMobile';
 
 // Utils
 import { debounce } from 'utils/debounce';
@@ -64,6 +65,7 @@ interface TableTemplateProps {
 }
 
 export const TableTemplate = (props: TableTemplateProps): ReactElement => {
+  const isMobile = useIsMobile();
   const [filteredData, setFilteredData] = useState<Array<any> | null>(null);
 
   const { newColumns, options, checkedList, setCheckedList } =
@@ -103,12 +105,14 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
         <h1>
           {props?.header?.title}
           <Tooltip title="Fazer tour da página" placement="bottom">
-            <div>
-              <QuestionCircleOutlinedIcon
-                id="info-icon"
-                onClick={() => props?.tour?.isOpenTourState[1](true)}
-              />
-            </div>
+            {!isMobile && (
+              <div>
+                <QuestionCircleOutlinedIcon
+                  id="info-icon"
+                  onClick={() => props?.tour?.isOpenTourState[1](true)}
+                />
+              </div>
+            )}
           </Tooltip>
         </h1>
 
@@ -170,6 +174,7 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
             columns={newColumns}
             size="small"
             bordered
+            scroll={{ x: 400 }}
             pagination={{
               showSizeChanger: true,
               defaultPageSize: 10,
