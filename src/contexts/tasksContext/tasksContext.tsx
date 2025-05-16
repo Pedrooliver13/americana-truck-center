@@ -16,6 +16,7 @@ import { useGetAllPrices } from 'hooks/prices/useGetAllPrices';
 import { useDeleteByIdTask } from 'hooks/tasks/useDeleteTaskById';
 import { useGetAllClients } from 'hooks/clients/useGetAllClients';
 import { useGetAllDrivers } from 'hooks/drivers/useGetAllDrivers';
+import { useDeleteBatchTaskByIds } from 'hooks/tasks/useDeleteBatchTaskByIds';
 
 // Models
 import { Task, TasksToExport, PostTask, statusName } from 'models/tasks/tasks';
@@ -39,6 +40,7 @@ export interface TasksContextProps {
   navigate: NavigateFunction;
   createTask: (data: PostTask) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
+  deleteBatchTasks: (ids: Array<string>) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -75,6 +77,11 @@ export const TasksProvider = ({
 
   const { mutateAsync: deleteTaskMutate, isPending: isPendingDeleteTask } =
     useDeleteByIdTask();
+
+  const {
+    mutateAsync: deleteBatchTaskMutate,
+    isPending: isPendingDeleteBatchTask,
+  } = useDeleteBatchTaskByIds();
 
   const formatedDataToExport = useMemo(() => {
     return tasksList?.map((item) => {
@@ -135,6 +142,13 @@ export const TasksProvider = ({
     [deleteTaskMutate]
   );
 
+  const deleteBatchTasks = useCallback(
+    async (ids: Array<string>): Promise<void> => {
+      await deleteBatchTaskMutate(ids);
+    },
+    [deleteBatchTaskMutate]
+  );
+
   return (
     <TasksContext.Provider
       value={{
@@ -150,6 +164,7 @@ export const TasksProvider = ({
         navigate,
         createTask,
         deleteTask,
+        deleteBatchTasks,
         isLoading:
           isPendingDeleteTask ||
           isPendingPostTask ||
@@ -157,7 +172,8 @@ export const TasksProvider = ({
           isFetchingTaskItem ||
           isFetchingPricesList ||
           isFetchingClientsList ||
-          isFetchingDriversList,
+          isFetchingDriversList ||
+          isPendingDeleteBatchTask,
       }}
     >
       {children}

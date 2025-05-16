@@ -3,13 +3,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 // Services
-import { deleteTaskById } from 'services/tasks/deleteTask';
+import { deleteBatchTaskByIds } from 'services/tasks/deleteBatchTasks';
 
-export const useDeleteByIdTask = () => {
+export const useDeleteBatchTaskByIds = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (id: string) => deleteTaskById(id),
+    mutationFn: (ids: Array<string>) => deleteBatchTaskByIds(ids),
 
     onSuccess: () => {
       toast.success('Serviço deletado com sucesso!', {

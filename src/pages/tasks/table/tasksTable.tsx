@@ -10,6 +10,7 @@ import {
 import { TableTemplate } from 'components/layout';
 import { ButtonPrintTaskReport, ButtonTaskStatus } from 'components/shared';
 import { Button, Modal, Table, Tag, Tooltip } from 'components/core';
+import { ButtonBatchTaskStatus } from 'components/shared/buttonBatchTaskStatus';
 
 // Hooks
 import { useGetColumnSearch } from 'hooks/core';
@@ -24,13 +25,23 @@ import { priceFormatter } from 'utils/formatter';
 
 export const Tasks = (): ReactElement => {
   const [removeId, setRemoveId] = useState<string | null>(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<
+    Array<React.Key | string>
+  >([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isBatch, setIsBatch] = useState(false);
 
   const { isOpenTourState, steps, ref1, ref2, ref3, ref4, ref5, ref6 } =
     useTaskTableTour();
 
-  const { tasksList, deleteTask, navigate, formatedDataToExport, isLoading } =
-    useTasksContext();
+  const {
+    tasksList,
+    deleteTask,
+    deleteBatchTasks,
+    navigate,
+    formatedDataToExport,
+    isLoading,
+  } = useTasksContext();
 
   const { getColumnSearchProps } = useGetColumnSearch<Task>();
 
@@ -39,6 +50,16 @@ export const Tasks = (): ReactElement => {
   };
 
   const handleDeleteTask = (id: string) => {
+    if (isBatch) {
+      setIsBatch(false);
+
+      return selectedRowKeys.length > 0
+        ? deleteBatchTasks(selectedRowKeys.map(String)).then(() =>
+            setSelectedRowKeys([])
+          )
+        : null;
+    }
+
     deleteTask(id);
   };
 
@@ -49,6 +70,33 @@ export const Tasks = (): ReactElement => {
           title: 'Serviços',
           buttonLabel: 'Adicionar serviço',
           buttonLink: '/tasks/new',
+          extraButtons: (
+            <>
+              {Boolean(selectedRowKeys?.length) && (
+                <>
+                  <ButtonBatchTaskStatus
+                    selectedRows={selectedRowKeys.map(String)}
+                  />
+
+                  <Tooltip title="Deletar múltiplos serviços">
+                    <div>
+                      <Button
+                        danger
+                        size="large"
+                        shape="circle"
+                        onClick={() => {
+                          handleToggleModal();
+                          setIsBatch((state) => !state);
+                        }}
+                      >
+                        <DeleteOutlinedIcon />
+                      </Button>
+                    </div>
+                  </Tooltip>
+                </>
+              )}
+            </>
+          ),
         }}
         exports={{
           xlsx: {
@@ -64,6 +112,10 @@ export const Tasks = (): ReactElement => {
           dataSource: tasksList,
           isLoading: isLoading,
           rowKey: 'id',
+          rowSelection: {
+            selectedRowKeys,
+            onChange: (newRows) => setSelectedRowKeys(newRows),
+          },
           expandable: {
             expandedRowRender: (row) => {
               return (
@@ -260,17 +312,16 @@ export const Tasks = (): ReactElement => {
         onClose={handleToggleModal}
         onCancel={handleToggleModal}
         onOk={() => {
-          if (removeId) {
-            handleDeleteTask(String(removeId));
-          }
-
+          handleDeleteTask(String(removeId));
           handleToggleModal();
         }}
         okButtonProps={{ danger: true }}
       >
         <p>
-          Tem certeza que deseja excluir este registro? Após excluído essa ação
-          não poderá ser desfeita!
+          {selectedRowKeys?.length >= 1
+            ? 'Tem certeza que deseja excluir estes registros? '
+            : 'Tem certeza que deseja excluir este registro? '}
+          Após excluído essa ação não poderá ser desfeita!
         </p>
       </Modal>
     </>

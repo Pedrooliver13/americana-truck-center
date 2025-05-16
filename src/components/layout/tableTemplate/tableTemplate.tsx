@@ -8,6 +8,7 @@ import {
   useState,
   useCallback,
   useEffect,
+  ReactNode,
 } from 'react';
 import { TableProps, Tour } from 'antd';
 import { Link } from 'react-router-dom';
@@ -36,6 +37,7 @@ interface TableTemplateProps {
     title: string;
     buttonLabel: string;
     buttonLink: string;
+    extraButtons?: ReactNode;
   };
   table: TableProps & {
     defaultCheckedList: Array<string>;
@@ -141,6 +143,7 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
           </div>
 
           <div className="table-template-card__actions--columns">
+            {props?.header?.extraButtons && props.header.extraButtons}
             {!props?.exports.xlsx.customComponent ? (
               <XlsxButton
                 filename={props?.exports?.xlsx?.filename}

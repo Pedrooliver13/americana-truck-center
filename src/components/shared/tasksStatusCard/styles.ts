@@ -14,8 +14,8 @@ export const TaskStatusContainer = styled(Card)`
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-
       margin-bottom: 20px;
+      font-size: 16px;
     }
   `}
 `;
