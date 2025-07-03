@@ -48,7 +48,13 @@ type FormValues = zod.infer<typeof schema>;
 export const ReportsForm = (): ReactElement => {
   const [isOpenModal, setIsOpenModal] = useState(false);
 
-  const { control, handleSubmit, setValue, reset } = useForm<FormValues>({
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<FormValues>({
     defaultValues: {
       hygieneCertificateDate: new Date(),
       reviewDate: new Date(),
@@ -513,7 +519,7 @@ export const ReportsForm = (): ReactElement => {
                 size="large"
                 type="primary"
                 htmlType="submit"
-                // loading={isLoading}
+                loading={isSubmitting}
               >
                 Salvar
               </Button>
