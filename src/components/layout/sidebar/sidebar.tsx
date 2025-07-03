@@ -10,6 +10,7 @@ import {
   SettingOutlined as SettingOutlinedIcon,
   PoweroffOutlined as PoweroffOutlinedIcon,
   IdcardOutlined as IdcardOutlinedIcon,
+  FileDoneOutlined as FileDoneOutlinedIcon,
 } from '@ant-design/icons';
 
 // Hooks
@@ -105,6 +106,11 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
             key: '/prices',
             icon: <DollarOutlinedIcon />,
             label: <Link to={'/prices'}>Preços</Link>,
+          },
+          {
+            key: '/reports',
+            icon: <FileDoneOutlinedIcon />,
+            label: <Link to={'/reports'}>Laudo</Link>,
           },
 
           /* FOOTER */

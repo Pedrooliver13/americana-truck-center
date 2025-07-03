@@ -15,6 +15,7 @@ import { Tasks, TasksForm } from 'pages/tasks';
 import { ClientsTable, ClientForm } from 'pages/clients';
 import { DriversTable, DriversForm } from 'pages/drivers';
 import { PricesTable, PricesForm } from 'pages/prices';
+import { ReportsForm } from 'pages/reports';
 import { Settings } from 'pages/settings';
 import { Page404 } from 'pages/page404';
 
@@ -67,6 +68,7 @@ export const Router = (): ReactElement => {
           <Route path="/prices/:id" element={<PricesForm />} />
         </Route>
 
+        <Route path="/reports" element={<ReportsForm />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
 
