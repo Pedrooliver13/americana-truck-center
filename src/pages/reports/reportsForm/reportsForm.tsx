@@ -1,5 +1,5 @@
 // Packages
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { FormItem } from 'react-hook-form-antd';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,15 +7,30 @@ import { DatePicker, Typography } from 'antd';
 import * as zod from 'zod';
 
 // Components
-import { Input, Button, Card, Col, Form, Row, Modal } from 'components/core';
+import {
+  Input,
+  Button,
+  Card,
+  Col,
+  Form,
+  Row,
+  Modal,
+  Select,
+} from 'components/core';
+
+// Hooks
+import { useGetAllClients } from 'hooks/clients/useGetAllClients';
 
 // Pdfs
 import { generateHygieneCertificate } from 'pdfs/hygieneCertificatePdf';
 
 // Styles
 import * as Styled from './styles';
+import { DefaultOptionType } from 'antd/es/select';
+import { Clients } from 'models/clients/clients';
 
 const schema = zod.object({
+  client: zod.string(),
   hygieneCertificateDate: zod.any(),
   reviewDate: zod.any(),
   socialName: zod.string(),
@@ -47,17 +62,21 @@ type FormValues = zod.infer<typeof schema>;
 
 export const ReportsForm = (): ReactElement => {
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const { data: clientsList, isFetching: isFetchingClientsList } =
+    useGetAllClients();
 
   const {
     control,
     handleSubmit,
     setValue,
     reset,
+    clearErrors,
     formState: { isSubmitting },
   } = useForm<FormValues>({
     defaultValues: {
-      hygieneCertificateDate: new Date(),
-      reviewDate: new Date(),
+      client: '',
+      hygieneCertificateDate: '',
+      reviewDate: '',
       socialName: '',
       truck: '',
       tank: '',
@@ -85,6 +104,20 @@ export const ReportsForm = (): ReactElement => {
     resolver: zodResolver(schema),
   });
 
+  const clientListOptions = useMemo(() => {
+    if (!Array.isArray(clientsList)) {
+      return [];
+    }
+
+    return clientsList?.map((item) => {
+      return {
+        ...item,
+        label: item?.name,
+        value: item?.id,
+      };
+    });
+  }, [clientsList]);
+
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
   };
@@ -94,8 +127,24 @@ export const ReportsForm = (): ReactElement => {
     reset();
   };
 
+  const handleChangeClient = (
+    _value: string,
+    option: DefaultOptionType | DefaultOptionType[]
+  ): void => {
+    const clientOption = option as Clients;
+
+    if (!clientOption) {
+      return setValue('client', '');
+    }
+
+    setValue('socialName', clientOption?.name);
+    clearErrors('socialName');
+  };
   const onSubmit = (data: FormValues) => {
     generateHygieneCertificate(data);
+
+    delete data.hygieneCertificateDate;
+    delete data.reviewDate;
 
     localStorage.setItem(
       '@americana-truck-center:hygieneCertificate',
@@ -128,6 +177,22 @@ export const ReportsForm = (): ReactElement => {
         <Form onFinish={handleSubmit(onSubmit)} className="prices-form">
           <Card className="prices-form__fields">
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+              <Col xs={24}>
+                <FormItem control={control} name="client">
+                  <Select
+                    id="client"
+                    showSearch
+                    placeholder="Selecione um Cliente"
+                    optionFilterProp="label"
+                    label="Vincular Cliente"
+                    allowClear
+                    autoClearSearchValue
+                    onChange={handleChangeClient}
+                    options={clientListOptions}
+                  />
+                </FormItem>
+              </Col>
+
               <Col xs={24} md={12}>
                 <FormItem control={control} name="hygieneCertificateDate">
                   <div>
@@ -519,7 +584,7 @@ export const ReportsForm = (): ReactElement => {
                 size="large"
                 type="primary"
                 htmlType="submit"
-                loading={isSubmitting}
+                disabled={isSubmitting || isFetchingClientsList}
               >
                 Salvar
               </Button>

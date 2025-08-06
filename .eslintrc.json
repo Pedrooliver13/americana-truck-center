@@ -18,6 +18,7 @@
           { "path": "react" },
           { "path": "firebase" },
           { "path": "moment" },
+          { "path": "uuid" },
           { "path": "use-context-selector" },
           { "path": "antd" },
           { "path": "date-fns" },

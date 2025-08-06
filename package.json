@@ -32,6 +32,7 @@
     "react-router-dom": "^6.23.1",
     "react-toastify": "^10.0.5",
     "styled-components": "^6.1.11",
+    "uuid": "^11.1.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
