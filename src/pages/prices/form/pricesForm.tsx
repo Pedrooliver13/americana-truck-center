@@ -79,7 +79,7 @@ export const PricesForm = (): ReactElement => {
       ...data,
       client: data?.client || '',
       clientName: currentClient?.name || '',
-      currentClient,
+      currentClient: currentClient || null,
     };
 
     if (id) {
