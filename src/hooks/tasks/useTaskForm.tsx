@@ -217,7 +217,15 @@ export const useTaskForm = () => {
 
           return !searchValue || isSameName || isSameType;
         })
-        .filter((service) => client === service?.client);
+        .filter((service) => {
+          const hasServiceInTask = services?.find(
+            (serviceItem) => serviceItem?.client === client
+          );
+
+          return hasServiceInTask
+            ? client === service?.client
+            : !service.client;
+        });
     }, [
       taskItem?.services,
       pricesList,
