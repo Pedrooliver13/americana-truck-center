@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DatePicker, Typography } from 'antd';
 import * as zod from 'zod';
+import { DefaultOptionType } from 'antd/es/select';
 
 // Components
 import {
@@ -24,13 +25,14 @@ import { useGetAllClients } from 'hooks/clients/useGetAllClients';
 // Pdfs
 import { generateHygieneCertificate } from 'pdfs/hygieneCertificatePdf';
 
-// Styles
-import * as Styled from './styles';
-import { DefaultOptionType } from 'antd/es/select';
+// Models
 import { Clients } from 'models/clients/clients';
 
+// Styles
+import * as Styled from './styles';
+
 const schema = zod.object({
-  client: zod.string(),
+  client: zod.string().optional(),
   hygieneCertificateDate: zod.any(),
   reviewDate: zod.any(),
   socialName: zod.string(),
@@ -145,6 +147,7 @@ export const ReportsForm = (): ReactElement => {
 
     delete data.hygieneCertificateDate;
     delete data.reviewDate;
+    delete data?.client;
 
     localStorage.setItem(
       '@americana-truck-center:hygieneCertificate',
@@ -171,7 +174,7 @@ export const ReportsForm = (): ReactElement => {
         <div className="prices__header">
           <h1>Gerar Laudo</h1>
           <div>
-            <Button onClick={handleToggleModal}>Voltar</Button>
+            <Button onClick={handleToggleModal}>Limpar campos</Button>
           </div>
         </div>
         <Form onFinish={handleSubmit(onSubmit)} className="prices-form">
