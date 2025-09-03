@@ -142,6 +142,7 @@ export const ReportsForm = (): ReactElement => {
     setValue('socialName', clientOption?.name);
     clearErrors('socialName');
   };
+
   const onSubmit = (data: FormValues) => {
     generateHygieneCertificate(data);
 

@@ -101,7 +101,13 @@ export const SalesOverview = (): ReactElement => {
               format: 'DD/MM/YYYY',
               type: 'mask',
             }}
-            onChange={(_event, dateString) => setChartDateValue(dateString)}
+            onChange={(_event, dateString) => {
+              if (!Array.isArray(dateString)) {
+                return;
+              }
+
+              setChartDateValue(dateString.filter(Boolean));
+            }}
           />
         </div>
       </header>

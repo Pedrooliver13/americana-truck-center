@@ -28,6 +28,10 @@ export interface DashboardContextProps {
   chartData: DashboardChart;
   chartDateValue: Array<string> | null;
   setChartDateValue: React.Dispatch<React.SetStateAction<Array<string> | null>>;
+  paymentStatusDateValue: Array<string> | null;
+  setPaymentStatusDateValue: React.Dispatch<
+    React.SetStateAction<Array<string> | null>
+  >;
 }
 
 interface DashboardProviderProps {
@@ -43,6 +47,9 @@ export const DashboardProvider = ({
     moment().startOf('month').format('DD/MM/YYYY'),
     moment().endOf('month').format('DD/MM/YYYY'),
   ]);
+
+  const [paymentStatusDateValue, setPaymentStatusDateValue] =
+    useState<Array<string> | null>([]);
 
   const { data: clientsList } = useGetAllClients();
   const { data: pricesList } = useGetAllPrices();
@@ -146,54 +153,72 @@ export const DashboardProvider = ({
       return [];
     }
 
-    const result = tasksList.reduce(
-      (
-        acc: Record<
-          string,
-          {
-            id: string;
-            clientName: string;
-            totalPaidOff: number;
-            totalInvoice: number;
-            totalReceivable: number;
+    const result = tasksList
+      .filter((task) => {
+        if (!paymentStatusDateValue?.length) {
+          return true;
+        }
+
+        const startDate = moment(paymentStatusDateValue[0], 'DD/MM/YYYY');
+        const endDate = moment(paymentStatusDateValue[1], 'DD/MM/YYYY');
+
+        const currentDate = moment(task?.createdAt?.seconds * 1000).format(
+          'DD/MM/YYYY'
+        );
+
+        return (
+          moment(currentDate, 'DD/MM/YYYY').isSameOrBefore(endDate) &&
+          moment(currentDate, 'DD/MM/YYYY').isSameOrAfter(startDate)
+        );
+      })
+      .reduce(
+        (
+          acc: Record<
+            string,
+            {
+              id: string;
+              clientName: string;
+              totalPaidOff: number;
+              totalInvoice: number;
+              totalReceivable: number;
+            }
+          >,
+          task
+        ) => {
+          const clientId = task.client || task.name;
+
+          if (!acc[clientId]) {
+            acc[clientId] = {
+              id: String(Math.random()),
+              clientName: 'Desconhecido',
+              totalPaidOff: 0,
+              totalInvoice: 0,
+              totalReceivable: 0,
+            };
           }
-        >,
-        task
-      ) => {
-        const clientId = task.client || task.name;
 
-        if (!acc[clientId]) {
-          acc[clientId] = {
-            id: String(Math.random()),
-            clientName: 'Desconhecido',
-            totalPaidOff: 0,
-            totalInvoice: 0,
-            totalReceivable: 0,
-          };
-        }
+          const totalServices = task.services.reduce((sum, service) => {
+            return sum + Number(service.value);
+          }, 0);
 
-        const totalServices = task.services.reduce((sum, service) => {
-          return sum + Number(service.value);
-        }, 0);
+          acc[clientId].id = task?.client ?? String(Math.random());
+          acc[clientId].clientName = task?.clientName || task?.name;
 
-        acc[clientId].id = task?.client ?? '';
-        acc[clientId].clientName = task?.clientName || task?.name;
+          if (task.status === ETaskStatus.PAID_OFF) {
+            acc[clientId].totalPaidOff += totalServices;
+          } else if (task.status === ETaskStatus.INVOICE) {
+            acc[clientId].totalInvoice += totalServices;
+          } else if (task.status === ETaskStatus.RECEIVABLE) {
+            acc[clientId].totalReceivable += totalServices;
+          }
 
-        if (task.status === ETaskStatus.PAID_OFF) {
-          acc[clientId].totalPaidOff += totalServices;
-        } else if (task.status === ETaskStatus.INVOICE) {
-          acc[clientId].totalInvoice += totalServices;
-        } else if (task.status === ETaskStatus.RECEIVABLE) {
-          acc[clientId].totalReceivable += totalServices;
-        }
-
-        return acc;
-      },
-      {}
-    );
+          return acc;
+        },
+        {}
+      );
 
     return Object.values(result);
-  }, [tasksList]);
+  }, [paymentStatusDateValue, tasksList]);
 
   return (
     <DashboardContext.Provider
@@ -206,6 +231,8 @@ export const DashboardProvider = ({
         chartData,
         chartDateValue,
         setChartDateValue,
+        paymentStatusDateValue,
+        setPaymentStatusDateValue,
       }}
     >
       {children}

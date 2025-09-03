@@ -1,5 +1,6 @@
 // Packages
 import { ReactElement } from 'react';
+import { DatePicker } from 'antd';
 
 // Components
 import { Table, Tag } from 'components/core';
@@ -14,12 +15,31 @@ import { priceFormatter } from 'utils/formatter';
 import * as Styled from './styles';
 
 export const TasksStatusCard = (): ReactElement => {
-  const { tasksPendingList } = useDashboardContext();
+  const { tasksPendingList, setPaymentStatusDateValue } = useDashboardContext();
 
   return (
     <Styled.TaskStatusContainer>
       <header>
         <h2>Faturamento</h2>
+
+        <div>
+          <DatePicker.RangePicker
+            id="paymentStatusDate"
+            name="paymentStatusDate"
+            lang="pt-br"
+            format={{
+              format: 'DD/MM/YYYY',
+              type: 'mask',
+            }}
+            onChange={(_event, dateString) => {
+              if (!Array.isArray(dateString)) {
+                return;
+              }
+
+              setPaymentStatusDateValue(dateString.filter(Boolean));
+            }}
+          />
+        </div>
       </header>
 
       <Table
