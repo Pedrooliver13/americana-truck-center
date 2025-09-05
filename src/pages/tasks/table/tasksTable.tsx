@@ -74,6 +74,18 @@ export const Tasks = (): ReactElement => {
             <>
               {Boolean(selectedRowKeys?.length) && (
                 <>
+                  <Tooltip title="Gerar múltiplos recibos">
+                    <div>
+                      <ButtonPrintTaskReport
+                        record={tasksList}
+                        ids={selectedRowKeys.map(String)}
+                        size="large"
+                        shape="circle"
+                        type="default"
+                      />
+                    </div>
+                  </Tooltip>
+
                   <ButtonBatchTaskStatus
                     selectedRows={selectedRowKeys.map(String)}
                   />

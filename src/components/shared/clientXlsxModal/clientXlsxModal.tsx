@@ -121,6 +121,7 @@ const ClientXlsxModalBase = (
           OBSERVAÇÕES: task?.observation ?? '',
           DATA: moment(task?.createdAt?.seconds * 1000).format('DD/MM/YYYY'),
           STATUS: statusName[task.status],
+          'ID RECIBO': String(task?.id).substring(task?.id.length - 5),
         };
       });
     },

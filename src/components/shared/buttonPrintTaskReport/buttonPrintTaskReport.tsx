@@ -12,7 +12,11 @@ import { downloadReceiptsPDF } from 'pdfs/receiptsPdf';
 import { Task } from 'models/tasks/tasks';
 
 interface ButtonPrintTaskReportProps {
-  record: Task;
+  record?: Task | Task[];
+  ids?: string[];
+  size?: 'small' | 'middle' | 'large';
+  shape?: 'default' | 'circle' | 'round';
+  type?: 'text' | 'primary' | 'dashed' | 'link' | 'default';
 }
 
 export const ButtonPrintTaskReport = (
@@ -25,6 +29,17 @@ export const ButtonPrintTaskReport = (
   };
 
   const handleDownloadPDF = (isShowValue = false) => {
+    if (Array.isArray(props?.record) && Array.isArray(props?.ids)) {
+      // Filtrar as tasks que correspondem aos ids selecionados
+      (props.record as Task[])
+        .filter((task) => props?.ids && props?.ids.includes(task?.id))
+        // Baixar o PDF de cada task filtrada
+        .forEach((task) => downloadReceiptsPDF(task, isShowValue));
+
+      handleToggleModal();
+      return;
+    }
+
     downloadReceiptsPDF(props.record as unknown as Task, isShowValue);
     handleToggleModal();
   };
@@ -33,10 +48,11 @@ export const ButtonPrintTaskReport = (
     <>
       <Button
         id="print-service"
-        type="text"
-        className="table__actions--normal"
+        type={props?.type || 'text'}
+        className="table__actions--normal btn-batch-status"
         icon={<FileTextOutlinedIcon color="#2B3034" />}
-        size="small"
+        size={props?.size || 'small'}
+        shape={props?.shape || 'default'}
         onClick={handleToggleModal}
       />
 

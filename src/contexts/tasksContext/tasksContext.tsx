@@ -96,6 +96,7 @@ export const TasksProvider = ({
         SERVIÇOS: item?.services?.map((service) => service?.name).join(', '),
         DATA: moment(item?.createdAt?.seconds * 1000).format('DD/MM/YYYY'),
         STATUS: statusName[item?.status],
+        'ID RECIBO': String(item?.id).substring(item?.id.length - 5),
       };
     });
   }, [tasksList]);
