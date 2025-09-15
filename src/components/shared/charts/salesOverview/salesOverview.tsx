@@ -14,6 +14,7 @@ import * as Styled from './styles';
 
 // Models
 import { ETaskStatus } from 'models/tasks/tasks';
+import { priceFormatter } from 'utils/formatter';
 
 export const SalesOverview = (): ReactElement => {
   const { theme } = useGlobalContext();
@@ -202,7 +203,7 @@ export const SalesOverview = (): ReactElement => {
       theme: 'dark',
       fillSeriesColor: false,
       y: {
-        formatter: (val: number) => `${val} itens`,
+        formatter: (val: number) => priceFormatter.format(val),
       },
     },
     legend: {
