@@ -9,12 +9,14 @@ import { useDashboardContext } from 'hooks/dashboard/useDashboardContext';
 // Contexts
 import { useGlobalContext } from 'contexts/globalContext';
 
-// Styles
-import * as Styled from './styles';
-
 // Models
 import { ETaskStatus } from 'models/tasks/tasks';
+
+// Utils
 import { priceFormatter } from 'utils/formatter';
+
+// Styles
+import * as Styled from './styles';
 
 export const SalesOverview = (): ReactElement => {
   const { theme } = useGlobalContext();
