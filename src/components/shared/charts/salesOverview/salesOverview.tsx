@@ -65,6 +65,7 @@ export const SalesOverview = (): ReactElement => {
     },
     grid: {
       strokeDashArray: 4,
+      borderColor: '#000',
       xaxis: {
         lines: {
           show: false,
