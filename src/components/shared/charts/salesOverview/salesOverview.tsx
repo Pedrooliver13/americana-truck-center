@@ -30,50 +30,87 @@ export const SalesOverview = (): ReactElement => {
   };
 
   /* BAR CHART */
-  const optionscolumnchart = {
+  const optionsColumnChart = {
     theme: {
       mode: theme,
     },
     chart: {
       type: 'bar',
-      fontFamily: "'Plus Jakarta Sans', sans-serif;",
-      foreColor: '#adb0bb',
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
     },
     colors: ['#5D87FF', '#FEC53D', '#EF3826'],
     plotOptions: {
       bar: {
         horizontal: false,
-        barHeight: '100%',
-        columnWidth: '70%',
-        borderRadius: [8],
+        columnWidth: '55%',
+        borderRadius: 6,
         borderRadiusApplication: 'end',
-        borderRadiusWhenStacked: 'all',
       },
-    },
-    stroke: {
-      show: true,
-      lineCap: 'butt',
-      colors: ['transparent'],
     },
     dataLabels: {
       enabled: true,
+      style: {
+        fontSize: '12px',
+        fontWeight: 600,
+      },
+      background: {
+        enabled: true,
+        foreColor: '#000',
+        borderRadius: 4,
+        opacity: 0.7,
+      },
+    },
+    stroke: {
+      show: false,
     },
     grid: {
+      strokeDashArray: 4,
       xaxis: {
         lines: {
           show: false,
         },
       },
+      yaxis: {
+        lines: {
+          show: true,
+        },
+      },
     },
     yaxis: {
-      tickAmount: 3,
+      tickAmount: 4,
+      labels: {
+        style: {
+          fontSize: '12px',
+        },
+      },
     },
     xaxis: {
       categories: chartData?.categories,
+      labels: {
+        rotate: -25,
+        style: {
+          fontSize: '12px',
+          fontWeight: 500,
+        },
+      },
+      axisTicks: {
+        show: false,
+      },
     },
     tooltip: {
       theme: 'dark',
       fillSeriesColor: false,
+      style: {
+        fontSize: '13px',
+      },
+    },
+    legend: {
+      position: 'bottom',
+      horizontalAlign: 'center',
+      markers: {
+        radius: 12,
+      },
+      fontSize: '13px',
     },
   };
 
@@ -97,24 +134,88 @@ export const SalesOverview = (): ReactElement => {
     theme: {
       mode: theme,
     },
-    stroke: {
-      show: false,
-    },
     chart: {
       type: 'donut',
       fontFamily: "'Plus Jakarta Sans', sans-serif",
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800,
+        animateGradually: {
+          enabled: true,
+          delay: 150,
+        },
+      },
+    },
+    stroke: {
+      show: false,
     },
     colors: ['#5D87FF', '#FEC53D', '#EF3826'],
     labels: ['Pago', 'Faturar', 'A Receber'],
+    plotOptions: {
+      pie: {
+        donut: {
+          size: '70%',
+          labels: {
+            show: true,
+            total: {
+              show: true,
+              label: 'Total',
+              color: '#cbd5e1',
+              fontSize: '14px',
+              fontWeight: 600,
+            },
+          },
+        },
+      },
+    },
     dataLabels: {
       enabled: true,
+      style: {
+        fontSize: '13px',
+        fontWeight: 600,
+        colors: ['#333'],
+      },
+      background: {
+        enabled: true,
+        foreColor: '#fff',
+        borderRadius: 4,
+        padding: 4,
+        opacity: 0.7,
+        dropShadow: {
+          enabled: true,
+          blur: 2,
+          opacity: 0.3,
+        },
+      },
+      dropShadow: {
+        enabled: true,
+        top: 1,
+        left: 1,
+        blur: 2,
+        opacity: 0.4,
+      },
+      formatter: (val: number) => `${val.toFixed(1)}%`,
     },
     tooltip: {
       theme: 'dark',
       fillSeriesColor: false,
+      y: {
+        formatter: (val: number) => `${val} itens`,
+      },
     },
     legend: {
       position: 'bottom',
+      horizontalAlign: 'center',
+      fontSize: '13px',
+      itemMargin: {
+        horizontal: 10,
+        vertical: 6,
+      },
+      markers: {
+        radius: 12,
+        size: 10,
+      },
     },
   };
 
@@ -151,7 +252,7 @@ export const SalesOverview = (): ReactElement => {
 
       <Styled.SalesOverviewChartsList>
         <Chart
-          options={optionscolumnchart as Props}
+          options={optionsColumnChart as Props}
           series={seriescolumnchart}
           type="bar"
           height={250}
