@@ -25,6 +25,11 @@ export const SalesOverview = (): ReactElement => {
     );
   };
 
+  const getValuesPie = (currentStatus: ETaskStatus) => {
+    return getValues(currentStatus)?.reduce((acc, val) => acc + val, 0);
+  };
+
+  /* BAR CHART */
   const optionscolumnchart = {
     theme: {
       mode: theme,
@@ -87,6 +92,38 @@ export const SalesOverview = (): ReactElement => {
     },
   ];
 
+  /* DONUT CHART */
+  const donutOptionsColumnChart = {
+    theme: {
+      mode: theme,
+    },
+    stroke: {
+      show: false,
+    },
+    chart: {
+      type: 'donut',
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+    },
+    colors: ['#5D87FF', '#FEC53D', '#EF3826'],
+    labels: ['Pago', 'Faturar', 'A Receber'],
+    dataLabels: {
+      enabled: true,
+    },
+    tooltip: {
+      theme: 'dark',
+      fillSeriesColor: false,
+    },
+    legend: {
+      position: 'bottom',
+    },
+  };
+
+  const donutSeriesColumnChart = [
+    getValuesPie(ETaskStatus.PAID_OFF),
+    getValuesPie(ETaskStatus.INVOICE),
+    getValuesPie(ETaskStatus.RECEIVABLE),
+  ];
+
   return (
     <Styled.SalesOverviewContainer>
       <header className="salesOverview__header">
@@ -112,13 +149,23 @@ export const SalesOverview = (): ReactElement => {
         </div>
       </header>
 
-      <Chart
-        options={optionscolumnchart as Props}
-        series={seriescolumnchart}
-        type="bar"
-        height={250}
-        width={'100%'}
-      />
+      <Styled.SalesOverviewChartsList>
+        <Chart
+          options={optionscolumnchart as Props}
+          series={seriescolumnchart}
+          type="bar"
+          height={250}
+          width={'100%'}
+        />
+
+        <Chart
+          options={donutOptionsColumnChart as Props}
+          series={donutSeriesColumnChart}
+          type="donut"
+          height={280}
+          width={'100%'}
+        />
+      </Styled.SalesOverviewChartsList>
     </Styled.SalesOverviewContainer>
   );
 };

@@ -26,3 +26,13 @@ export const SalesOverviewContainer = styled.div`
     }
   `}
 `;
+
+export const SalesOverviewChartsList = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+`;
