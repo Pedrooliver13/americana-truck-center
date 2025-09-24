@@ -58,9 +58,19 @@ export const TasksForm = (): ReactElement => {
       handleChangeClient,
       handleChangeDriver,
       handleNewItem,
+      handleEditItem,
       handleChangeAddNewServiceInList,
     },
   } = useTaskForm();
+
+  const onSubmit = () => {
+    if (id) {
+      handleEditItem(id);
+      return;
+    }
+
+    handleNewItem();
+  };
 
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
@@ -85,7 +95,7 @@ export const TasksForm = (): ReactElement => {
             <Button onClick={handleToggleModal}>Voltar</Button>
           </div>
         </div>
-        <Form onFinish={handleSubmit(handleNewItem)} className="tasks-form">
+        <Form onFinish={handleSubmit(onSubmit)} className="tasks-form">
           <Card className="tasks-form__fields" ref={ref1}>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
               {!id && (
@@ -135,7 +145,6 @@ export const TasksForm = (): ReactElement => {
                     showCount
                     maxLength={150}
                     required
-                    disabled={Boolean(id)}
                   />
                 </FormItem>
               </Col>
@@ -147,7 +156,6 @@ export const TasksForm = (): ReactElement => {
                     placeholder="Documento"
                     autoComplete="off"
                     firstmasklength={9}
-                    disabled={Boolean(id)}
                     status={errors?.driverDocument ? 'error' : ''}
                     mask={[
                       {
@@ -172,7 +180,6 @@ export const TasksForm = (): ReactElement => {
                     autoComplete="off"
                     showCount
                     maxLength={150}
-                    disabled={Boolean(id)}
                   />
                 </FormItem>
               </Col>
@@ -184,7 +191,6 @@ export const TasksForm = (): ReactElement => {
                     placeholder="Documento"
                     autoComplete="off"
                     firstmasklength={11}
-                    disabled={Boolean(id)}
                     status={errors?.document ? 'error' : ''}
                     mask={[
                       {
@@ -206,7 +212,6 @@ export const TasksForm = (): ReactElement => {
                     name="phone"
                     label="Celular"
                     placeholder="Celular"
-                    disabled={Boolean(id)}
                     status={errors?.phone ? 'error' : ''}
                     autoComplete="off"
                     mask={[
@@ -227,7 +232,6 @@ export const TasksForm = (): ReactElement => {
                     placeholder="Modelo do Veículo"
                     autoComplete="off"
                     maxLength={150}
-                    disabled={Boolean(id)}
                   />
                 </FormItem>
               </Col>
@@ -244,7 +248,6 @@ export const TasksForm = (): ReactElement => {
                     placeholder="Placa do Veículo"
                     autoComplete="off"
                     maxLength={150}
-                    disabled={Boolean(id)}
                   />
                 </FormItem>
               </Col>
@@ -255,7 +258,6 @@ export const TasksForm = (): ReactElement => {
                     label="Frota"
                     placeholder="Frota de Veículos"
                     autoComplete="off"
-                    disabled={Boolean(id)}
                   />
                 </FormItem>
               </Col>
@@ -272,7 +274,6 @@ export const TasksForm = (): ReactElement => {
                     rows={4}
                     placeholder="Observação"
                     autoComplete="off"
-                    disabled={Boolean(id)}
                   />
                 </FormItem>
               </Col>
@@ -414,7 +415,6 @@ export const TasksForm = (): ReactElement => {
                 type="primary"
                 htmlType="submit"
                 loading={isLoading}
-                disabled={Boolean(id)}
               >
                 Salvar
               </Button>

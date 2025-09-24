@@ -14,7 +14,7 @@ import { useTasksContext } from 'hooks/tasks/useTasksContext';
 // Models
 import { Clients } from 'models/clients/clients';
 import { Drivers } from 'models/drivers/drivers';
-import { ETaskStatus, PostTask } from 'models/tasks/tasks';
+import { ETaskStatus, PostTask, PutTask } from 'models/tasks/tasks';
 
 const schema = zod
   .object({
@@ -62,6 +62,7 @@ export const useTaskForm = () => {
     driverListOptions,
     taskItem,
     createTask,
+    updateTask,
     isLoading,
   } = useTasksContext();
 
@@ -169,6 +170,18 @@ export const useTaskForm = () => {
       };
 
       createTask(prepareData as PostTask);
+    },
+    handleEditItem: async (id: string): Promise<void> => {
+      const value = watch();
+
+      delete value.search;
+
+      const prepareData = {
+        ...value,
+        id,
+      };
+
+      updateTask(prepareData as PutTask);
     },
   };
 

@@ -17,9 +17,16 @@ import { useDeleteByIdTask } from 'hooks/tasks/useDeleteTaskById';
 import { useGetAllClients } from 'hooks/clients/useGetAllClients';
 import { useGetAllDrivers } from 'hooks/drivers/useGetAllDrivers';
 import { useDeleteBatchTaskByIds } from 'hooks/tasks/useDeleteBatchTaskByIds';
+import { usePutTask } from 'hooks/tasks/usePutTask';
 
 // Models
-import { Task, TasksToExport, PostTask, statusName } from 'models/tasks/tasks';
+import {
+  Task,
+  TasksToExport,
+  PostTask,
+  PutTask,
+  statusName,
+} from 'models/tasks/tasks';
 import { Prices } from 'models/prices/prices';
 import { Clients } from 'models/clients/clients';
 import { Drivers } from 'models/drivers/drivers';
@@ -39,6 +46,7 @@ export interface TasksContextProps {
   formatedDataToExport?: Array<TasksToExport>;
   navigate: NavigateFunction;
   createTask: (data: PostTask) => Promise<void>;
+  updateTask: (data: PutTask) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
   deleteBatchTasks: (ids: Array<string>) => Promise<void>;
   isLoading: boolean;
@@ -74,6 +82,9 @@ export const TasksProvider = ({
   // Mutate's
   const { mutateAsync: createTaskMutate, isPending: isPendingPostTask } =
     usePostTask();
+
+  const { mutateAsync: updateTaskMutate, isPending: isPendingPutTask } =
+    usePutTask();
 
   const { mutateAsync: deleteTaskMutate, isPending: isPendingDeleteTask } =
     useDeleteByIdTask();
@@ -136,6 +147,13 @@ export const TasksProvider = ({
     [createTaskMutate]
   );
 
+  const updateTask = useCallback(
+    async (data: PutTask): Promise<void> => {
+      updateTaskMutate(data);
+    },
+    [updateTaskMutate]
+  );
+
   const deleteTask = useCallback(
     async (id: string): Promise<void> => {
       deleteTaskMutate(id);
@@ -164,11 +182,13 @@ export const TasksProvider = ({
         formatedDataToExport,
         navigate,
         createTask,
+        updateTask,
         deleteTask,
         deleteBatchTasks,
         isLoading:
           isPendingDeleteTask ||
           isPendingPostTask ||
+          isPendingPutTask ||
           isFetchingTasksList ||
           isFetchingTaskItem ||
           isFetchingPricesList ||

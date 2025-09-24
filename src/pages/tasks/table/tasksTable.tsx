@@ -3,7 +3,7 @@ import { ReactElement, useState } from 'react';
 import moment from 'moment';
 import {
   DeleteOutlined as DeleteOutlinedIcon,
-  EyeOutlined as EyeOutlinedIcon,
+  EditOutlined as EditOutlinedIcon,
 } from '@ant-design/icons';
 
 // Components
@@ -258,13 +258,13 @@ export const Tasks = (): ReactElement => {
               width: '100px',
               render: (_value, record) => (
                 <div className="table__actions">
-                  <Tooltip title="Visualizar Serviço">
+                  <Tooltip title="Editar Serviço">
                     <>
                       <Button
-                        id="visualize-service"
+                        id="edit-service"
                         type="text"
                         className="table__actions--normal"
-                        icon={<EyeOutlinedIcon color="#2B3034" />}
+                        icon={<EditOutlinedIcon color="#2B3034" />}
                         size="small"
                         onClick={() => navigate(`/tasks/${record?.id}`)}
                       />
