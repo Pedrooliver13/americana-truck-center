@@ -145,6 +145,7 @@ export const TasksForm = (): ReactElement => {
                     showCount
                     maxLength={150}
                     required
+                    disabled={Boolean(id)}
                   />
                 </FormItem>
               </Col>
@@ -157,6 +158,7 @@ export const TasksForm = (): ReactElement => {
                     autoComplete="off"
                     firstmasklength={9}
                     status={errors?.driverDocument ? 'error' : ''}
+                    disabled={Boolean(id)}
                     mask={[
                       {
                         mask: Masks.RG,
@@ -180,6 +182,7 @@ export const TasksForm = (): ReactElement => {
                     autoComplete="off"
                     showCount
                     maxLength={150}
+                    disabled={Boolean(id)}
                   />
                 </FormItem>
               </Col>
@@ -192,6 +195,7 @@ export const TasksForm = (): ReactElement => {
                     autoComplete="off"
                     firstmasklength={11}
                     status={errors?.document ? 'error' : ''}
+                    disabled={Boolean(id)}
                     mask={[
                       {
                         mask: Masks.CPF,
@@ -214,6 +218,7 @@ export const TasksForm = (): ReactElement => {
                     placeholder="Celular"
                     status={errors?.phone ? 'error' : ''}
                     autoComplete="off"
+                    disabled={Boolean(id)}
                     mask={[
                       {
                         mask: Masks.PHONE,
@@ -232,6 +237,7 @@ export const TasksForm = (): ReactElement => {
                     placeholder="Modelo do Veículo"
                     autoComplete="off"
                     maxLength={150}
+                    disabled={Boolean(id)}
                   />
                 </FormItem>
               </Col>
