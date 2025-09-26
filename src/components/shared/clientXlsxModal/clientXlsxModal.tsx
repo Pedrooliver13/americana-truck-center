@@ -117,7 +117,9 @@ const ClientXlsxModalBase = (
           CELULAR: task?.phone,
           PREÇO: task?.total,
           FROTA: task?.fleet,
-          SERVIÇOS: task?.services?.map((service) => service?.name).join(', '),
+          SERVIÇOS: task?.services
+            ?.map((service) => `${service?.name}(R$ ${service.value})`)
+            .join(', '),
           OBSERVAÇÕES: task?.observation ?? '',
           DATA: moment(task?.createdAt?.seconds * 1000).format('DD/MM/YYYY'),
           STATUS: statusName[task.status],
