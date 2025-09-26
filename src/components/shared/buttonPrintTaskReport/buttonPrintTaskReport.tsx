@@ -7,6 +7,7 @@ import { Modal, Button } from 'components/core';
 
 // Pdfs
 import { downloadReceiptsPDF } from 'pdfs/receiptsPdf';
+import { downloadMultipleReceiptsPDF } from 'pdfs/multipleReceiptsPdf';
 
 // Models
 import { Task } from 'models/tasks/tasks';
@@ -30,12 +31,11 @@ export const ButtonPrintTaskReport = (
 
   const handleDownloadPDF = (isShowValue = false) => {
     if (Array.isArray(props?.record) && Array.isArray(props?.ids)) {
-      // Filtrar as tasks que correspondem aos ids selecionados
-      (props.record as Task[])
-        .filter((task) => props?.ids && props?.ids.includes(task?.id))
-        // Baixar o PDF de cada task filtrada
-        .forEach((task) => downloadReceiptsPDF(task, isShowValue));
+      const filteredRecords = (props.record as Task[]).filter(
+        (task) => props?.ids && props?.ids.includes(task?.id)
+      );
 
+      downloadMultipleReceiptsPDF(filteredRecords, isShowValue);
       handleToggleModal();
       return;
     }
