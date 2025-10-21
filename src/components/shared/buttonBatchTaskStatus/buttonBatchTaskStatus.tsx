@@ -1,6 +1,6 @@
 // Packages
 import { ReactElement, useState } from 'react';
-import { ArrowRightOutlined as ArrowRightOutlinedIcon } from '@ant-design/icons';
+import { DollarOutlined as DollarOutlinedIcon } from '@ant-design/icons';
 import { Typography } from 'antd';
 import { FormItem } from 'react-hook-form-antd';
 import { useForm } from 'react-hook-form';
@@ -67,14 +67,14 @@ export const ButtonBatchTaskStatus = (
 
   return (
     <>
-      <Tooltip title="Alterar múltiplos status">
+      <Tooltip title="Alterar múltiplos status de faturamento">
         <Styled.ButtonTaskStatusContainer
           onClick={handleToggleModal}
           className={`btn-batch-status`}
           size="large"
           shape="circle"
         >
-          <ArrowRightOutlinedIcon />
+          <DollarOutlinedIcon />
         </Styled.ButtonTaskStatusContainer>
       </Tooltip>
 
@@ -98,9 +98,9 @@ export const ButtonBatchTaskStatus = (
                   <Select
                     id="status"
                     showSearch
-                    placeholder="Alterar o status"
+                    placeholder="Alterar o status de faturamento"
                     optionFilterProp="label"
-                    label="Status"
+                    label="Status de faturamento"
                     allowClear
                     autoClearSearchValue
                     options={[

@@ -14,7 +14,12 @@ import { useTasksContext } from 'hooks/tasks/useTasksContext';
 // Models
 import { Clients } from 'models/clients/clients';
 import { Drivers } from 'models/drivers/drivers';
-import { ETaskStatus, PostTask, PutTask } from 'models/tasks/tasks';
+import {
+  ETaskServiceStatus,
+  ETaskStatus,
+  PostTask,
+  PutTask,
+} from 'models/tasks/tasks';
 
 const schema = zod
   .object({
@@ -166,6 +171,7 @@ export const useTaskForm = () => {
         total: totalPrice,
         services: listServices,
         status: ETaskStatus.INVOICE,
+        serviceStatus: ETaskServiceStatus.PENDING,
         createdAt: taskItem?.createdAt ?? moment().format('YYYY-MM-DD'),
       };
 

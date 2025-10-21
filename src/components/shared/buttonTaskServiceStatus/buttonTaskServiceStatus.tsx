@@ -11,7 +11,11 @@ import * as zod from 'zod';
 import { Button, Col, Form, Modal, Row, Select } from 'components/core';
 
 // Models
-import { ETaskStatus, statusName, Task } from 'models/tasks/tasks';
+import {
+  ETaskServiceStatus,
+  serviceStatusName,
+  Task,
+} from 'models/tasks/tasks';
 
 // Hooks
 import { usePutTask } from 'hooks/tasks/usePutTask';
@@ -20,17 +24,20 @@ import { usePutTask } from 'hooks/tasks/usePutTask';
 import * as Styled from './styles';
 
 interface ButtonTaskStatusProps {
-  status: ETaskStatus.INVOICE | ETaskStatus.PAID_OFF | ETaskStatus.RECEIVABLE;
+  serviceStatus:
+    | ETaskServiceStatus.PENDING
+    | ETaskServiceStatus.COMPLETED
+    | ETaskServiceStatus.CANCELED;
   record: Task;
 }
 
 const schema = zod.object({
-  status: zod.number({ message: 'Campo obrigatório' }),
+  serviceStatus: zod.number({ message: 'Campo obrigatório' }),
 });
 
 export type FormValues = zod.infer<typeof schema>;
 
-export const ButtonTaskStatus = (
+export const ButtonTaskServiceStatus = (
   props: ButtonTaskStatusProps
 ): ReactElement => {
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -38,7 +45,7 @@ export const ButtonTaskStatus = (
 
   const { control, handleSubmit } = useForm<FormValues>({
     values: {
-      status: props.status,
+      serviceStatus: props.serviceStatus,
     },
     resolver: zodResolver(schema),
   });
@@ -50,7 +57,7 @@ export const ButtonTaskStatus = (
   const onChangeTaskStatus = async (data: FormValues) => {
     await updateTaskMutate({
       ...props?.record,
-      status: data.status,
+      serviceStatus: data.serviceStatus,
     });
 
     setIsOpenModal(false);
@@ -58,53 +65,52 @@ export const ButtonTaskStatus = (
 
   return (
     <>
-      <Styled.ButtonTaskStatusContainer
+      <Styled.ButtonTaskServiceStatusContainer
         icon={<div className="status" />}
-        className={`btn-status-${props.status}`}
+        className={`btn-status-${
+          props?.serviceStatus || ETaskServiceStatus.PENDING
+        }`}
         size="small"
         onClick={handleToggleModal}
       >
-        {statusName[props?.status] ?? statusName[ETaskStatus.INVOICE]}
+        {serviceStatusName[props?.serviceStatus] ??
+          serviceStatusName[ETaskServiceStatus.PENDING]}
         <ArrowRightOutlinedIcon />
-      </Styled.ButtonTaskStatusContainer>
+      </Styled.ButtonTaskServiceStatusContainer>
 
       <Modal
         open={isOpenModal}
         centered
-        title="Deseja alterar o status do faturamento?"
+        title="Deseja alterar o status do serviço?"
         onCancel={handleToggleModal}
         footer={null}
       >
         <Styled.ModalContainer>
           <Typography>
-            O status do faturamento deste item será alterado. Tem certeza de que
+            O status do serviço deste item será alterado. Tem certeza de que
             deseja continuar?
           </Typography>
 
           <Form onFinish={handleSubmit(onChangeTaskStatus)}>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
               <Col xs={24}>
-                <FormItem control={control} name="status">
+                <FormItem control={control} name="serviceStatus">
                   <Select
-                    id="status"
+                    id="serviceStatus"
                     showSearch
-                    placeholder="Alterar o status do faturamento"
+                    placeholder="Alterar o status do serviço"
                     optionFilterProp="label"
-                    label="Status do faturamento"
+                    label="Status do serviço"
                     allowClear
                     autoClearSearchValue
                     options={[
                       {
-                        label: statusName[ETaskStatus.PAID_OFF],
-                        value: ETaskStatus.PAID_OFF,
+                        label: serviceStatusName[ETaskServiceStatus.PENDING],
+                        value: ETaskServiceStatus.PENDING,
                       },
                       {
-                        label: statusName[ETaskStatus.INVOICE],
-                        value: ETaskStatus.INVOICE,
-                      },
-                      {
-                        label: statusName[ETaskStatus.RECEIVABLE],
-                        value: ETaskStatus.RECEIVABLE,
+                        label: serviceStatusName[ETaskServiceStatus.COMPLETED],
+                        value: ETaskServiceStatus.COMPLETED,
                       },
                     ]}
                   />
@@ -113,7 +119,7 @@ export const ButtonTaskStatus = (
 
               <Col xs={24}>
                 <Button
-                  id="btn-task-status"
+                  id="btn-task-service-status"
                   type="primary"
                   htmlType="submit"
                   size="large"

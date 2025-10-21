@@ -2,15 +2,20 @@
 import { ReactElement, useState } from 'react';
 import moment from 'moment';
 import {
+  CheckCircleOutlined as CheckCircleOutlinedIcon,
   DeleteOutlined as DeleteOutlinedIcon,
   EditOutlined as EditOutlinedIcon,
+  WarningOutlined as WarningOutlinedIcon,
+  OrderedListOutlined as OrderedListOutlinedIcon,
 } from '@ant-design/icons';
 
 // Components
-import { TableTemplate } from 'components/layout';
 import { ButtonPrintTaskReport, ButtonTaskStatus } from 'components/shared';
 import { Button, Modal, Table, Tag, Tooltip } from 'components/core';
 import { ButtonBatchTaskStatus } from 'components/shared/buttonBatchTaskStatus';
+import { ButtonTaskServiceStatus } from 'components/shared/buttonTaskServiceStatus';
+import { ButtonBatchTaskServiceStatus } from 'components/shared/buttonBatchTaskServiceStatus';
+import { TableWithTabsTemplate } from 'components/layout/tableWithTabsTemplate';
 
 // Hooks
 import { useGetColumnSearch } from 'hooks/core';
@@ -35,7 +40,7 @@ export const Tasks = (): ReactElement => {
     useTaskTableTour();
 
   const {
-    tasksList,
+    tasksListByStatus,
     deleteTask,
     deleteBatchTasks,
     navigate,
@@ -65,7 +70,7 @@ export const Tasks = (): ReactElement => {
 
   return (
     <>
-      <TableTemplate
+      <TableWithTabsTemplate
         header={{
           title: 'Serviços',
           buttonLabel: 'Adicionar serviço',
@@ -77,7 +82,7 @@ export const Tasks = (): ReactElement => {
                   <Tooltip title="Gerar múltiplos recibos">
                     <div>
                       <ButtonPrintTaskReport
-                        record={tasksList}
+                        record={tasksListByStatus.all}
                         ids={selectedRowKeys.map(String)}
                         size="large"
                         shape="circle"
@@ -85,6 +90,10 @@ export const Tasks = (): ReactElement => {
                       />
                     </div>
                   </Tooltip>
+
+                  <ButtonBatchTaskServiceStatus
+                    selectedRows={selectedRowKeys.map(String)}
+                  />
 
                   <ButtonBatchTaskStatus
                     selectedRows={selectedRowKeys.map(String)}
@@ -120,12 +129,32 @@ export const Tasks = (): ReactElement => {
             data: formatedDataToExport,
           },
         }}
+        tabs={[
+          {
+            tabIcon: <OrderedListOutlinedIcon />,
+            label: `Todos ${tasksListByStatus.all.length}`,
+            key: 'all',
+            dataSource: tasksListByStatus.all,
+          },
+          {
+            tabIcon: <WarningOutlinedIcon />,
+            label: `Pendentes ${tasksListByStatus.pending.length}`,
+            key: 'pending',
+            dataSource: tasksListByStatus.pending,
+          },
+          {
+            tabIcon: <CheckCircleOutlinedIcon />,
+            label: ` Concluídos ${tasksListByStatus.completed.length}`,
+            key: 'completed',
+            dataSource: tasksListByStatus.completed,
+          },
+        ]}
         table={{
-          dataSource: tasksList,
           isLoading: isLoading,
           rowKey: 'id',
           rowSelection: {
             selectedRowKeys,
+            setSelectedRowKeys,
             onChange: (newRows) => setSelectedRowKeys(newRows),
           },
           expandable: {
@@ -239,7 +268,24 @@ export const Tasks = (): ReactElement => {
               }),
             },
             {
-              title: 'Status',
+              title: 'Status do serviço',
+              dataIndex: 'serviceStatus',
+              key: 'serviceStatus',
+              sorter: (a, b) => {
+                return a?.serviceStatus - b?.serviceStatus;
+              },
+              ...getColumnSearchProps('statusName', 'Status do serviço'),
+              render: (value, record) => {
+                return (
+                  <ButtonTaskServiceStatus
+                    serviceStatus={value}
+                    record={record}
+                  />
+                );
+              },
+            },
+            {
+              title: 'Status de faturamento',
               dataIndex: 'status',
               key: 'status',
               sorter: (a, b) => {
@@ -298,7 +344,7 @@ export const Tasks = (): ReactElement => {
             'clientName',
             'name',
             'total',
-            'createdAt',
+            'serviceStatus',
             'status',
             'actions',
           ],

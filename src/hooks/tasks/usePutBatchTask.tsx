@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 // Models
-import { ETaskStatus } from 'models/tasks/tasks';
+import { ETaskServiceStatus, ETaskStatus } from 'models/tasks/tasks';
 
 // Services
 import { putBatchTask } from 'services/tasks/putBatchTasks';
@@ -15,13 +15,18 @@ export const usePutBatchTask = () => {
     mutationFn: ({
       ids,
       status,
+      serviceStatus,
     }: {
       ids: Array<string>;
-      status:
+      status?:
         | ETaskStatus.INVOICE
         | ETaskStatus.PAID_OFF
         | ETaskStatus.RECEIVABLE;
-    }) => putBatchTask(ids, status),
+      serviceStatus?:
+        | ETaskServiceStatus.PENDING
+        | ETaskServiceStatus.COMPLETED
+        | ETaskServiceStatus.CANCELED;
+    }) => putBatchTask(ids, { status, serviceStatus }),
 
     onSuccess: () => {
       toast.success('Serviços atualizado com sucesso!', {

@@ -8,38 +8,42 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
 
 // Components
-import { Button, Col, Form, Modal, Row, Select } from 'components/core';
+import {
+  Button,
+  Col,
+  Form,
+  Modal,
+  Row,
+  Select,
+  Tooltip,
+} from 'components/core';
 
 // Models
-import { ETaskStatus, statusName, Task } from 'models/tasks/tasks';
+import { ETaskServiceStatus, serviceStatusName } from 'models/tasks/tasks';
 
 // Hooks
-import { usePutTask } from 'hooks/tasks/usePutTask';
+import { usePutBatchTask } from 'hooks/tasks/usePutBatchTask';
 
 // Styles
 import * as Styled from './styles';
 
-interface ButtonTaskStatusProps {
-  status: ETaskStatus.INVOICE | ETaskStatus.PAID_OFF | ETaskStatus.RECEIVABLE;
-  record: Task;
+interface ButtonBatchTaskServiceStatusProps {
+  selectedRows: Array<string>;
 }
 
 const schema = zod.object({
-  status: zod.number({ message: 'Campo obrigatório' }),
+  serviceStatus: zod.number({ message: 'Campo obrigatório' }),
 });
 
 export type FormValues = zod.infer<typeof schema>;
 
-export const ButtonTaskStatus = (
-  props: ButtonTaskStatusProps
+export const ButtonBatchTaskServiceStatus = (
+  props: ButtonBatchTaskServiceStatusProps
 ): ReactElement => {
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const { mutateAsync: updateTaskMutate, isPending } = usePutTask();
+  const { mutateAsync: updateBatchTaskMutate, isPending } = usePutBatchTask();
 
-  const { control, handleSubmit } = useForm<FormValues>({
-    values: {
-      status: props.status,
-    },
+  const { control, handleSubmit, reset } = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
 
@@ -48,63 +52,65 @@ export const ButtonTaskStatus = (
   };
 
   const onChangeTaskStatus = async (data: FormValues) => {
-    await updateTaskMutate({
-      ...props?.record,
-      status: data.status,
-    });
+    if (!Array.isArray(props.selectedRows) || !data?.serviceStatus) {
+      return;
+    }
 
-    setIsOpenModal(false);
+    await updateBatchTaskMutate({
+      ids: props?.selectedRows,
+      serviceStatus: data?.serviceStatus,
+    }).then(() => {
+      reset();
+      handleToggleModal();
+    });
   };
 
   return (
     <>
-      <Styled.ButtonTaskStatusContainer
-        icon={<div className="status" />}
-        className={`btn-status-${props.status}`}
-        size="small"
-        onClick={handleToggleModal}
-      >
-        {statusName[props?.status] ?? statusName[ETaskStatus.INVOICE]}
-        <ArrowRightOutlinedIcon />
-      </Styled.ButtonTaskStatusContainer>
+      <Tooltip title="Alterar múltiplos status do serviço">
+        <Styled.ButtonTaskServiceStatusContainer
+          onClick={handleToggleModal}
+          className={`btn-batch-service-status`}
+          size="large"
+          shape="circle"
+        >
+          <ArrowRightOutlinedIcon />
+        </Styled.ButtonTaskServiceStatusContainer>
+      </Tooltip>
 
       <Modal
         open={isOpenModal}
         centered
-        title="Deseja alterar o status do faturamento?"
+        title="Deseja alterar o status do serviço de múltiplos serviços?"
         onCancel={handleToggleModal}
         footer={null}
       >
         <Styled.ModalContainer>
           <Typography>
-            O status do faturamento deste item será alterado. Tem certeza de que
-            deseja continuar?
+            Todos os status de serviço selecionados serão alterados. Tem certeza
+            de que deseja continuar?
           </Typography>
 
           <Form onFinish={handleSubmit(onChangeTaskStatus)}>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
               <Col xs={24}>
-                <FormItem control={control} name="status">
+                <FormItem control={control} name="serviceStatus">
                   <Select
-                    id="status"
+                    id="serviceStatus"
                     showSearch
-                    placeholder="Alterar o status do faturamento"
+                    placeholder="Alterar o status do serviço"
                     optionFilterProp="label"
-                    label="Status do faturamento"
+                    label="Status do serviço"
                     allowClear
                     autoClearSearchValue
                     options={[
                       {
-                        label: statusName[ETaskStatus.PAID_OFF],
-                        value: ETaskStatus.PAID_OFF,
+                        label: serviceStatusName[ETaskServiceStatus.PENDING],
+                        value: ETaskServiceStatus.PENDING,
                       },
                       {
-                        label: statusName[ETaskStatus.INVOICE],
-                        value: ETaskStatus.INVOICE,
-                      },
-                      {
-                        label: statusName[ETaskStatus.RECEIVABLE],
-                        value: ETaskStatus.RECEIVABLE,
+                        label: serviceStatusName[ETaskServiceStatus.COMPLETED],
+                        value: ETaskServiceStatus.COMPLETED,
                       },
                     ]}
                   />
@@ -113,7 +119,7 @@ export const ButtonTaskStatus = (
 
               <Col xs={24}>
                 <Button
-                  id="btn-task-status"
+                  id="btn-task-service-status"
                   type="primary"
                   htmlType="submit"
                   size="large"

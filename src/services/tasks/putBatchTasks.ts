@@ -3,11 +3,19 @@ import { db } from 'config/firebase';
 import { updateDoc, doc, collection, getDocs } from 'firebase/firestore';
 
 // Models
-import { ETaskStatus } from 'models/tasks/tasks';
+import { ETaskServiceStatus, ETaskStatus } from 'models/tasks/tasks';
+
+interface PutBatchTaskBody {
+  status?: ETaskStatus.INVOICE | ETaskStatus.PAID_OFF | ETaskStatus.RECEIVABLE;
+  serviceStatus?:
+    | ETaskServiceStatus.PENDING
+    | ETaskServiceStatus.COMPLETED
+    | ETaskServiceStatus.CANCELED;
+}
 
 export const putBatchTask = async (
   ids: Array<string>,
-  status: ETaskStatus.INVOICE | ETaskStatus.PAID_OFF | ETaskStatus.RECEIVABLE
+  body: PutBatchTaskBody
 ) => {
   try {
     const snapshot = await getDocs(collection(db, 'tasks'));
@@ -21,7 +29,8 @@ export const putBatchTask = async (
       .forEach(async (document) => {
         await updateDoc(doc(db, 'tasks', document?.id), {
           ...document.data,
-          status,
+          status: body?.status ?? document?.data()?.status,
+          serviceStatus: body?.serviceStatus ?? document?.data()?.serviceStatus,
         });
       });
   } catch (error) {

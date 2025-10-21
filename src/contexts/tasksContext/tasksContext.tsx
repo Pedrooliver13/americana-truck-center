@@ -26,6 +26,7 @@ import {
   PostTask,
   PutTask,
   statusName,
+  ETaskServiceStatus,
 } from 'models/tasks/tasks';
 import { Prices } from 'models/prices/prices';
 import { Clients } from 'models/clients/clients';
@@ -44,6 +45,11 @@ export interface TasksContextProps {
   driverListOptions: Array<Drivers>;
   clientListOptions: Array<Clients>;
   formatedDataToExport?: Array<TasksToExport>;
+  tasksListByStatus: {
+    all: Array<Task>;
+    pending: Array<Task>;
+    completed: Array<Task>;
+  };
   navigate: NavigateFunction;
   createTask: (data: PostTask) => Promise<void>;
   updateTask: (data: PutTask) => Promise<void>;
@@ -140,6 +146,22 @@ export const TasksProvider = ({
     });
   }, [clientsList]);
 
+  const tasksListByStatus = useMemo(() => {
+    return {
+      all: tasksList || [],
+
+      pending:
+        tasksList?.filter(
+          (task) => task?.serviceStatus === ETaskServiceStatus.PENDING
+        ) || [],
+
+      completed:
+        tasksList?.filter(
+          (task) => task?.serviceStatus === ETaskServiceStatus.COMPLETED
+        ) || [],
+    };
+  }, [tasksList]);
+
   const createTask = useCallback(
     async (data: PostTask): Promise<void> => {
       createTaskMutate(data);
@@ -173,6 +195,7 @@ export const TasksProvider = ({
       value={{
         id,
         tasksList,
+        tasksListByStatus,
         taskItem,
         pricesList,
         clientsList,
