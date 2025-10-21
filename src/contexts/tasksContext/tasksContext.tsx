@@ -152,7 +152,9 @@ export const TasksProvider = ({
 
       pending:
         tasksList?.filter(
-          (task) => task?.serviceStatus === ETaskServiceStatus.PENDING
+          (task) =>
+            task?.serviceStatus === ETaskServiceStatus.PENDING ||
+            !task?.serviceStatus
         ) || [],
 
       completed:
