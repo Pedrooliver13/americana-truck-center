@@ -7,6 +7,7 @@ import {
   RefObject,
   useState,
   useCallback,
+  useMemo,
   useEffect,
   ReactNode,
 } from 'react';
@@ -25,9 +26,6 @@ import { ButtonHideColumns, PdfButton, XlsxButton } from 'components/shared';
 // Hooks
 import { useGetHiddenColumns } from 'hooks/core';
 import { useIsMobile } from 'hooks/core/useMobile';
-
-// Utils
-import { debounce } from 'utils/debounce';
 
 // Styles
 import * as Styled from './styles';
@@ -79,10 +77,12 @@ export const TableWithTabsTemplate = (
   props: TableWithTabsTemplateProps
 ): ReactElement => {
   const isMobile = useIsMobile();
+
   const [activeTabKey, setActiveTabKey] = useState<string>(
     props.tabs[0]?.key || ''
   );
-  const [filteredData, setFilteredData] = useState<Array<any>>([]);
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [debouncedSearch, setDebouncedSearch] = useState<string>('');
 
   const { newColumns, options, checkedList, setCheckedList } =
     useGetHiddenColumns({
@@ -90,28 +90,35 @@ export const TableWithTabsTemplate = (
       defaultCheckedList: props?.table?.defaultCheckedList as Array<string>,
     });
 
-  // Atualiza os dados ao trocar de aba
+  // Atualiza o valor de busca com debounce
   useEffect(() => {
-    const activeTab = props.tabs.find((tab) => tab.key === activeTabKey);
-    setFilteredData([...(activeTab?.dataSource ?? [])]);
-  }, [activeTabKey, props.tabs]);
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchValue);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchValue]);
 
-  const handleSearch = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const search = event.target.value.toLowerCase();
-      const activeTab = props.tabs.find((tab) => tab.key === activeTabKey);
-      const data = activeTab?.dataSource ?? [];
-
-      const filtered = data.filter((item) =>
-        Object.keys(item).some((key) =>
-          String(item[key]).toLowerCase().includes(search)
-        )
-      );
-
-      setFilteredData(filtered);
-    },
+  const activeTab = useMemo(
+    () => props.tabs.find((tab) => tab.key === activeTabKey),
     [activeTabKey, props.tabs]
   );
+
+  const filteredData = useMemo(() => {
+    if (!activeTab) return [];
+    if (!debouncedSearch.trim()) return activeTab.dataSource ?? [];
+
+    const lowerSearch = debouncedSearch.toLowerCase();
+
+    return (activeTab.dataSource ?? []).filter((item) =>
+      Object.keys(item).some((key) =>
+        String(item[key]).toLowerCase().includes(lowerSearch)
+      )
+    );
+  }, [activeTab, debouncedSearch]);
+
+  const handleSearch = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
+  }, []);
 
   return (
     <Styled.TableWithTabsTemplateContainer className="container">
@@ -143,7 +150,6 @@ export const TableWithTabsTemplate = (
           type="card"
           onChange={(key) => {
             setActiveTabKey(key);
-
             props?.table?.rowSelection?.setSelectedRowKeys?.([]);
           }}
         >
@@ -165,7 +171,8 @@ export const TableWithTabsTemplate = (
                     allowClear
                     autoComplete="off"
                     prefix={<SearchOutlinedIcon />}
-                    onChange={debounce(handleSearch, 300)}
+                    value={searchValue}
+                    onChange={handleSearch}
                   />
                 </div>
 
