@@ -145,7 +145,6 @@ export const TasksForm = (): ReactElement => {
                     showCount
                     maxLength={150}
                     required
-                    disabled={Boolean(id)}
                   />
                 </FormItem>
               </Col>
