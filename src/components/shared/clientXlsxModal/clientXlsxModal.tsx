@@ -117,6 +117,7 @@ const ClientXlsxModalBase = (
           CELULAR: task?.phone,
           PREÇO: task?.total,
           FROTA: task?.fleet,
+          PLACA: task?.licensePlate,
           SERVIÇOS: task?.services
             ?.map((service) => `${service?.name}(R$ ${service?.value})`)
             .join(', '),
