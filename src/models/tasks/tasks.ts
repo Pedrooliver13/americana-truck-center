@@ -49,6 +49,8 @@ export interface Task {
   driver?: string;
   driverDocument: string;
   observation?: string;
+  createdBy?: string;
+  updatedBy?: string;
   services: Array<{
     id: string;
     name: string;
@@ -95,8 +97,10 @@ export interface PostTask {
     value: string | number;
     client?: string;
   } | void>;
+  createdBy?: string;
 }
 
 export interface PutTask extends PostTask {
   id: string;
+  updatedBy?: string;
 }

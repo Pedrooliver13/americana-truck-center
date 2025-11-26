@@ -16,6 +16,7 @@ import { ButtonBatchTaskStatus } from 'components/shared/buttonBatchTaskStatus';
 import { ButtonTaskServiceStatus } from 'components/shared/buttonTaskServiceStatus';
 import { ButtonBatchTaskServiceStatus } from 'components/shared/buttonBatchTaskServiceStatus';
 import { TableWithTabsTemplate } from 'components/layout/tableWithTabsTemplate';
+import { ButtonBatchTaskCreatedAt } from 'components/shared/buttonBatchTaskCreatedAt';
 
 // Hooks
 import { useGetColumnSearch } from 'hooks/core';
@@ -79,6 +80,10 @@ export const Tasks = (): ReactElement => {
             <>
               {Boolean(selectedRowKeys?.length) && (
                 <>
+                  <ButtonBatchTaskCreatedAt
+                    selectedRows={selectedRowKeys.map(String)}
+                  />
+
                   <Tooltip title="Gerar múltiplos recibos">
                     <div>
                       <ButtonPrintTaskReport
@@ -295,6 +300,18 @@ export const Tasks = (): ReactElement => {
               render: (value, record) => {
                 return <ButtonTaskStatus status={value} record={record} />;
               },
+            },
+            {
+              title: 'Criado por',
+              dataIndex: 'createdBy',
+              key: 'createdBy',
+              ...getColumnSearchProps('createdBy', 'Criado por'),
+            },
+            {
+              title: 'Atualizado por',
+              dataIndex: 'updatedBy',
+              key: 'updatedBy',
+              ...getColumnSearchProps('updatedBy', 'Atualizado por'),
             },
             {
               title: 'Ações',

@@ -3,6 +3,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+// Contexts
+import { useGlobalContext } from 'contexts/globalContext';
+
 // Models
 import { PostTask } from 'models/tasks/tasks';
 
@@ -12,9 +15,11 @@ import { postTask } from 'services/tasks/postTask';
 export const usePostTask = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { currentUser } = useGlobalContext();
 
   const mutation = useMutation({
-    mutationFn: (data: PostTask) => postTask(data),
+    mutationFn: (data: PostTask) =>
+      postTask({ ...data, createdBy: currentUser?.email ?? '' }),
 
     onSuccess: () => {
       toast.success('Serviço cadastrado com sucesso!', {
