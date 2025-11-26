@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
 import moment from 'moment';
+import { toast } from 'react-toastify';
 
 // Components
 import { Button, Col, Form, Modal, Row, Tooltip } from 'components/core';
@@ -48,6 +49,11 @@ export const ButtonBatchTaskCreatedAt = (
 
   const onSubmit = async (data: FormValues) => {
     if (!Array.isArray(props.selectedRows) || !data?.dateValue) {
+      return;
+    }
+
+    if (moment(data.dateValue, 'DD/MM/YYYY').isAfter(moment())) {
+      toast.error('A data de criação não pode estar no futuro!');
       return;
     }
 
