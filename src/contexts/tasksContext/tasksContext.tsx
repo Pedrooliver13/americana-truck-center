@@ -47,6 +47,7 @@ export interface TasksContextProps {
   formatedDataToExport?: Array<TasksToExport>;
   tasksListByStatus: {
     all: Array<Task>;
+    awaiting: Array<Task>;
     pending: Array<Task>;
     completed: Array<Task>;
   };
@@ -149,6 +150,11 @@ export const TasksProvider = ({
   const tasksListByStatus = useMemo(() => {
     return {
       all: tasksList || [],
+
+      awaiting:
+        tasksList?.filter(
+          (task) => task?.serviceStatus === ETaskServiceStatus.AWAITING
+        ) || [],
 
       pending:
         tasksList?.filter(

@@ -13,7 +13,8 @@ export enum ETaskStatus {
 export enum ETaskServiceStatus {
   PENDING = 1,
   COMPLETED = 2,
-  CANCELED = 3,
+  AWAITING = 3,
+  CANCELED = 4,
 }
 
 export const statusName = {
@@ -25,6 +26,7 @@ export const statusName = {
 export const serviceStatusName = {
   [ETaskServiceStatus.PENDING]: 'Pendente',
   [ETaskServiceStatus.COMPLETED]: 'Concluído',
+  [ETaskServiceStatus.AWAITING]: 'Aguardando',
   [ETaskServiceStatus.CANCELED]: 'Cancelado',
 };
 
@@ -40,7 +42,11 @@ export interface Task {
   total: number;
   status: ETaskStatus.INVOICE | ETaskStatus.PAID_OFF | ETaskStatus.RECEIVABLE;
   statusName?: string;
-  serviceStatus: ETaskServiceStatus.PENDING | ETaskServiceStatus.COMPLETED;
+  serviceStatus:
+    | ETaskServiceStatus.PENDING
+    | ETaskServiceStatus.COMPLETED
+    | ETaskServiceStatus.AWAITING
+    | ETaskServiceStatus.CANCELED;
   serviceStatusName?: string;
   phone: string;
   client?: string;
@@ -89,7 +95,11 @@ export interface PostTask {
   observation?: string;
   createdAt: Timestamp;
   status?: ETaskStatus.INVOICE | ETaskStatus.PAID_OFF | ETaskStatus.RECEIVABLE;
-  serviceStatus?: ETaskServiceStatus.PENDING | ETaskServiceStatus.COMPLETED;
+  serviceStatus?:
+    | ETaskServiceStatus.PENDING
+    | ETaskServiceStatus.COMPLETED
+    | ETaskServiceStatus.AWAITING
+    | ETaskServiceStatus.CANCELED;
   services: Array<{
     id: string;
     name: string;

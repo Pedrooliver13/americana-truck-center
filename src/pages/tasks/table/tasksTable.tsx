@@ -7,6 +7,7 @@ import {
   EditOutlined as EditOutlinedIcon,
   WarningOutlined as WarningOutlinedIcon,
   OrderedListOutlined as OrderedListOutlinedIcon,
+  RetweetOutlined as RetweetOutlinedIcon,
 } from '@ant-design/icons';
 
 // Components
@@ -148,6 +149,12 @@ export const Tasks = (): ReactElement => {
             dataSource: tasksListByStatus.pending,
           },
           {
+            tabIcon: <RetweetOutlinedIcon />,
+            label: `Aguardando ${tasksListByStatus.awaiting.length}`,
+            key: 'awaiting',
+            dataSource: tasksListByStatus.awaiting,
+          },
+          {
             tabIcon: <CheckCircleOutlinedIcon />,
             label: ` Concluídos ${tasksListByStatus.completed.length}`,
             key: 'completed',
@@ -239,6 +246,7 @@ export const Tasks = (): ReactElement => {
               title: 'Placa do Veículo',
               dataIndex: 'licensePlate',
               key: 'licensePlate',
+              width: '20%',
               ...getColumnSearchProps('licensePlate', 'Placa do Veículo'),
             },
             {
@@ -263,6 +271,7 @@ export const Tasks = (): ReactElement => {
               title: 'Data',
               dataIndex: 'createdAt',
               key: 'createdAt',
+              width: '15%',
               sorter: (a, b) => {
                 return a?.createdAt?.seconds - b?.createdAt?.seconds;
               },
@@ -361,6 +370,8 @@ export const Tasks = (): ReactElement => {
             'clientName',
             'name',
             'total',
+            'createdAt',
+            'licensePlate',
             'serviceStatus',
             'status',
             'actions',

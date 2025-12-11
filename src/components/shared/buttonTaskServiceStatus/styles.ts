@@ -19,7 +19,7 @@ export const ButtonTaskServiceStatusContainer = styled(Button)`
     }
 
     &.btn-status-3 .status {
-      background-color: ${theme.colors['red-900']};
+      background-color: ${theme.colors.primary};
     }
 
     .status {

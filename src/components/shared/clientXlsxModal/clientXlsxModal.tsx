@@ -106,7 +106,8 @@ const ClientXlsxModalBase = (
             moment(taskDate, 'DD/MM/YYYY').isSameOrBefore(endDate) &&
             moment(taskDate, 'DD/MM/YYYY').isSameOrAfter(startDate)
           );
-        });
+        })
+        .sort((a, b) => a?.createdAt?.seconds - b?.createdAt?.seconds);
 
       return clientTasksList?.map((task) => {
         return {

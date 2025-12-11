@@ -109,6 +109,10 @@ export const ButtonTaskServiceStatus = (
                         value: ETaskServiceStatus.PENDING,
                       },
                       {
+                        label: serviceStatusName[ETaskServiceStatus.AWAITING],
+                        value: ETaskServiceStatus.AWAITING,
+                      },
+                      {
                         label: serviceStatusName[ETaskServiceStatus.COMPLETED],
                         value: ETaskServiceStatus.COMPLETED,
                       },
