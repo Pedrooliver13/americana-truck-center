@@ -78,18 +78,28 @@ export const TableTemplate = (props: TableTemplateProps): ReactElement => {
 
   const handleSearch = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      const search = event.target.value.toLowerCase();
-      const data = props?.table?.dataSource as Array<any>;
+      const search = event.target.value;
 
-      const filteredData = data.filter((item) => {
-        return Object.keys(item).some((key) => {
-          return String(item[key]).toLowerCase().includes(search);
-        });
-      });
+      const normalize = (str: string) =>
+        String(str)
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/ç/g, 'c')
+          .replace(/Ç/g, 'C')
+          .toLowerCase();
+
+      const normalizedSearch = normalize(search);
+      const data = props?.table?.dataSource ?? [];
+
+      const filteredData = data.filter((item) =>
+        Object.keys(item).some((key) =>
+          normalize(item[key]).includes(normalizedSearch)
+        )
+      );
 
       setFilteredData(filteredData);
     },
-    [props.table.dataSource, setFilteredData]
+    [props.table?.dataSource, setFilteredData]
   );
 
   useEffect(() => {

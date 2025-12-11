@@ -107,11 +107,19 @@ export const TableWithTabsTemplate = (
     if (!activeTab) return [];
     if (!debouncedSearch.trim()) return activeTab.dataSource ?? [];
 
-    const lowerSearch = debouncedSearch.toLowerCase();
+    const normalize = (str: string) =>
+      String(str)
+        .normalize('NFD') // separa acentos
+        .replace(/[\u0300-\u036f]/g, '') // remove acentos
+        .replace(/ç/g, 'c') // trata cedilha minúscula
+        .replace(/Ç/g, 'C') // trata cedilha maiúscula
+        .toLowerCase();
+
+    const normalizedSearch = normalize(debouncedSearch);
 
     return (activeTab.dataSource ?? []).filter((item) =>
       Object.keys(item).some((key) =>
-        String(item[key]).toLowerCase().includes(lowerSearch)
+        normalize(item[key]).includes(normalizedSearch)
       )
     );
   }, [activeTab, debouncedSearch]);
