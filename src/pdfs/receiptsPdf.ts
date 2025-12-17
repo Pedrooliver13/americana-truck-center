@@ -61,13 +61,16 @@ export const generateReceiptsPDF = (data: Task, isShowValue = false) => {
   const secondColumn = 125; // Posição horizontal da segunda coluna
   const lineSpacing = 10; // Espaçamento vertical entre linhas
 
-  doc.text(
-    `CLIENTE: ${
-      data?.currentClient?.name?.toUpperCase() ?? '___________________________'
-    }`,
-    firstColumn,
-    marginTop + 45
-  );
+  const clientMaxWidth = 110;
+
+  const clientText = `CLIENTE: ${
+    data?.currentClient?.name?.toUpperCase() ?? '___________________________'
+  }`;
+
+  const clientLines = doc.splitTextToSize(clientText, clientMaxWidth);
+
+  doc.text(clientLines, firstColumn, marginTop + 45);
+
   doc.text(
     `DATA: ${
       moment(data?.createdAt?.seconds * 1000).format('DD/MM/YYYY') ?? ''
