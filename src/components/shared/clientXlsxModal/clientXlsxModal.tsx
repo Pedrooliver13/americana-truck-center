@@ -143,8 +143,10 @@ const ClientXlsxModalBase = (
       return;
     }
 
+    const currentClientName = String(currentClient?.name).replace(/\./g, '');
+
     downloadExcel({
-      fileName: `${currentClient?.name}-${new Date().toLocaleDateString()}`,
+      fileName: `${currentClientName}-${new Date().toLocaleDateString()}`,
       sheet: 'react-export-table-to-excel',
       tablePayload: {
         header: Object.keys(body[0]),
