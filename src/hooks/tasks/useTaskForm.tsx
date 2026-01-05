@@ -175,19 +175,27 @@ export const useTaskForm = () => {
         createdAt: taskItem?.createdAt ?? moment().format('YYYY-MM-DD'),
       };
 
+      console.log('prepareData', prepareData);
+
       createTask(prepareData as PostTask);
+    },
+    removeUndefined: (obj: object) => {
+      return Object.fromEntries(
+        Object.entries(obj).filter(([, value]) => Boolean(value))
+      );
     },
     handleEditItem: async (id: string): Promise<void> => {
       const value = watch();
 
       delete value.search;
 
-      const prepareData = {
+      const filteredData = handlers.removeUndefined({
+        ...taskItem,
         ...value,
         id,
-      };
+      });
 
-      updateTask(prepareData as PutTask);
+      updateTask(filteredData as PutTask);
     },
   };
 
