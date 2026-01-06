@@ -51,13 +51,15 @@ const renderReceipt = (doc: jsPDF, data: Task, isShowValue = false) => {
   const secondColumn = 125;
   const lineSpacing = 10;
 
-  doc.text(
-    `CLIENTE: ${
-      data?.currentClient?.name?.toUpperCase() ?? '___________________________'
-    }`,
-    firstColumn,
-    marginTop + 45
-  );
+  const clientMaxWidth = 110;
+
+  const clientText = `CLIENTE: ${
+    data?.currentClient?.name?.toUpperCase() ?? '___________________________'
+  }`;
+
+  const clientLines = doc.splitTextToSize(clientText, clientMaxWidth);
+
+  doc.text(clientLines, firstColumn, marginTop + 45);
   doc.text(
     `DATA: ${
       moment(data?.createdAt?.seconds * 1000).format('DD/MM/YYYY') ?? ''
