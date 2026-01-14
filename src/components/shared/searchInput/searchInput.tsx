@@ -44,6 +44,8 @@ export const SearchInput = (): ReactElement => {
         { value: '/drivers/new', label: 'Motoristas - Página de Cadastro' },
         { value: '/prices', label: 'Preços - Página' },
         { value: '/prices/new', label: 'Preços - Página de Cadastro' },
+        { value: '/reports', label: 'Laudos - Página' },
+        { value: '/reports/new', label: 'Laudos - Página de Cadastro' },
         { value: '/settings', label: 'Configurações - Página' },
       ]}
       ref={searchRef}

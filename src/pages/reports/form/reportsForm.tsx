@@ -4,8 +4,10 @@ import { FormItem } from 'react-hook-form-antd';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DatePicker, Typography } from 'antd';
-import * as zod from 'zod';
+import { useNavigate } from 'react-router-dom';
 import { DefaultOptionType } from 'antd/es/select';
+import * as zod from 'zod';
+import moment from 'moment';
 
 // Components
 import {
@@ -21,9 +23,7 @@ import {
 
 // Hooks
 import { useGetAllClients } from 'hooks/clients/useGetAllClients';
-
-// Pdfs
-import { generateHygieneCertificate } from 'pdfs/hygieneCertificatePdf';
+import { useReportsContext } from 'hooks/reports/useReportsContext';
 
 // Models
 import { Clients } from 'models/clients/clients';
@@ -63,7 +63,12 @@ const schema = zod.object({
 type FormValues = zod.infer<typeof schema>;
 
 export const ReportsForm = (): ReactElement => {
+  const navigate = useNavigate();
+  const [isOpenClearFieldsModal, setIsOpenClearFieldsModal] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
+
+  const { createReport } = useReportsContext();
+
   const { data: clientsList, isFetching: isFetchingClientsList } =
     useGetAllClients();
 
@@ -120,6 +125,10 @@ export const ReportsForm = (): ReactElement => {
     });
   }, [clientsList]);
 
+  const handleToggleClearFieldsModal = () => {
+    setIsOpenClearFieldsModal((state) => !state);
+  };
+
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
   };
@@ -143,8 +152,27 @@ export const ReportsForm = (): ReactElement => {
     clearErrors('socialName');
   };
 
+  function generateNumericId() {
+    return String(
+      parseInt(crypto.randomUUID().replace(/\D/g, '').slice(0, 15), 10)
+    ).substring(0, 5);
+  }
+
   const onSubmit = (data: FormValues) => {
-    generateHygieneCertificate(data);
+    createReport({
+      ...data,
+      reportId: generateNumericId(),
+
+      hygieneCertificateDate: data?.hygieneCertificateDate
+        ? moment(data?.hygieneCertificateDate, 'DD/MM/YYYY').format(
+            'DD/MM/YYYY'
+          )
+        : '',
+
+      reviewDate: data?.reviewDate
+        ? moment(data?.reviewDate, 'DD/MM/YYYY').format('DD/MM/YYYY')
+        : '',
+    });
 
     delete data.hygieneCertificateDate;
     delete data.reviewDate;
@@ -175,7 +203,10 @@ export const ReportsForm = (): ReactElement => {
         <div className="prices__header">
           <h1>Gerar Laudo</h1>
           <div>
-            <Button onClick={handleToggleModal}>Limpar campos</Button>
+            <Button onClick={handleToggleClearFieldsModal}>
+              Limpar campos
+            </Button>
+            <Button onClick={handleToggleModal}>Voltar</Button>
           </div>
         </div>
         <Form onFinish={handleSubmit(onSubmit)} className="prices-form">
@@ -188,7 +219,7 @@ export const ReportsForm = (): ReactElement => {
                     showSearch
                     placeholder="Selecione um Cliente"
                     optionFilterProp="label"
-                    label="Vincular Cliente"
+                    label="Cliente (apenas para preencher a razão social)"
                     allowClear
                     autoClearSearchValue
                     onChange={handleChangeClient}
@@ -598,19 +629,32 @@ export const ReportsForm = (): ReactElement => {
       </Styled.ReportsFormContainer>
       <Modal
         title="Desejar limpar os campos?"
+        open={isOpenClearFieldsModal}
+        centered
+        okText="Confirmar"
+        cancelText="Cancelar"
+        onClose={handleToggleClearFieldsModal}
+        onCancel={handleToggleClearFieldsModal}
+        onOk={() => {
+          handleToggleClearFieldsModal();
+          handleClearFields();
+        }}
+        okButtonProps={{ danger: true }}
+      >
+        <p>Após confirmar os dados serão descartados!</p>
+      </Modal>
+      <Modal
+        title="Desejar cancelar a operação?"
         open={isOpenModal}
         centered
         okText="Confirmar"
         cancelText="Cancelar"
         onClose={handleToggleModal}
         onCancel={handleToggleModal}
-        onOk={() => {
-          handleToggleModal();
-          handleClearFields();
-        }}
+        onOk={() => navigate('/reports')}
         okButtonProps={{ danger: true }}
       >
-        <p>Após confirmar os dados serão descartados!</p>
+        <p>Após o cancelamento os dados serão descartados!</p>
       </Modal>
     </>
   );

@@ -1,6 +1,11 @@
-export interface HygieneCertificate {
-  hygieneCertificateDate?: string;
-  reviewDate?: string;
+// Packages
+import { Timestamp } from 'firebase/firestore';
+
+export interface Report {
+  id?: string;
+  reportId?: string;
+  hygieneCertificateDate?: string | Timestamp | Date;
+  reviewDate?: string | Timestamp | Date;
   socialName: string;
   truck: string;
   tank: string;
@@ -24,4 +29,15 @@ export interface HygieneCertificate {
   detergentUsed: string;
   temperatureRinse: string;
   temperatureWashing: string;
+  createdAt?: Timestamp;
 }
+
+export interface ReportsToExport {
+  ID: string;
+  'RAZÃO SOCIAL': string;
+  'ID DO LAUDO': string;
+}
+
+export interface PostReport extends HygieneCertificate {}
+
+export interface HygieneCertificate extends Report {}

@@ -23,6 +23,11 @@ export const ReportsFormContainer = styled.div`
           color: ${theme.colors.primary};
         }
       }
+
+      div {
+        display: flex;
+        gap: 10px;
+      }
     }
 
     .prices-form__footer {

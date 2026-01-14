@@ -1,2 +1,3 @@
 // Components
-export * from './reportsForm/reportsForm';
+export * from './form/reportsForm';
+export * from './table/reportsTable';

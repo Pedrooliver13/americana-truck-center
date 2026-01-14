@@ -15,9 +15,9 @@ import { Tasks, TasksForm } from 'pages/tasks';
 import { ClientsTable, ClientForm } from 'pages/clients';
 import { DriversTable, DriversForm } from 'pages/drivers';
 import { PricesTable, PricesForm } from 'pages/prices';
-import { ReportsForm } from 'pages/reports';
 import { Settings } from 'pages/settings';
 import { Page404 } from 'pages/page404';
+import { ReportsTable, ReportsForm } from 'pages/reports';
 
 // Contexts
 import { TasksContextLayout } from 'contexts/tasksContext';
@@ -25,6 +25,7 @@ import { ClientsContextLayout } from 'contexts/clientContext';
 import { PriceContextLayout } from 'contexts/priceContext';
 import { DashboardContextLayout } from 'contexts/dashboardContext';
 import { DriverContextLayout } from 'contexts/driversContext';
+import { ReportContextLayout } from 'contexts/reportsContext/reportsContext';
 
 export const Router = (): ReactElement => {
   return (
@@ -68,7 +69,11 @@ export const Router = (): ReactElement => {
           <Route path="/prices/:id" element={<PricesForm />} />
         </Route>
 
-        <Route path="/reports" element={<ReportsForm />} />
+        <Route element={<ReportContextLayout />}>
+          <Route path="/reports" element={<ReportsTable />} />
+          <Route path="/reports/new" element={<ReportsForm />} />
+        </Route>
+
         <Route path="/settings" element={<Settings />} />
       </Route>
 

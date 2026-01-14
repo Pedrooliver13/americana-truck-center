@@ -1,7 +1,6 @@
 // Packages
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { v4 as uuidV4 } from 'uuid';
 
 // Assets
 import LogoImage from 'assets/americana-truck-center.png';
@@ -18,7 +17,9 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
   doc.addImage(LogoImage, 'PNG', 90, 2, logoWidth, logoHeight);
 
   doc.setFontSize(12);
-  doc.text(`Id: ${uuidV4().substring(0, 5)}`, 195, 20, { align: 'right' });
+  doc.text(`Id: ${String(data?.reportId)?.substring(0, 5)}`, 195, 20, {
+    align: 'right',
+  });
 
   autoTable(doc, {
     startY: 23,
@@ -51,7 +52,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
         },
         {
           content: `REVISÃO: ${data?.reviewDate || ''}`,
-          styles: { fillColor: [0, 102, 204] },
+          styles: { fillColor: [0, 102, 204], cellWidth: 90 },
         },
       ],
       [
