@@ -71,12 +71,17 @@ export const ClientForm = (): ReactElement => {
   };
 
   const onSubmit = (data: FormValues) => {
+    const preparedData = {
+      ...data,
+      name: data?.name?.toUpperCase(),
+    };
+
     if (id) {
-      updateClient({ ...data, id });
+      updateClient({ ...preparedData, id });
       return;
     }
 
-    createClient(data);
+    createClient(preparedData);
   };
 
   useEffect(() => {

@@ -63,6 +63,14 @@ export const DriversTable = (): ReactElement => {
           isLoading,
           columns: [
             {
+              title: 'Cliente',
+              dataIndex: 'clientName',
+              key: 'clientName',
+              width: '25%',
+              sorter: (a, b) => a.clientName.localeCompare(b.clientName),
+              ...getColumnSearchProps('clientName', 'Cliente'),
+            },
+            {
               title: 'Nome',
               dataIndex: 'name',
               key: 'name',
@@ -144,7 +152,14 @@ export const DriversTable = (): ReactElement => {
               ),
             },
           ],
-          defaultCheckedList: ['name', 'code', 'document', 'phone', 'actions'],
+          defaultCheckedList: [
+            'clientName',
+            'name',
+            'code',
+            'document',
+            'phone',
+            'actions',
+          ],
         }}
         tour={{
           isOpenTourState,

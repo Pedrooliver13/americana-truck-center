@@ -26,6 +26,15 @@ const SelectBase = (
   props: SelectProps,
   ref: React.LegacyRef<BaseSelectRef> | undefined
 ): ReactElement => {
+  const normalize = (str: string) =>
+    // Remove accents and special characters
+    String(str)
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/ç/g, 'c')
+      .replace(/Ç/g, 'C')
+      .toLowerCase();
+
   return (
     <Styled.SelectContainer>
       {props.label && (
@@ -35,7 +44,15 @@ const SelectBase = (
           </Typography.Title>
         </label>
       )}
-      <SelectAntDesign ref={ref} size="large" {...props} />
+      <SelectAntDesign
+        ref={ref}
+        size="large"
+        optionFilterProp="label"
+        filterOption={(input, option) =>
+          normalize(option?.label as string).includes(normalize(input))
+        }
+        {...props}
+      />
     </Styled.SelectContainer>
   );
 };

@@ -6,6 +6,7 @@ import { QuestionCircleOutlined as QuestionCircleOutlinedIcon } from '@ant-desig
 import { Tour } from 'antd';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
+import { DefaultOptionType } from 'antd/es/select';
 
 // Components
 import {
@@ -18,11 +19,15 @@ import {
   Tooltip,
   Modal,
   MaskedInput,
+  Select,
 } from 'components/core';
 
 // Hooks
 import { useDriversFormTour } from 'hooks/drivers/useDriversFormTour';
 import { useDriversContext } from 'hooks/drivers/useDriversContext';
+
+// Models
+import { Clients } from 'models/clients/clients';
 
 // Utils
 import { Masks } from 'utils/masks';
@@ -34,6 +39,8 @@ const schema = zod.object({
   name: zod.string().min(1, { message: 'Campo obrigatório' }),
   document: zod.string(),
   code: zod.string(),
+  client: zod.string().optional().or(zod.literal('')),
+  clientName: zod.string().optional().or(zod.literal('')),
   email: zod
     .string()
     .email({ message: 'E-mail inválido' })
@@ -52,6 +59,7 @@ export const DriversForm = (): ReactElement => {
     driverItem,
     createDriver,
     updateDriver,
+    clientListOptions,
     onToggleModal,
     navigate,
     isOpenModal,
@@ -62,11 +70,14 @@ export const DriversForm = (): ReactElement => {
     control,
     handleSubmit,
     setFocus,
+    setValue,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
       name: '',
       document: '',
+      client: '',
+      clientName: '',
       code: '',
       email: '',
       phone: '',
@@ -79,13 +90,33 @@ export const DriversForm = (): ReactElement => {
     onToggleModal();
   };
 
+  const handleChangeClient = (
+    _value: string,
+    option: DefaultOptionType | DefaultOptionType[]
+  ): void => {
+    const clientOption = option as Clients;
+
+    console.log('clientOption', clientOption);
+
+    if (!clientOption) {
+      return setValue('clientName', '');
+    }
+
+    setValue('clientName', clientOption?.name);
+  };
+
   const onSubmit = (data: FormValues) => {
+    const preparedData = {
+      ...data,
+      name: data?.name?.toUpperCase(),
+    };
+
     if (id) {
-      updateDriver({ ...data, id });
+      updateDriver({ ...preparedData, id });
       return;
     }
 
-    createDriver(data);
+    createDriver(preparedData);
   };
 
   useEffect(() => {
@@ -114,6 +145,23 @@ export const DriversForm = (): ReactElement => {
         <Form onFinish={handleSubmit(onSubmit)} className="drivers-form">
           <Card className="drivers-form__fields" ref={ref1}>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+              <Col xs={24}>
+                <FormItem control={control} name="client">
+                  <Select
+                    id="client"
+                    autoFocus={Boolean(id)}
+                    showSearch
+                    placeholder="Selecione um Cliente"
+                    optionFilterProp="label"
+                    label="Vincular Cliente"
+                    allowClear
+                    autoClearSearchValue
+                    disabled={Boolean(id)}
+                    onChange={handleChangeClient}
+                    options={clientListOptions}
+                  />
+                </FormItem>
+              </Col>
               <Col xs={24} md={24}>
                 <FormItem control={control} name="name">
                   <Input
@@ -160,6 +208,16 @@ export const DriversForm = (): ReactElement => {
                     autoComplete="off"
                     showCount
                     maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="clientName" status={'error'}>
+                  <Input
+                    id="clientName"
+                    name="clientName"
+                    label="Nome do Cliente"
+                    placeholder="Nome do cliente"
                   />
                 </FormItem>
               </Col>
