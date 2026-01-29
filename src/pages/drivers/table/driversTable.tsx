@@ -63,14 +63,6 @@ export const DriversTable = (): ReactElement => {
           isLoading,
           columns: [
             {
-              title: 'Empresa',
-              dataIndex: 'clientName',
-              key: 'clientName',
-              width: '18%',
-              sorter: (a, b) => a?.clientName?.localeCompare(b?.clientName),
-              ...getColumnSearchProps('clientName', 'Empresa'),
-            },
-            {
               title: 'Nome',
               dataIndex: 'name',
               key: 'name',
@@ -100,11 +92,12 @@ export const DriversTable = (): ReactElement => {
               ...getColumnSearchProps('document', 'Documento'),
             },
             {
-              title: 'Email',
+              /* Change email label to "Empresa"(customer request)  */
+              title: 'Empresa',
               dataIndex: 'email',
               key: 'email',
               responsive: ['md'],
-              ...getColumnSearchProps('email', 'Email'),
+              ...getColumnSearchProps('email', 'Empresa'),
             },
             {
               title: 'Contato',

@@ -19,7 +19,6 @@ import { usePostDriver } from 'hooks/drivers/usePostDriver';
 import { usePutDriver } from 'hooks/drivers/usePutDriver';
 import { useDeleteDriverById } from 'hooks/drivers/useDeleteDriverById';
 import { useGetByIdDriver } from 'hooks/drivers/useGetDriverById';
-import { useGetAllClients } from 'hooks/clients/useGetAllClients';
 
 // Models
 import {
@@ -28,13 +27,11 @@ import {
   PostDriver,
   PutDriver,
 } from 'models/drivers/drivers';
-import { Clients } from 'models/clients/clients';
 
 export interface DriversContextProps {
   id?: string;
   driversList?: Array<Drivers>;
   driverItem?: Drivers;
-  clientListOptions: Array<Clients>;
   formatedDataToExport?: Array<DriversToExport>;
 
   createDriver: (data: PostDriver) => void;
@@ -76,9 +73,6 @@ export const DriversProvider = ({
   const { mutateAsync: deleteDriverMutate, isPending: isPendingDelete } =
     useDeleteDriverById();
 
-  const { data: clientsList, isFetching: isFetchingClientsList } =
-    useGetAllClients(id);
-
   const formatedDataToExport = useMemo(() => {
     if (!Array?.isArray(driversList)) {
       return [];
@@ -86,7 +80,6 @@ export const DriversProvider = ({
 
     return driversList?.map((item) => {
       return {
-        EMPRESA: item?.clientName ?? '',
         NOME: item?.name,
         DOCUMENTO: item?.document,
         CONTATO: item?.phone ?? '',
@@ -94,20 +87,6 @@ export const DriversProvider = ({
       };
     });
   }, [driversList]);
-
-  const clientListOptions = useMemo(() => {
-    if (!Array.isArray(clientsList)) {
-      return [];
-    }
-
-    return clientsList?.map((item) => {
-      return {
-        ...item,
-        label: item?.name,
-        value: item?.id,
-      };
-    });
-  }, [clientsList]);
 
   const createDriver = useCallback(
     async (data: PostDriver): Promise<void> => {
@@ -144,7 +123,6 @@ export const DriversProvider = ({
         id,
         driversList: driversList ?? [],
         driverItem,
-        clientListOptions,
         formatedDataToExport,
         createDriver,
         updateDriver,
@@ -157,8 +135,7 @@ export const DriversProvider = ({
           isPendingPut ||
           isPendingDelete ||
           isFetchingDriverList ||
-          isFetchingDriverItem ||
-          isFetchingClientsList,
+          isFetchingDriverItem,
       }}
     >
       {children}

@@ -2,10 +2,10 @@ export interface Drivers {
   id: string;
   name: string;
   document: string;
-  client?: string;
-  clientName?: string;
   code: string;
   phone: string;
+
+  /* Change email label to "Empresa"(customer request)  */
   email?: string | undefined;
 }
 
@@ -17,8 +17,8 @@ export interface PostDriver {
   name: string;
   document: string;
   phone: string;
-  client?: string | undefined;
-  clientName?: string | undefined;
+
+  /* Change email label to "Empresa"(customer request)  */
   email?: string | undefined;
 }
 

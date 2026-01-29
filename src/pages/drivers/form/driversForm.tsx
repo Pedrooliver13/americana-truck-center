@@ -6,7 +6,6 @@ import { QuestionCircleOutlined as QuestionCircleOutlinedIcon } from '@ant-desig
 import { Tour } from 'antd';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
-import { DefaultOptionType } from 'antd/es/select';
 
 // Components
 import {
@@ -19,15 +18,11 @@ import {
   Tooltip,
   Modal,
   MaskedInput,
-  Select,
 } from 'components/core';
 
 // Hooks
 import { useDriversFormTour } from 'hooks/drivers/useDriversFormTour';
 import { useDriversContext } from 'hooks/drivers/useDriversContext';
-
-// Models
-import { Clients } from 'models/clients/clients';
 
 // Utils
 import { Masks } from 'utils/masks';
@@ -39,14 +34,10 @@ const schema = zod.object({
   name: zod.string().min(1, { message: 'Campo obrigatório' }),
   document: zod.string(),
   code: zod.string(),
-  client: zod.string().optional().or(zod.literal('')),
-  clientName: zod.string().optional().or(zod.literal('')),
-  email: zod
-    .string()
-    .email({ message: 'E-mail inválido' })
-    .optional()
-    .or(zod.literal('')),
   phone: zod.string(),
+
+  /* Change email label to "Empresa"(customer request)  */
+  email: zod.string().optional().or(zod.literal('')),
 });
 
 type FormValues = zod.infer<typeof schema>;
@@ -59,7 +50,6 @@ export const DriversForm = (): ReactElement => {
     driverItem,
     createDriver,
     updateDriver,
-    clientListOptions,
     onToggleModal,
     navigate,
     isOpenModal,
@@ -70,17 +60,16 @@ export const DriversForm = (): ReactElement => {
     control,
     handleSubmit,
     setFocus,
-    setValue,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
       name: '',
       document: '',
-      client: '',
-      clientName: '',
       code: '',
-      email: '',
       phone: '',
+
+      /* Change email label to "Empresa"(customer request)  */
+      email: '',
     },
     values: driverItem,
     resolver: zodResolver(schema),
@@ -88,21 +77,6 @@ export const DriversForm = (): ReactElement => {
 
   const handleToggleModal = () => {
     onToggleModal();
-  };
-
-  const handleChangeClient = (
-    _value: string,
-    option: DefaultOptionType | DefaultOptionType[]
-  ): void => {
-    const clientOption = option as Clients;
-
-    console.log('clientOption', clientOption);
-
-    if (!clientOption) {
-      return setValue('clientName', '');
-    }
-
-    setValue('clientName', clientOption?.name);
   };
 
   const onSubmit = (data: FormValues) => {
@@ -145,27 +119,6 @@ export const DriversForm = (): ReactElement => {
         <Form onFinish={handleSubmit(onSubmit)} className="drivers-form">
           <Card className="drivers-form__fields" ref={ref1}>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-              <Col xs={24}>
-                <FormItem
-                  control={control}
-                  name="client"
-                  help="Apenas para preencher campo 'Empresa'"
-                >
-                  <Select
-                    id="client"
-                    autoFocus={Boolean(id)}
-                    showSearch
-                    placeholder="Selecione uma empresa"
-                    optionFilterProp="label"
-                    label="Selecione a Empresa"
-                    allowClear
-                    autoClearSearchValue
-                    disabled={Boolean(id)}
-                    onChange={handleChangeClient}
-                    options={clientListOptions}
-                  />
-                </FormItem>
-              </Col>
               <Col xs={24} md={24}>
                 <FormItem control={control} name="name">
                   <Input
@@ -216,22 +169,13 @@ export const DriversForm = (): ReactElement => {
                 </FormItem>
               </Col>
               <Col xs={24} md={12}>
-                <FormItem control={control} name="clientName" status={'error'}>
-                  <Input
-                    id="clientName"
-                    name="clientName"
-                    label="Empresa"
-                    placeholder="Empresa"
-                  />
-                </FormItem>
-              </Col>
-              <Col xs={24} md={12}>
+                {/* Change email label to "Empresa"(customer request)  */}
                 <FormItem control={control} name="email" status={'error'}>
                   <Input
                     id="email"
                     name="email"
-                    label="E-mail"
-                    placeholder="E-mail"
+                    label="Empresa"
+                    placeholder="Empresa"
                   />
                 </FormItem>
               </Col>
