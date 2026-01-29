@@ -146,14 +146,18 @@ export const DriversForm = (): ReactElement => {
           <Card className="drivers-form__fields" ref={ref1}>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
               <Col xs={24}>
-                <FormItem control={control} name="client">
+                <FormItem
+                  control={control}
+                  name="client"
+                  help="Apenas para preencher campo 'Empresa'"
+                >
                   <Select
                     id="client"
                     autoFocus={Boolean(id)}
                     showSearch
-                    placeholder="Selecione um Cliente"
+                    placeholder="Selecione uma empresa"
                     optionFilterProp="label"
-                    label="Vincular Cliente"
+                    label="Selecione a Empresa"
                     allowClear
                     autoClearSearchValue
                     disabled={Boolean(id)}
@@ -216,8 +220,8 @@ export const DriversForm = (): ReactElement => {
                   <Input
                     id="clientName"
                     name="clientName"
-                    label="Nome do Cliente"
-                    placeholder="Nome do cliente"
+                    label="Empresa"
+                    placeholder="Empresa"
                   />
                 </FormItem>
               </Col>

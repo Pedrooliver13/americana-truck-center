@@ -63,12 +63,12 @@ export const DriversTable = (): ReactElement => {
           isLoading,
           columns: [
             {
-              title: 'Cliente',
+              title: 'Empresa',
               dataIndex: 'clientName',
               key: 'clientName',
-              width: '25%',
-              sorter: (a, b) => a.clientName.localeCompare(b.clientName),
-              ...getColumnSearchProps('clientName', 'Cliente'),
+              width: '18%',
+              sorter: (a, b) => a?.clientName?.localeCompare(b?.clientName),
+              ...getColumnSearchProps('clientName', 'Empresa'),
             },
             {
               title: 'Nome',
@@ -82,7 +82,7 @@ export const DriversTable = (): ReactElement => {
               title: 'Matrícula',
               dataIndex: 'code',
               key: 'code',
-              width: '25%',
+              width: '5%',
               sorter: (a, b) => {
                 if (a?.code === b?.code) {
                   return 0;

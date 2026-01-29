@@ -86,6 +86,7 @@ export const DriversProvider = ({
 
     return driversList?.map((item) => {
       return {
+        EMPRESA: item?.clientName ?? '',
         NOME: item?.name,
         DOCUMENTO: item?.document,
         CONTATO: item?.phone ?? '',
