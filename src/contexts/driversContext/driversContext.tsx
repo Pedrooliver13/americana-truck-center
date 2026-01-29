@@ -83,7 +83,9 @@ export const DriversProvider = ({
         NOME: item?.name,
         DOCUMENTO: item?.document,
         CONTATO: item?.phone ?? '',
-        EMAIL: item?.email ?? '',
+
+        /* Change email label to "Empresa"(customer request)  */
+        EMPRESA: item?.email ?? '',
       };
     });
   }, [driversList]);
