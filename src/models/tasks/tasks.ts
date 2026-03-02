@@ -68,15 +68,19 @@ export interface Task {
 
 export interface TasksToExport {
   CLIENTE: string;
-  NOME: string;
+  'NOME DO MOTORISTA': string;
   'DOCUMENTO DO MOTORISTA': string;
   'DOCUMENTO DO CLIENTE': string;
+  CELULAR: string;
+  PREÇO: number | string;
   PLACA: string;
   FROTA: string;
   'TOTAL(R$)': number;
   SERVIÇOS: string;
+  OBSERVAÇÕES: string;
   DATA: string;
   STATUS: string;
+  'ID RECIBO': string;
 }
 
 export interface PostTask {

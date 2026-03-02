@@ -4,6 +4,7 @@ import {
   EditOutlined as EditOutlinedIcon,
   DeleteOutlined as DeleteOutlinedIcon,
 } from '@ant-design/icons';
+import moment from 'moment';
 
 // Components
 import { Button, Modal, Tag, Tooltip } from 'components/core';
@@ -110,6 +111,20 @@ export const PricesTable = (): ReactElement => {
               },
             },
             {
+              title: 'Data',
+              dataIndex: 'createdAt',
+              key: 'createdAt',
+              width: '15%',
+              sorter: (a, b) => {
+                return a?.createdAt?.seconds - b?.createdAt?.seconds;
+              },
+              ...getColumnSearchProps('createdAt', 'Data', (record) => {
+                return moment(record?.seconds * 1000).format(
+                  'DD/MM/YYYY HH:mm',
+                );
+              }),
+            },
+            {
               title: 'Ações',
               dataIndex: 'actions',
               key: 'actions',
@@ -153,6 +168,7 @@ export const PricesTable = (): ReactElement => {
             'name',
             'type',
             'value',
+            'createdAt',
             'actions',
           ],
         }}

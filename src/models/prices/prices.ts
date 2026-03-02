@@ -7,13 +7,14 @@ export interface Prices {
   type: string;
   value: string;
   client?: string | null;
-  createdAt: Timestamp | string;
+  createdAt: Timestamp;
 }
 
 export interface PricesToExport {
   NOME: string;
   TIPO: string;
   VALOR: string;
+  DATA: string;
 }
 
 export interface PostPrice {

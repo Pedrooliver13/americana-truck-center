@@ -105,13 +105,18 @@ export const TasksProvider = ({
     return tasksList?.map((item) => {
       return {
         CLIENTE: item?.currentClient?.name ?? '',
-        NOME: item?.name,
+        'NOME DO MOTORISTA': item?.name,
         'DOCUMENTO DO MOTORISTA': item?.driverDocument,
         'DOCUMENTO DO CLIENTE': item?.document,
-        PLACA: item?.licensePlate,
+        CELULAR: item?.phone,
+        PREÇO: item?.total,
         FROTA: item?.fleet,
+        PLACA: item?.licensePlate,
         'TOTAL(R$)': convertCurrencyToNumber(String(item?.total)) ?? 0,
-        SERVIÇOS: item?.services?.map((service) => service?.name).join(', '),
+        SERVIÇOS: item?.services
+          ?.map((service) => `${service?.name}(R$ ${service?.value})`)
+          .join(', '),
+        OBSERVAÇÕES: item?.observation ?? '',
         DATA: moment(item?.createdAt?.seconds * 1000).format('DD/MM/YYYY'),
         STATUS: statusName[item?.status],
         'ID RECIBO': String(item?.id).substring(item?.id.length - 5),
@@ -153,19 +158,19 @@ export const TasksProvider = ({
 
       awaiting:
         tasksList?.filter(
-          (task) => task?.serviceStatus === ETaskServiceStatus.AWAITING
+          (task) => task?.serviceStatus === ETaskServiceStatus.AWAITING,
         ) || [],
 
       pending:
         tasksList?.filter(
           (task) =>
             task?.serviceStatus === ETaskServiceStatus.PENDING ||
-            !task?.serviceStatus
+            !task?.serviceStatus,
         ) || [],
 
       completed:
         tasksList?.filter(
-          (task) => task?.serviceStatus === ETaskServiceStatus.COMPLETED
+          (task) => task?.serviceStatus === ETaskServiceStatus.COMPLETED,
         ) || [],
     };
   }, [tasksList]);
@@ -174,28 +179,28 @@ export const TasksProvider = ({
     async (data: PostTask): Promise<void> => {
       createTaskMutate(data);
     },
-    [createTaskMutate]
+    [createTaskMutate],
   );
 
   const updateTask = useCallback(
     async (data: PutTask): Promise<void> => {
       updateTaskMutate(data);
     },
-    [updateTaskMutate]
+    [updateTaskMutate],
   );
 
   const deleteTask = useCallback(
     async (id: string): Promise<void> => {
       deleteTaskMutate(id);
     },
-    [deleteTaskMutate]
+    [deleteTaskMutate],
   );
 
   const deleteBatchTasks = useCallback(
     async (ids: Array<string>): Promise<void> => {
       await deleteBatchTaskMutate(ids);
     },
-    [deleteBatchTaskMutate]
+    [deleteBatchTaskMutate],
   );
 
   return (

@@ -12,6 +12,7 @@ import {
   Outlet,
   useParams,
 } from 'react-router-dom';
+import moment from 'moment';
 
 // Hooks
 import { useGetAllPrices } from 'hooks/prices/useGetAllPrices';
@@ -92,6 +93,7 @@ export const PricesProvider = ({
         NOME: item?.name,
         TIPO: item?.type,
         VALOR: priceFormatter.format(Number(item?.value)),
+        DATA: moment(item?.createdAt?.seconds * 1000).format('DD/MM/YYYY'),
       };
     });
   }, [pricesList]);
@@ -119,7 +121,7 @@ export const PricesProvider = ({
 
       createPricePostMutate(payload);
     },
-    [createPricePostMutate]
+    [createPricePostMutate],
   );
 
   const updatePrice = useCallback(
@@ -131,14 +133,14 @@ export const PricesProvider = ({
 
       updatePriceMutate(payload);
     },
-    [updatePriceMutate]
+    [updatePriceMutate],
   );
 
   const deletePrice = useCallback(
     (id: string) => {
       deletePriceMutate(id);
     },
-    [deletePriceMutate]
+    [deletePriceMutate],
   );
 
   const onToggleModal = () => {
