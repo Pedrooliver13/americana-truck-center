@@ -34,10 +34,7 @@ const schema = zod.object({
   name: zod.string().min(1, { message: 'Campo obrigatório' }),
   document: zod.string().min(1, { message: 'Campo obrigatório' }),
   phone: zod.string().min(1, { message: 'Campo obrigatório' }),
-  email: zod
-    .string()
-    .min(1, { message: 'Campo obrigatório' })
-    .email('E-mail inválido'),
+  email: zod.string().min(1, { message: 'Campo obrigatório' }),
 });
 
 type FormValues = zod.infer<typeof schema>;
