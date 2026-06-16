@@ -77,6 +77,7 @@ export const TasksFormContainer = styled.div`
           border-radius: 8px;
           margin: 10px 0px;
           padding: 0.5rem;
+          gap: 5px;
         }
 
         &--empty {

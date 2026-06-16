@@ -1,9 +1,10 @@
 // Packages
 import { ReactElement, useState } from 'react';
-import { Divider, Empty, Tour } from 'antd';
+import { Divider, Empty, RadioChangeEvent, Tour } from 'antd';
 import { FormItem } from 'react-hook-form-antd';
 import {
   SearchOutlined as SearchOutlinedIcon,
+  DeleteOutlined as DeleteOutlinedIcon,
   QuestionCircleOutlined as QuestionCircleOutlinedIcon,
 } from '@ant-design/icons';
 
@@ -42,6 +43,7 @@ export const TasksForm = (): ReactElement => {
 
   const {
     id,
+    setValue,
     clientListOptions,
     driverListOptions,
     totalPrice,
@@ -75,6 +77,37 @@ export const TasksForm = (): ReactElement => {
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
   };
+
+  const handleRemoveServiceInCart = (item: {
+    id: string;
+    name: string;
+    type: string;
+    value: number | string;
+  }) => {
+    const isCustomService = String(item?.id).includes('Manual');
+
+    // Remove o serviço do carrinho de serviços selecionados.
+    handleChangeAddNewServiceInList(
+      {
+        target: { value: '0' },
+      } as unknown as RadioChangeEvent,
+      {
+        id: item?.id,
+        name: item?.name,
+        type: item?.type,
+        value: '0',
+      },
+    );
+
+    // Após remover o serviço do carrinho, reseta o valor do serviço para "0" para desmarcar o serviço selecionado.
+    if (isCustomService) {
+      setValue('serviceValue', '');
+    } else {
+      setValue(String(item?.id) as keyof FormValues, '0');
+    }
+  };
+
+  console.log('watch()', watch());
 
   return (
     <>
@@ -381,12 +414,25 @@ export const TasksForm = (): ReactElement => {
                 <ul>
                   {listServices.map((item) => (
                     <li key={item?.id}>
-                      <p>{item?.name}</p>
+                      <p style={{ flex: 1 }}>{item?.name}</p>
                       <span>
                         <Tag color="green">
                           {priceFormatter.format(Number(item?.value) ?? 0)}
                         </Tag>
                       </span>
+
+                      {!id && (
+                        <Button
+                          danger
+                          shape="circle"
+                          icon={<DeleteOutlinedIcon />}
+                          type="text"
+                          onClick={() => {
+                            handleRemoveServiceInCart(item);
+                          }}
+                          aria-label={`Remover o serviço ${item?.name} do carrinho de serviços selecionados`}
+                        />
+                      )}
                     </li>
                   ))}
                 </ul>
