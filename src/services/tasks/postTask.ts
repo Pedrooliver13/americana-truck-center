@@ -9,6 +9,6 @@ export const postTask = async (data: PostTask) => {
   try {
     await addDoc(collection(db, 'tasks'), { ...data, createdAt: new Date() });
   } catch (error) {
-    console.error('Error adding document: ', error);
+    throw new Error('Error adding document: ' + error);
   }
 };

@@ -13,6 +13,6 @@ export const getAllTasks = async () => {
 
     return response;
   } catch (error) {
-    console.error('Error getting documents: ', error);
+    throw new Error('Error getting documents: ' + error);
   }
 };

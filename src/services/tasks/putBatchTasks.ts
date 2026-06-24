@@ -23,7 +23,7 @@ interface PutBatchTaskBody {
 
 export const putBatchTask = async (
   ids: Array<string>,
-  body: PutBatchTaskBody
+  body: PutBatchTaskBody,
 ) => {
   try {
     const snapshot = await getDocs(collection(db, 'tasks'));
@@ -44,6 +44,6 @@ export const putBatchTask = async (
         });
       });
   } catch (error) {
-    console.error('Error adding document: ', error);
+    throw new Error('Error updating document: ' + error);
   }
 };

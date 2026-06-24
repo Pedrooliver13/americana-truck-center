@@ -9,6 +9,6 @@ export const putTask = async (data: PutTask) => {
   try {
     await updateDoc(doc(db, 'tasks', data?.id), { ...data });
   } catch (error) {
-    console.error('Error adding document: ', error);
+    throw new Error('Error updating document: ' + error);
   }
 };

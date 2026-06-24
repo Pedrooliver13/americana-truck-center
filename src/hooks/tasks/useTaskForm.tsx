@@ -114,7 +114,7 @@ export const useTaskForm = () => {
     handleChangeAddNewServiceInList,
     handleChangeClient: (
       _value: string,
-      option: DefaultOptionType | DefaultOptionType[]
+      option: DefaultOptionType | DefaultOptionType[],
     ): void => {
       const clientOption = option as Clients;
       setServicesSelectedList([]);
@@ -133,7 +133,7 @@ export const useTaskForm = () => {
     },
     handleChangeDriver: (
       _value: string,
-      option: DefaultOptionType | DefaultOptionType[]
+      option: DefaultOptionType | DefaultOptionType[],
     ): void => {
       const driverOption = option as Drivers;
 
@@ -153,7 +153,7 @@ export const useTaskForm = () => {
     handleNewItem: async (): Promise<void> => {
       const value = watch();
       const currentClient = clientListOptions?.find(
-        (clientOption) => clientOption?.id === watch('client')
+        (clientOption) => clientOption?.id === watch('client'),
       );
 
       if (listServices.length <= 0) {
@@ -175,13 +175,11 @@ export const useTaskForm = () => {
         createdAt: taskItem?.createdAt ?? moment().format('YYYY-MM-DD'),
       };
 
-      console.log('prepareData', prepareData);
-
       createTask(prepareData as PostTask);
     },
     removeUndefined: (obj: object) => {
       return Object.fromEntries(
-        Object.entries(obj).filter(([, value]) => Boolean(value))
+        Object.entries(obj).filter(([, value]) => Boolean(value)),
       );
     },
     handleEditItem: async (id: string): Promise<void> => {
@@ -246,7 +244,7 @@ export const useTaskForm = () => {
         })
         .filter((service) => {
           const hasServiceInTask = services?.find(
-            (serviceItem) => serviceItem?.client === client
+            (serviceItem) => serviceItem?.client === client,
           );
 
           return hasServiceInTask
