@@ -9,6 +9,6 @@ export const postClient = async (data: PostClient) => {
   try {
     await addDoc(collection(db, 'clients'), { ...data, createdAt: new Date() });
   } catch (error) {
-    console.error('Error adding document: ', error);
+    throw new Error('Error adding document: ' + error);
   }
 };

@@ -9,6 +9,6 @@ export const putClient = async (data: PutClient) => {
   try {
     await updateDoc(doc(db, 'clients', data?.id), { ...data });
   } catch (error) {
-    console.error('Error adding document: ', error);
+    throw new Error('Error adding document: ' + error);
   }
 };

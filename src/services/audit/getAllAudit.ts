@@ -1,10 +1,10 @@
 // Packages
-import { db } from 'config/firebase';
+import { dbAudit } from 'config/audit-firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
-export const getAllClients = async () => {
+export const getAllAudits = async () => {
   try {
-    const query = await getDocs(collection(db, 'clients'));
+    const query = await getDocs(collection(dbAudit, 'audits'));
 
     const response = query.docs.map((doc) => ({
       id: doc.id,
@@ -13,6 +13,6 @@ export const getAllClients = async () => {
 
     return response;
   } catch (error) {
-    throw new Error('Error getting documents: ' + error);
+    console.error('Error getting audits: ', error);
   }
 };

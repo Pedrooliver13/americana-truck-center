@@ -11,6 +11,7 @@ import { PostTask } from 'models/tasks/tasks';
 
 // Services
 import { postTask } from 'services/tasks/postTask';
+import { postAudit } from 'services/audit/postAudit';
 
 export const usePostTask = () => {
   const navigate = useNavigate();
@@ -18,8 +19,14 @@ export const usePostTask = () => {
   const { currentUser } = useGlobalContext();
 
   const mutation = useMutation({
-    mutationFn: (data: PostTask) =>
-      postTask({ ...data, createdBy: currentUser?.email ?? '' }),
+    mutationFn: (data: PostTask) => {
+      postAudit({
+        description: `O usuário ${currentUser?.email} cadastrou o serviço ${data?.name}`,
+        content: `${JSON.stringify(data)}`,
+      });
+
+      return postTask({ ...data, createdBy: currentUser?.email ?? '' });
+    },
 
     onSuccess: () => {
       toast.success('Serviço cadastrado com sucesso!', {

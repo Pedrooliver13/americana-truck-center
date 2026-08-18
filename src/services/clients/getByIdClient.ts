@@ -10,6 +10,6 @@ export const getByIdClient = async (id?: string) => {
     const response = await getDoc(docRef);
     return response.data();
   } catch (error) {
-    console.error('Error getting documents: ', error);
+    throw new Error('Error getting documents: ' + error);
   }
 };

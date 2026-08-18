@@ -4,6 +4,7 @@ import { Tabs } from 'antd';
 
 // Pages
 import { ForgotPasswordTab } from 'pages/settings/tabs/forgotPasswordTab/forgotPasswordTab';
+import { AuditTab } from 'pages/settings/tabs/auditTab/auditTab';
 
 // Hooks
 import { useIsMobile } from 'hooks/core/useMobile';
@@ -23,6 +24,12 @@ export const Settings = (): ReactElement => {
             label: `Alterar senha`,
             key: '1',
             children: <ForgotPasswordTab />,
+            animated: true,
+          },
+          {
+            label: `Auditoria`,
+            key: '2',
+            children: <AuditTab />,
             animated: true,
           },
         ]}
