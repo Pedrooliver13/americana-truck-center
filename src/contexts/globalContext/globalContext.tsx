@@ -29,7 +29,11 @@ interface GlobalContextProps {
   currentUser: currentUser | null;
   theme: 'light' | 'dark';
   setTheme: (theme: 'light' | 'dark') => void;
-
+  allUsers: Array<{
+    id: string;
+    email: string;
+    roles: Array<number>;
+  }> | null;
   isAdmin: boolean;
   isUserLoggedIn: boolean;
   isLoading: boolean;
@@ -49,7 +53,7 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
   const { data: allUsers } = useGetAllUsers();
 
   const currentTheme = localStorage.getItem(
-    '@americana-truck-center:theme-state-1.0.0'
+    '@americana-truck-center:theme-state-1.0.0',
   ) as 'light' | 'dark';
 
   const [theme, setTheme] = useState(currentTheme);
@@ -64,7 +68,8 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
 
     return allUsers.some(
       (user) =>
-        currentUser?.email === user?.email && user?.roles.includes(ERoles.ADMIN)
+        currentUser?.email === user?.email &&
+        user?.roles.includes(ERoles.ADMIN),
     );
   }, [allUsers, currentUser]);
 
@@ -81,7 +86,7 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
 
       setIsLoading(false);
     },
-    []
+    [],
   );
 
   useEffect(() => {
@@ -95,7 +100,7 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
         currentUser,
         theme,
         setTheme,
-
+        allUsers,
         isAdmin,
         isUserLoggedIn,
         isLoading,
