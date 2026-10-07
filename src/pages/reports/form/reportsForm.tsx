@@ -1,13 +1,13 @@
 // Packages
-import { ReactElement, useEffect, useMemo, useState } from 'react';
+import { ReactElement, useMemo, useState } from 'react';
 import { FormItem } from 'react-hook-form-antd';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DatePicker, Typography } from 'antd';
+import { DatePicker, Divider, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { DefaultOptionType } from 'antd/es/select';
-import * as zod from 'zod';
 import moment from 'moment';
+import * as zod from 'zod';
 
 // Components
 import {
@@ -19,10 +19,13 @@ import {
   Row,
   Modal,
   Select,
+  Radio,
+  RadioGroup,
 } from 'components/core';
 
 // Hooks
 import { useGetAllClients } from 'hooks/clients/useGetAllClients';
+import { useGetAllDrivers } from 'hooks/drivers/useGetAllDrivers';
 import { useReportsContext } from 'hooks/reports/useReportsContext';
 
 // Models
@@ -32,29 +35,83 @@ import { Clients } from 'models/clients/clients';
 import * as Styled from './styles';
 
 const schema = zod.object({
+  /* DADOS DO CLIENTE */
   client: zod.string().optional(),
-  hygieneCertificateDate: zod.any(),
-  reviewDate: zod.any(),
+  driver: zod.string().optional(),
   socialName: zod.string(),
+  driverName: zod.string(),
   truck: zod.string(),
   tank: zod.string(),
-  capacity: zod.string(),
-  driverName: zod.string(),
+  sanitarySurveillance: zod.string().optional(),
+  adapterNeedsToBeCleaned: zod.string().optional(),
+  /* DADOS DO CLIENTE */
+
+  /* CHECKLIST */
+  clothsUsed: zod.string(),
+  returnedCloths: zod.string(),
+
+  capsUsed: zod.string(),
+  returnedCaps: zod.string(),
+
+  glovesUsed: zod.string(),
+  returnedGloves: zod.string(),
+
+  bootsUsed: zod.string(),
+  returnedBoots: zod.string(),
+
+  flashlightsUsed: zod.string(),
+  returnedFlashlights: zod.string(),
+
+  pliersUsed: zod.string(),
+  returnedPliers: zod.string(),
+
+  ladderUsed: zod.string(),
+  returnedLadder: zod.string(),
+
+  temperatureCheck: zod.string(),
+  timeCheck: zod.string(),
+  valveLeakTest: zod.string(),
+  phTest: zod.string(),
+  /* /CHECKLIST */
+
+  /* LACRES */
+  visitMouth: zod.string(),
+  securityValveVisitMouth: zod.string(),
+  manometer: zod.string(),
+  /* /LACRES */
+
+  /* PH */
+  mounthDischargePH: zod.string(),
+  hoseHolderPH: zod.string(),
+  /* /PH */
+
+  /* ÚLTIMOS PRODUTOS TRANSPORTADOS */
   lastProduct: zod.string(),
   pernultimateProduct: zod.string(),
   antepernultimateProduct: zod.string(),
-  visitMouth: zod.string(),
-  respiring: zod.string(),
-  dischargeValve: zod.string(),
-  pressureWatch: zod.string(),
-  hoseHolder: zod.string(),
-  drainValve: zod.string(),
+  hoseSuitability: zod.string(),
+  damagedHose: zod.string(),
+  /* /ÚLTIMOS PRODUTOS TRANSPORTADOS */
+
+  /* LIMPEZA EXTERNA */
+  valves: zod.string(),
+  hoseExternal: zod.string(),
+  pipesExternal: zod.string(),
+  /* /LIMPEZA EXTERNA */
+
+  /* AVALIAÇÃO - APÓS HIGIENIZAÇÃO */
   strangeBody: zod.string(),
-  suitability: zod.string(),
-  presenceOfLiquids: zod.string(),
   odors: zod.string(),
-  washingExecution: zod.string(),
-  inspectorChoice: zod.string(),
+  presenceOfLiquids: zod.string(),
+  suitability: zod.string(),
+  hoseHolder: zod.string(),
+  /* /AVALIAÇÃO - APÓS HIGIENIZAÇÃO */
+
+  hygieneCertificateDate: zod.any(),
+  reviewDate: zod.any(),
+  capacity: zod.string(),
+  dischargeValve: zod.string(),
+  drainValve: zod.string(),
   detergentUsed: zod.string(),
   temperatureRinse: zod.string(),
   temperatureWashing: zod.string(),
@@ -64,7 +121,6 @@ type FormValues = zod.infer<typeof schema>;
 
 export const ReportsForm = (): ReactElement => {
   const navigate = useNavigate();
-  const [isOpenClearFieldsModal, setIsOpenClearFieldsModal] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const { createReport } = useReportsContext();
@@ -72,41 +128,91 @@ export const ReportsForm = (): ReactElement => {
   const { data: clientsList, isFetching: isFetchingClientsList } =
     useGetAllClients();
 
+  const { data: driversList, isFetching: isFetchingDriversList } =
+    useGetAllDrivers();
+
   const {
     control,
     handleSubmit,
     setValue,
-    reset,
     clearErrors,
     formState: { isSubmitting },
   } = useForm<FormValues>({
     defaultValues: {
+      /* DADOS DO CLIENTE */
       client: '',
-      hygieneCertificateDate: '',
-      reviewDate: '',
-      socialName: '',
+      driver: '',
       truck: '',
       tank: '',
-      capacity: '',
-      driverName: '',
+      sanitarySurveillance: 'NÃO',
+      adapterNeedsToBeCleaned: 'NÃO',
+      /* /DADOS DO CLIENTE */
+
+      /* CHECKLIST */
+      clothsUsed: '',
+      returnedCloths: '',
+      capsUsed: '',
+      returnedCaps: '',
+      glovesUsed: '',
+      returnedGloves: '',
+      bootsUsed: '',
+      returnedBoots: '',
+      flashlightsUsed: '',
+      returnedFlashlights: '',
+      pliersUsed: '',
+      returnedPliers: '',
+      ladderUsed: '',
+      returnedLadder: '',
+      temperatureCheck: '',
+      timeCheck: '',
+      valveLeakTest: 'REPROVADO',
+      phTest: 'REPROVADO',
+      /* /CHECKLIST */
+
+      /* LACRES */
+      visitMouth: '',
+      securityValveVisitMouth: '',
+      manometer: '',
+      drainValve: '',
+      /* /LACRES */
+
+      /* PH */
+      mounthDischargePH: '',
+      hoseHolderPH: '',
+      /* /PH */
+
+      /* ÚLTIMOS PRODUTOS TRANSPORTADOS */
       lastProduct: '',
       pernultimateProduct: '',
       antepernultimateProduct: '',
-      visitMouth: '',
-      respiring: '',
+      /* /ÚLTIMOS PRODUTOS TRANSPORTADOS */
+
+      /* LIMPEZA EXTERNA */
+      valves: 'NÃO',
+      hoseExternal: 'NÃO',
+      pipesExternal: 'NÃO',
+      /* /LIMPEZA EXTERNA */
+
+      /* AVALIAÇÃO - APÓS HIGIENIZAÇÃO */
+      strangeBody: 'AUSENTE',
+      suitability: 'AUSENTE',
+      presenceOfLiquids: 'AUSENTE',
+      odors: 'AUSENTE',
+      hoseSuitability: 'AUSENTE',
+      damagedHose: 'AUSENTE',
+      /* /AVALIAÇÃO - APÓS HIGIENIZAÇÃO */
+
+      hygieneCertificateDate: '',
+      reviewDate: '',
+      socialName: '',
+      capacity: '',
+      driverName: '',
       dischargeValve: '',
-      pressureWatch: '',
       hoseHolder: '',
-      drainValve: '',
-      strangeBody: '',
-      suitability: '',
-      presenceOfLiquids: '',
-      odors: '',
-      washingExecution: '',
-      inspectorChoice: '',
-      detergentUsed: '',
-      temperatureRinse: '',
-      temperatureWashing: '',
+      detergentUsed:
+        'INSPECTOR’S CHOICE(DETERGENTE NEUTRO DE GRAU ALIMENTÍCIO)',
+      temperatureRinse: '60º',
+      temperatureWashing: '60º',
     },
     resolver: zodResolver(schema),
   });
@@ -125,22 +231,27 @@ export const ReportsForm = (): ReactElement => {
     });
   }, [clientsList]);
 
-  const handleToggleClearFieldsModal = () => {
-    setIsOpenClearFieldsModal((state) => !state);
-  };
+  const driverListOptions = useMemo(() => {
+    if (!Array.isArray(driversList)) {
+      return [];
+    }
+
+    return driversList?.map((item) => {
+      return {
+        ...item,
+        label: item?.name,
+        value: item?.id,
+      };
+    });
+  }, [driversList]);
 
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
   };
 
-  const handleClearFields = () => {
-    localStorage.removeItem('@americana-truck-center:hygieneCertificate');
-    reset();
-  };
-
   const handleChangeClient = (
     _value: string,
-    option: DefaultOptionType | DefaultOptionType[]
+    option: DefaultOptionType | DefaultOptionType[],
   ): void => {
     const clientOption = option as Clients;
 
@@ -152,20 +263,36 @@ export const ReportsForm = (): ReactElement => {
     clearErrors('socialName');
   };
 
+  const handleChangeDriver = (
+    _value: string,
+    option: DefaultOptionType | DefaultOptionType[],
+  ): void => {
+    const driverOption = option as Clients;
+
+    if (!driverOption) {
+      return setValue('driver', '');
+    }
+
+    setValue('driverName', driverOption?.name);
+    clearErrors('driverName');
+  };
+
   function generateNumericId() {
     return String(
-      parseInt(crypto.randomUUID().replace(/\D/g, '').slice(0, 15), 10)
+      parseInt(crypto.randomUUID().replace(/\D/g, '').slice(0, 15), 10),
     ).substring(0, 5);
   }
 
   const onSubmit = (data: FormValues) => {
+    console.log('data', data);
+
     createReport({
       ...data,
       reportId: generateNumericId(),
 
       hygieneCertificateDate: data?.hygieneCertificateDate
         ? moment(data?.hygieneCertificateDate, 'DD/MM/YYYY').format(
-            'DD/MM/YYYY'
+            'DD/MM/YYYY',
           )
         : '',
 
@@ -173,29 +300,7 @@ export const ReportsForm = (): ReactElement => {
         ? moment(data?.reviewDate, 'DD/MM/YYYY').format('DD/MM/YYYY')
         : '',
     });
-
-    delete data.hygieneCertificateDate;
-    delete data.reviewDate;
-    delete data?.client;
-
-    localStorage.setItem(
-      '@americana-truck-center:hygieneCertificate',
-      JSON.stringify(data)
-    );
   };
-
-  useEffect(() => {
-    if (localStorage.getItem('@americana-truck-center:hygieneCertificate')) {
-      const storedData = JSON.parse(
-        localStorage.getItem('@americana-truck-center:hygieneCertificate') ||
-          '{}'
-      );
-
-      Object.entries(storedData).forEach(([key, value]) => {
-        return setValue(key as keyof FormValues, value as string);
-      });
-    }
-  }, [setValue]);
 
   return (
     <>
@@ -203,135 +308,59 @@ export const ReportsForm = (): ReactElement => {
         <div className="prices__header">
           <h1>Gerar Laudo</h1>
           <div>
-            <Button onClick={handleToggleClearFieldsModal}>
-              Limpar campos
-            </Button>
             <Button onClick={handleToggleModal}>Voltar</Button>
           </div>
         </div>
         <Form onFinish={handleSubmit(onSubmit)} className="prices-form">
           <Card className="prices-form__fields">
-            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+            <Row
+              gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+              id="dados_do_cliente"
+            >
+              <Col xs={24}>
+                <h2
+                  className="prices-form__fields__title"
+                  style={{ textAlign: 'center' }}
+                >
+                  DADOS DO CLIENTE
+                </h2>
+                <br />
+              </Col>
+
               <Col xs={24}>
                 <FormItem control={control} name="client">
                   <Select
                     id="client"
                     showSearch
-                    placeholder="Selecione um Cliente"
+                    placeholder="Selecione um Transportador"
                     optionFilterProp="label"
-                    label="Cliente (apenas para preencher a razão social)"
+                    label="Transportador"
                     allowClear
                     autoClearSearchValue
                     onChange={handleChangeClient}
                     options={clientListOptions}
+                    autoFocus
                   />
                 </FormItem>
               </Col>
 
-              <Col xs={24} md={12}>
-                <FormItem control={control} name="hygieneCertificateDate">
-                  <div>
-                    <label htmlFor="hygieneCertificateDate">
-                      <Typography.Title level={5} className="label">
-                        Data Higienização *
-                      </Typography.Title>
-                    </label>
-
-                    <DatePicker
-                      style={{ width: '100%' }}
-                      id="hygieneCertificateDate"
-                      name="hygieneCertificateDate"
-                      placeholder="Data Higienização"
-                      autoComplete="off"
-                      size="large"
-                      format={{
-                        format: 'DD/MM/YYYY',
-                        type: 'mask',
-                      }}
-                      onChange={(_date, dateString) => {
-                        setValue(
-                          'hygieneCertificateDate',
-                          Array.isArray(dateString) ? dateString[0] : dateString
-                        );
-                      }}
-                    />
-                  </div>
-                </FormItem>
-              </Col>
-
-              <Col xs={24} md={12}>
-                <FormItem control={control} name="reviewDate">
-                  <div>
-                    <label htmlFor={'reviewDate'}>
-                      <Typography.Title level={5} className="label">
-                        Data de Revisão *
-                      </Typography.Title>
-                    </label>
-
-                    <DatePicker
-                      style={{ width: '100%' }}
-                      id="reviewDate"
-                      name="reviewDate"
-                      placeholder="Data Revisão"
-                      autoComplete="off"
-                      size="large"
-                      format={{
-                        format: 'DD/MM/YYYY',
-                        type: 'mask',
-                      }}
-                      onChange={(_date, dateString) => {
-                        setValue(
-                          'reviewDate',
-                          Array.isArray(dateString) ? dateString[0] : dateString
-                        );
-                      }}
-                    />
-                  </div>
-                </FormItem>
-              </Col>
-
-              <Col xs={24} md={12}>
-                <FormItem control={control} name="socialName">
-                  <Input
-                    id="socialName"
-                    name="socialName"
-                    label="Razão Social"
-                    placeholder="Razão Social"
-                    autoComplete="off"
-                    maxLength={150}
+              <Col xs={24}>
+                <FormItem control={control} name="driver">
+                  <Select
+                    id="driver"
+                    showSearch
+                    placeholder="Selecione um Condutor"
+                    optionFilterProp="label"
+                    label="Condutor"
+                    allowClear
+                    autoClearSearchValue
+                    onChange={handleChangeDriver}
+                    options={driverListOptions}
                   />
                 </FormItem>
               </Col>
 
-              <Col xs={24} md={12}>
-                <FormItem control={control} name="truck">
-                  <Input
-                    id="truck"
-                    name="truck"
-                    label="Cavalo/Truck"
-                    placeholder="Cavalo/Truck"
-                    autoComplete="off"
-                    showCount
-                    maxLength={150}
-                  />
-                </FormItem>
-              </Col>
-
-              <Col xs={24} md={12}>
-                <FormItem control={control} name="tank">
-                  <Input
-                    id="tank"
-                    name="tank"
-                    label="Carreta/Tanque"
-                    placeholder="Carreta/Tanque"
-                    autoComplete="off"
-                    showCount
-                    maxLength={150}
-                  />
-                </FormItem>
-              </Col>
-
-              <Col xs={24} md={12}>
+              <Col xs={24}>
                 <FormItem control={control} name="capacity">
                   <Input
                     id="capacity"
@@ -346,12 +375,12 @@ export const ReportsForm = (): ReactElement => {
               </Col>
 
               <Col xs={24} md={12}>
-                <FormItem control={control} name="driverName">
+                <FormItem control={control} name="truck">
                   <Input
-                    id="driverName"
-                    name="driverName"
-                    label="Condutor"
-                    placeholder="Condutor"
+                    id="truck"
+                    name="truck"
+                    label="Placa Cavalo/Truck"
+                    placeholder="Placa Cavalo/Truck"
                     autoComplete="off"
                     showCount
                     maxLength={150}
@@ -360,12 +389,12 @@ export const ReportsForm = (): ReactElement => {
               </Col>
 
               <Col xs={24} md={12}>
-                <FormItem control={control} name="lastProduct">
+                <FormItem control={control} name="tank">
                   <Input
-                    id="lastProduct"
-                    name="lastProduct"
-                    label="Último"
-                    placeholder="Último"
+                    id="tank"
+                    name="tank"
+                    label="Placa Carreta/Tanque"
+                    placeholder="Placa Carreta/Tanque"
                     autoComplete="off"
                     showCount
                     maxLength={150}
@@ -374,210 +403,257 @@ export const ReportsForm = (): ReactElement => {
               </Col>
 
               <Col xs={24} md={12}>
-                <FormItem control={control} name="pernultimateProduct">
+                <FormItem control={control} name="sanitarySurveillance">
+                  <RadioGroup
+                    id="sanitarySurveillance"
+                    label="Vigilância Sanitária válida?"
+                    size="large"
+                    buttonStyle="solid"
+                  >
+                    <Radio value="NÃO">NÃO</Radio>
+                    <Radio value="SIM">Sim</Radio>
+                  </RadioGroup>
+                </FormItem>
+              </Col>
+
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="adapterNeedsToBeCleaned">
+                  <RadioGroup
+                    id="adapterNeedsToBeCleaned"
+                    label="Adaptador precisa ser limpo?"
+                    size="large"
+                    buttonStyle="solid"
+                  >
+                    <Radio value="NÃO">NÃO</Radio>
+                    <Radio value="SIM">Sim</Radio>
+                  </RadioGroup>
+                </FormItem>
+              </Col>
+            </Row>
+
+            <Divider />
+
+            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} id="checklist">
+              <Col xs={24}>
+                <h2
+                  className="prices-form__fields__title"
+                  style={{ textAlign: 'center' }}
+                >
+                  CHECKLIST
+                </h2>
+                <br />
+              </Col>
+
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="clothsUsed">
                   <Input
-                    id="pernultimateProduct"
-                    name="pernultimateProduct"
-                    label="Penúltimo"
-                    placeholder="Penúltimo"
+                    id="clothsUsed"
+                    name="clothsUsed"
+                    label="Panos Utilizados"
+                    placeholder="Panos Utilizados"
                     autoComplete="off"
-                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="returnedCloths">
+                  <Input
+                    id="returnedCloths"
+                    name="returnedCloths"
+                    label="Panos Devolvidos"
+                    placeholder="Panos Devolvidos"
+                    autoComplete="off"
                     maxLength={150}
                   />
                 </FormItem>
               </Col>
 
               <Col xs={24} md={12}>
-                <FormItem control={control} name="antepernultimateProduct">
+                <FormItem control={control} name="capsUsed">
                   <Input
-                    id="antepernultimateProduct"
-                    name="antepernultimateProduct"
-                    label="Antepenúltimo"
-                    placeholder="Antepenúltimo"
+                    id="capsUsed"
+                    name="capsUsed"
+                    label="Toucas Utilizadas"
+                    placeholder="Toucas Utilizadas"
                     autoComplete="off"
-                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="returnedCaps">
+                  <Input
+                    id="returnedCaps"
+                    name="returnedCaps"
+                    label="Toucas Devolvidas"
+                    placeholder="Toucas Devolvidas"
+                    autoComplete="off"
                     maxLength={150}
                   />
                 </FormItem>
               </Col>
 
               <Col xs={24} md={12}>
-                <FormItem control={control} name="visitMouth">
+                <FormItem control={control} name="glovesUsed">
                   <Input
-                    id="visitMouth"
-                    name="visitMouth"
-                    label="Boca de Visita"
-                    placeholder="Boca de Visita"
+                    id="glovesUsed"
+                    name="glovesUsed"
+                    label="Luvas Utilizadas"
+                    placeholder="Luvas Utilizadas"
                     autoComplete="off"
-                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="returnedGloves">
+                  <Input
+                    id="returnedGloves"
+                    name="returnedGloves"
+                    label="Luvas Devolvidas"
+                    placeholder="Luvas Devolvidas"
+                    autoComplete="off"
                     maxLength={150}
                   />
                 </FormItem>
               </Col>
 
               <Col xs={24} md={12}>
-                <FormItem control={control} name="respiring">
+                <FormItem control={control} name="bootsUsed">
                   <Input
-                    id="respiring"
-                    name="respiring"
-                    label="Respiro"
-                    placeholder="Respiro"
+                    id="bootsUsed"
+                    name="bootsUsed"
+                    label="Botas Utilizadas"
+                    placeholder="Botas Utilizadas"
                     autoComplete="off"
-                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="returnedBoots">
+                  <Input
+                    id="returnedBoots"
+                    name="returnedBoots"
+                    label="Botas Devolvidas"
+                    placeholder="Botas Devolvidas"
+                    autoComplete="off"
                     maxLength={150}
                   />
                 </FormItem>
               </Col>
 
               <Col xs={24} md={12}>
-                <FormItem control={control} name="dischargeValve">
+                <FormItem control={control} name="flashlightsUsed">
                   <Input
-                    id="dischargeValve"
-                    name="dischargeValve"
-                    label="Válvula de Descarga"
-                    placeholder="Válvula de Descarga"
+                    id="flashlightsUsed"
+                    name="flashlightsUsed"
+                    label="Lanternas Utilizadas"
+                    placeholder="Lanternas Utilizadas"
                     autoComplete="off"
-                    showCount
                     maxLength={150}
                   />
                 </FormItem>
               </Col>
-
               <Col xs={24} md={12}>
-                <FormItem control={control} name="pressureWatch">
+                <FormItem control={control} name="returnedFlashlights">
                   <Input
-                    id="pressureWatch"
-                    name="pressureWatch"
-                    label="Relógio de Pressão"
-                    placeholder="Relógio de Pressão"
+                    id="returnedFlashlights"
+                    name="returnedFlashlights"
+                    label="Lanternas Devolvidas"
+                    placeholder="Lanternas Devolvidas"
                     autoComplete="off"
-                    showCount
                     maxLength={150}
                   />
                 </FormItem>
               </Col>
-
               <Col xs={24} md={12}>
-                <FormItem control={control} name="hoseHolder">
+                <FormItem control={control} name="pliersUsed">
                   <Input
-                    id="hoseHolder"
-                    name="hoseHolder"
-                    label="Suporte do Mangote"
-                    placeholder="Suporte do Mangote"
+                    id="pliersUsed"
+                    name="pliersUsed"
+                    label="Alicate Utilizado"
+                    placeholder="Alicate Utilizado"
                     autoComplete="off"
-                    showCount
                     maxLength={150}
                   />
                 </FormItem>
               </Col>
-
               <Col xs={24} md={12}>
-                <FormItem control={control} name="drainValve">
+                <FormItem control={control} name="returnedPliers">
                   <Input
-                    id="drainValve"
-                    name="drainValve"
-                    label="Válvula do Dreno"
-                    placeholder="Válvula do Dreno"
+                    id="returnedPliers"
+                    name="returnedPliers"
+                    label="Alicate Devolvido"
+                    placeholder="Alicate Devolvido"
                     autoComplete="off"
-                    showCount
                     maxLength={150}
                   />
                 </FormItem>
               </Col>
-
               <Col xs={24} md={12}>
-                <FormItem control={control} name="strangeBody">
+                <FormItem control={control} name="ladderUsed">
                   <Input
-                    id="strangeBody"
-                    name="strangeBody"
-                    label="Corpo Estranho"
-                    placeholder="Corpo Estranho"
+                    id="ladderUsed"
+                    name="ladderUsed"
+                    label="Escada Utilizada"
+                    placeholder="Escada Utilizada"
                     autoComplete="off"
-                    showCount
                     maxLength={150}
                   />
                 </FormItem>
               </Col>
-
               <Col xs={24} md={12}>
-                <FormItem control={control} name="suitability">
+                <FormItem control={control} name="returnedLadder">
                   <Input
-                    id="suitability"
-                    name="suitability"
-                    label="Sujidade"
-                    placeholder="Sujidade"
+                    id="returnedLadder"
+                    name="returnedLadder"
+                    label="Escada Devolvida"
+                    placeholder="Escada Devolvida"
                     autoComplete="off"
-                    showCount
                     maxLength={150}
                   />
                 </FormItem>
               </Col>
+            </Row>
+
+            <Divider />
+
+            <Row
+              gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+              id="etapa_de_temperatura"
+            >
+              <Col xs={24}>
+                <h2
+                  className="prices-form__fields__title"
+                  style={{ textAlign: 'center' }}
+                >
+                  ETAPA DE TEMPERATURA
+                </h2>
+                <br />
+              </Col>
 
               <Col xs={24} md={12}>
-                <FormItem control={control} name="presenceOfLiquids">
+                <FormItem control={control} name="temperatureCheck">
                   <Input
-                    id="presenceOfLiquids"
-                    name="presenceOfLiquids"
-                    label="Presença de Água / Líquidos"
-                    placeholder="Presença de Água / Líquidos"
+                    id="temperatureCheck"
+                    name="temperatureCheck"
+                    label="Temperatura"
+                    placeholder="Temperatura"
                     autoComplete="off"
-                    showCount
                     maxLength={150}
                   />
                 </FormItem>
               </Col>
-
               <Col xs={24} md={12}>
-                <FormItem control={control} name="odors">
+                <FormItem control={control} name="timeCheck">
                   <Input
-                    id="odors"
-                    name="odors"
-                    label="Odores"
-                    placeholder="Odores"
+                    id="timeCheck"
+                    name="timeCheck"
+                    label="Tempo"
+                    placeholder="Tempo"
                     autoComplete="off"
-                    showCount
-                    maxLength={150}
-                  />
-                </FormItem>
-              </Col>
-
-              <Col xs={24} md={12}>
-                <FormItem control={control} name="washingExecution">
-                  <Input
-                    id="washingExecution"
-                    name="washingExecution"
-                    label="Execução da Lavagem"
-                    placeholder="Execução da Lavagem"
-                    autoComplete="off"
-                    showCount
-                    maxLength={150}
-                  />
-                </FormItem>
-              </Col>
-
-              <Col xs={24} md={12}>
-                <FormItem control={control} name="inspectorChoice">
-                  <Input
-                    id="inspectorChoice"
-                    name="inspectorChoice"
-                    label="Escolha do Inspetor"
-                    placeholder="Escolha do Inspetor"
-                    autoComplete="off"
-                    showCount
-                    maxLength={150}
-                  />
-                </FormItem>
-              </Col>
-
-              <Col xs={24} md={12}>
-                <FormItem control={control} name="detergentUsed">
-                  <Input
-                    id="detergentUsed"
-                    name="detergentUsed"
-                    label="Detergente Utilizado"
-                    placeholder="Detergente Utilizado"
-                    autoComplete="off"
-                    showCount
                     maxLength={150}
                   />
                 </FormItem>
@@ -610,16 +686,489 @@ export const ReportsForm = (): ReactElement => {
                   />
                 </FormItem>
               </Col>
+
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="valveLeakTest">
+                  <RadioGroup
+                    id="valveLeakTest"
+                    label="Teste de Vazamento da Válvula e Descarga?"
+                    size="large"
+                    buttonStyle="solid"
+                  >
+                    <Radio value="REPROVADO">REPROVADO</Radio>
+                    <Radio value="APROVADO">APROVADO</Radio>
+                  </RadioGroup>
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="phTest">
+                  <RadioGroup
+                    id="phTest"
+                    label="PH (6,8 a 7,2)"
+                    size="large"
+                    buttonStyle="solid"
+                  >
+                    <Radio value="REPROVADO">REPROVADO</Radio>
+                    <Radio value="APROVADO">APROVADO</Radio>
+                  </RadioGroup>
+                </FormItem>
+              </Col>
             </Row>
+
+            <Divider />
+
+            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+              <Col xs={24}>
+                <h2
+                  className="prices-form__fields__title"
+                  style={{ textAlign: 'center' }}
+                >
+                  LACRES
+                </h2>
+                <br />
+              </Col>
+
+              <Col xs={24}>
+                <FormItem control={control} name="visitMouth">
+                  <Input
+                    id="visitMouth"
+                    name="visitMouth"
+                    label="Boca de Visita"
+                    placeholder="Boca de Visita"
+                    autoComplete="off"
+                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24}>
+                <FormItem control={control} name="securityValveVisitMouth">
+                  <Input
+                    id="securityValveVisitMouth"
+                    name="securityValveVisitMouth"
+                    label="Válvula de Segurança da Boca de Visita"
+                    placeholder="Válvula de Segurança da Boca de Visita"
+                    autoComplete="off"
+                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24}>
+                <FormItem control={control} id="manometer" name="manometer">
+                  <Input
+                    id="manometer"
+                    name="manometer"
+                    label="Manômetro"
+                    placeholder="Manômetro"
+                    autoComplete="off"
+                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24}>
+                <FormItem control={control} name="hoseHolder">
+                  <Input
+                    id="hoseHolder"
+                    name="hoseHolder"
+                    label="Suporte do Mangote"
+                    placeholder="Suporte do Mangote"
+                    autoComplete="off"
+                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24}>
+                <FormItem control={control} name="drainValve">
+                  <Input
+                    id="drainValve"
+                    name="drainValve"
+                    label="Dreno"
+                    placeholder="Dreno"
+                    autoComplete="off"
+                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24}>
+                <FormItem control={control} name="dischargeValve">
+                  <Input
+                    id="dischargeValve"
+                    name="dischargeValve"
+                    label="Válvula da Boca de Descarga"
+                    placeholder="Válvula da Boca de Descarga"
+                    autoComplete="off"
+                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+            </Row>
+
+            <Divider />
+
+            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+              <Col xs={24}>
+                <h2
+                  className="prices-form__fields__title"
+                  style={{ textAlign: 'center' }}
+                >
+                  PH (6,8 a 7,2)
+                </h2>
+                <br />
+              </Col>
+
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="mounthDischargePH">
+                  <Input
+                    id="mounthDischargePH"
+                    name="mounthDischargePH"
+                    label="PH Boca Descarga"
+                    placeholder="PH Boca Descarga"
+                    autoComplete="off"
+                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="hoseHolderPH">
+                  <Input
+                    id="hoseHolderPH"
+                    name="hoseHolderPH"
+                    label="PH Mangote"
+                    placeholder="PH Mangote"
+                    autoComplete="off"
+                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+            </Row>
+
+            <Divider />
+
+            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+              <Col xs={24}>
+                <h2
+                  className="prices-form__fields__title"
+                  style={{ textAlign: 'center' }}
+                >
+                  ÚLTIMOS PRODUTOS TRANSPORTADOS
+                </h2>
+                <br />
+              </Col>
+
+              <Col xs={24} md={8}>
+                <FormItem control={control} name="lastProduct">
+                  <Input
+                    id="lastProduct"
+                    name="lastProduct"
+                    label="Último"
+                    placeholder="Último"
+                    autoComplete="off"
+                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={8}>
+                <FormItem control={control} name="pernultimateProduct">
+                  <Input
+                    id="pernultimateProduct"
+                    name="pernultimateProduct"
+                    label="Penúltimo"
+                    placeholder="Penúltimo"
+                    autoComplete="off"
+                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={8}>
+                <FormItem control={control} name="antepernultimateProduct">
+                  <Input
+                    id="antepernultimateProduct"
+                    name="antepernultimateProduct"
+                    label="Antepenúltimo"
+                    placeholder="Antepenúltimo"
+                    autoComplete="off"
+                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+            </Row>
+
+            <Divider />
+
+            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+              <Col xs={24}>
+                <h2
+                  className="prices-form__fields__title"
+                  style={{ textAlign: 'center' }}
+                >
+                  LIMPEZA EXTERNA
+                </h2>
+                <br />
+              </Col>
+
+              <Col xs={24} md={8}>
+                <FormItem control={control} name="valves">
+                  <RadioGroup
+                    id="valves"
+                    label="Válvulas"
+                    size="large"
+                    buttonStyle="solid"
+                  >
+                    <Radio value="NÃO">NÃO</Radio>
+                    <Radio value="SIM">SIM</Radio>
+                  </RadioGroup>
+                </FormItem>
+              </Col>
+              <Col xs={24} md={8}>
+                <FormItem control={control} name="hoseExternal">
+                  <RadioGroup
+                    id="hoseExternal"
+                    label="Mangueiras"
+                    size="large"
+                    buttonStyle="solid"
+                  >
+                    <Radio value="NÃO">NÃO</Radio>
+                    <Radio value="SIM">SIM</Radio>
+                  </RadioGroup>
+                </FormItem>
+              </Col>
+              <Col xs={24} md={8}>
+                <FormItem control={control} name="pipesExternal">
+                  <RadioGroup
+                    id="pipesExternal"
+                    label="Tubulações"
+                    size="large"
+                    buttonStyle="solid"
+                  >
+                    <Radio value="NÃO">NÃO</Radio>
+                    <Radio value="SIM">SIM</Radio>
+                  </RadioGroup>
+                </FormItem>
+              </Col>
+            </Row>
+
+            <Divider />
+
+            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+              <Col xs={24}>
+                <h2
+                  className="prices-form__fields__title"
+                  style={{ textAlign: 'center' }}
+                >
+                  AVALIAÇÃO - APÓS HIGIENIZAÇÃO
+                </h2>
+                <br />
+              </Col>
+
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="strangeBody">
+                  <RadioGroup
+                    id="strangeBody"
+                    label="Corpo Estranho"
+                    size="large"
+                    buttonStyle="solid"
+                  >
+                    <Radio value="AUSENTE">AUSENTE</Radio>
+                    <Radio value="PRESENTE">PRESENTE</Radio>
+                  </RadioGroup>
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="suitability">
+                  <RadioGroup
+                    id="suitability"
+                    label="Sujidade"
+                    size="large"
+                    buttonStyle="solid"
+                  >
+                    <Radio value="AUSENTE">AUSENTE</Radio>
+                    <Radio value="PRESENTE">PRESENTE</Radio>
+                  </RadioGroup>
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="presenceOfLiquids">
+                  <RadioGroup
+                    id="presenceOfLiquids"
+                    label="Presença de Água / Líquidos"
+                    size="large"
+                    buttonStyle="solid"
+                  >
+                    <Radio value="AUSENTE">AUSENTE</Radio>
+                    <Radio value="PRESENTE">PRESENTE</Radio>
+                  </RadioGroup>
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="odors">
+                  <RadioGroup
+                    id="odors"
+                    label="Odor"
+                    size="large"
+                    buttonStyle="solid"
+                  >
+                    <Radio value="AUSENTE">AUSENTE</Radio>
+                    <Radio value="PRESENTE">PRESENTE</Radio>
+                  </RadioGroup>
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="hoseSuitability">
+                  <RadioGroup
+                    id="hoseSuitability"
+                    label="Mangote com Sujidade"
+                    size="large"
+                    buttonStyle="solid"
+                  >
+                    <Radio value="AUSENTE">AUSENTE</Radio>
+                    <Radio value="PRESENTE">PRESENTE</Radio>
+                  </RadioGroup>
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="damagedHose">
+                  <RadioGroup
+                    id="damagedHose"
+                    label="Mangote Danificado"
+                    size="large"
+                    buttonStyle="solid"
+                  >
+                    <Radio value="AUSENTE">AUSENTE</Radio>
+                    <Radio value="PRESENTE">PRESENTE</Radio>
+                  </RadioGroup>
+                </FormItem>
+              </Col>
+            </Row>
+
+            <Divider />
+
+            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="hygieneCertificateDate">
+                  <div>
+                    <label htmlFor="hygieneCertificateDate">
+                      <Typography.Title level={5} className="label">
+                        Data Higienização *
+                      </Typography.Title>
+                    </label>
+
+                    <DatePicker
+                      style={{ width: '100%' }}
+                      id="hygieneCertificateDate"
+                      name="hygieneCertificateDate"
+                      placeholder="Data Higienização"
+                      autoComplete="off"
+                      size="large"
+                      format={{
+                        format: 'DD/MM/YYYY',
+                        type: 'mask',
+                      }}
+                      onChange={(_date, dateString) => {
+                        setValue(
+                          'hygieneCertificateDate',
+                          Array.isArray(dateString)
+                            ? dateString[0]
+                            : dateString,
+                        );
+                      }}
+                    />
+                  </div>
+                </FormItem>
+              </Col>
+
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="reviewDate">
+                  <div>
+                    <label htmlFor={'reviewDate'}>
+                      <Typography.Title level={5} className="label">
+                        Data de Revisão *
+                      </Typography.Title>
+                    </label>
+
+                    <DatePicker
+                      style={{ width: '100%' }}
+                      id="reviewDate"
+                      name="reviewDate"
+                      placeholder="Data Revisão"
+                      autoComplete="off"
+                      size="large"
+                      format={{
+                        format: 'DD/MM/YYYY',
+                        type: 'mask',
+                      }}
+                      onChange={(_date, dateString) => {
+                        setValue(
+                          'reviewDate',
+                          Array.isArray(dateString)
+                            ? dateString[0]
+                            : dateString,
+                        );
+                      }}
+                    />
+                  </div>
+                </FormItem>
+              </Col>
+
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="socialName">
+                  <Input
+                    id="socialName"
+                    name="socialName"
+                    label="Razão Social"
+                    placeholder="Razão Social"
+                    autoComplete="off"
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="driverName">
+                  <Input
+                    id="driverName"
+                    name="driverName"
+                    label="Condutor"
+                    placeholder="Condutor"
+                    autoComplete="off"
+                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+
+              <Col xs={24}>
+                <FormItem control={control} name="detergentUsed">
+                  <Input
+                    id="detergentUsed"
+                    name="detergentUsed"
+                    label="Detergente Utilizado"
+                    placeholder="Detergente Utilizado"
+                    autoComplete="off"
+                    showCount
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+            </Row>
+
             <div className="prices-form__footer">
-              <Button size="large" type="default" onClick={handleToggleModal}>
-                Limpar campos
-              </Button>
               <Button
                 size="large"
                 type="primary"
                 htmlType="submit"
-                disabled={isSubmitting || isFetchingClientsList}
+                disabled={
+                  isSubmitting || isFetchingClientsList || isFetchingDriversList
+                }
               >
                 Salvar
               </Button>
@@ -627,22 +1176,6 @@ export const ReportsForm = (): ReactElement => {
           </Card>
         </Form>
       </Styled.ReportsFormContainer>
-      <Modal
-        title="Desejar limpar os campos?"
-        open={isOpenClearFieldsModal}
-        centered
-        okText="Confirmar"
-        cancelText="Cancelar"
-        onClose={handleToggleClearFieldsModal}
-        onCancel={handleToggleClearFieldsModal}
-        onOk={() => {
-          handleToggleClearFieldsModal();
-          handleClearFields();
-        }}
-        okButtonProps={{ danger: true }}
-      >
-        <p>Após confirmar os dados serão descartados!</p>
-      </Modal>
       <Modal
         title="Desejar cancelar a operação?"
         open={isOpenModal}
