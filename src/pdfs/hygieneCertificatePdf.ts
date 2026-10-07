@@ -14,7 +14,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
 
   const logoWidth = 25;
   const logoHeight = 25;
-  doc.addImage(LogoImage, 'PNG', 90, 2, logoWidth, logoHeight);
+  doc.addImage(LogoImage, 'PNG', 12, 2, logoWidth, logoHeight);
 
   doc.setFontSize(12);
   doc.text(`Id: ${String(data?.reportId)?.substring(0, 5)}`, 195, 20, {
@@ -22,7 +22,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
   });
 
   autoTable(doc, {
-    startY: 23,
+    startY: 30,
     head: [
       [
         {
@@ -31,7 +31,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
             'TELEFONE: (19) 3478-4615 / CNPJ: 37.541.303/0001-21 / E-MAIL: contato@americanatruckcenter.com.br\n' +
             'CÓDIGO DE REGISTRO IPEM: 012796/2022',
           colSpan: 5,
-          styles: { halign: 'center', fontSize: 10 },
+          styles: { halign: 'center', fontSize: 8 },
         },
       ],
     ],
@@ -41,20 +41,298 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
     },
   });
 
-  // Parte de IDENTIFICAÇÃO
   autoTable(doc, {
     startY: doc.lastAutoTable.finalY,
     head: [
       [
         {
+          content: 'DADOS DO CLIENTE',
+          colSpan: 2,
+          styles: { halign: 'center', fillColor: [255, 255, 0] },
+        },
+      ],
+    ],
+    body: [
+      [`TRANSPORTADOR:`, `${data?.socialName || ''}`],
+      [`MOTORISTA:`, `${data.driverName || ''}`],
+      [`PLACA CAVALO/TRUCK:`, `${data?.truck || ''}`],
+      [`PLACA CARRETA:`, `${data?.tank || ''}`],
+      [`CAPACIDADE TANQUE:`, `${data?.capacity || ''}`],
+      [`VIGILÂNCIA SANITÁRIA VÁLIDA?`, `${data?.sanitarySurveillance || ''}`],
+      [
+        `ADAPTADOR DE MANGOTE PRECISA DE HIGIENIZAÇÃO?`,
+        `${data?.sanitarySurveillance || ''}`,
+      ],
+    ],
+    styles: {
+      textColor: [0, 0, 0],
+      lineWidth: 0.1,
+      lineColor: [0, 0, 0],
+      cellPadding: 1,
+    },
+  });
+  autoTable(doc, {
+    startY: doc.lastAutoTable.finalY,
+    head: [
+      // Cabeçalho geral
+      [
+        {
+          content: 'CHECKLIST',
+          colSpan: 4,
+          styles: { halign: 'center', fillColor: [255, 255, 0] },
+        },
+      ],
+      // Cabeçalho das colunas
+      ['Higienização', 'Controle Utensílio', 'Utilizado', 'Devolvido'],
+    ],
+    body: [
+      [
+        'Inspeção interna do tanque',
+        'Panos',
+        data?.clothsUsed,
+        data?.returnedCloths,
+      ],
+      [
+        'Inspeção interna do tanque',
+        'Toucas',
+        data?.capsUsed,
+        data?.returnedCaps,
+      ],
+      [
+        'Inspeção interna do tanque',
+        'Luvas',
+        data?.glovesUsed,
+        data?.returnedGloves,
+      ],
+      [
+        'Inspeção interna do tanque',
+        'Botas',
+        data?.bootsUsed,
+        data?.returnedBoots,
+      ],
+      [
+        'Inspeção interna do tanque',
+        'Lanternas',
+        data?.flashlightsUsed,
+        data?.returnedFlashlights,
+      ],
+      [
+        'Inspeção interna do tanque',
+        'Alicate',
+        data?.pliersUsed,
+        data?.returnedPliers,
+      ],
+      [
+        'Inspeção interna do tanque',
+        'Escada',
+        data?.ladderUsed,
+        data?.returnedLadder,
+      ],
+    ],
+    styles: {
+      textColor: [0, 0, 0],
+      lineWidth: 0.1,
+      lineColor: [0, 0, 0],
+      cellPadding: 1,
+    },
+    headStyles: {
+      fontStyle: 'bold',
+      halign: 'center',
+      fillColor: [255, 255, 0],
+    },
+  });
+  autoTable(doc, {
+    startY: doc.lastAutoTable.finalY,
+    body: [
+      [
+        'ETAPA DE AQUECIMENTO',
+        `TEMPERATURA: ${data?.temperatureCheck || ''}`,
+        `TEMPO: ${data?.timeCheck || ''}`,
+      ],
+      [
+        'TESTE DE VAZAMENTO DA VÁVULA DE SEGURANÇA',
+        `${data?.valveLeakTest === 'APROVADO' ? 'APROVADO' : ''}`,
+        `${data?.valveLeakTest === 'REPROVADO' ? 'REPROVADO' : ''}`,
+      ],
+      [
+        'PH (6,8 a 7,6)',
+        `${data?.phTest === 'APROVADO' ? 'APROVADO' : ''}`,
+        `${data?.phTest === 'REPROVADO' ? 'REPROVADO' : ''}`,
+      ],
+    ],
+    styles: {
+      textColor: [0, 0, 0],
+      lineWidth: 0.1,
+      lineColor: [0, 0, 0],
+      cellPadding: 1,
+    },
+    headStyles: {
+      fontStyle: 'bold',
+      halign: 'center',
+      fillColor: [255, 255, 0],
+    },
+  });
+  autoTable(doc, {
+    startY: doc.lastAutoTable.finalY,
+    head: [
+      // Cabeçalho geral
+      [
+        {
+          content: 'LACRES',
+          colSpan: 2,
+          styles: { halign: 'center', fillColor: [255, 255, 0] },
+        },
+      ],
+    ],
+    body: [
+      ['BOCA DE VISITA', data?.visitMouth || ''],
+      [
+        'VÁLVULA DE SEGURANÇA DA BOCA DE VISITA',
+        data?.securityValveVisitMouth || '',
+      ],
+      ['MANÔMETRO', data?.manometer || ''],
+      ['SUPORTE DO MANGOTE', data?.hoseHolder || ''],
+      ['DRENO', data?.drainValve || ''],
+      ['VÁLVULA BOCA DE DESCARGA', data?.dischargeValve || ''],
+    ],
+    styles: {
+      textColor: [0, 0, 0],
+      lineWidth: 0.1,
+      lineColor: [0, 0, 0],
+      cellPadding: 1,
+    },
+    headStyles: {
+      fontStyle: 'bold',
+      halign: 'center',
+      fillColor: [255, 255, 0],
+    },
+  });
+  autoTable(doc, {
+    startY: doc.lastAutoTable.finalY,
+    head: [
+      // Cabeçalho geral
+      [
+        {
+          content: 'PH (6,8 - 7,6)',
+          colSpan: 2,
+          styles: { halign: 'center', fillColor: [255, 255, 0] },
+        },
+      ],
+    ],
+    body: [
+      [
+        `PH BOCA DESCARDA: ${data?.mounthDischargePH || ''}`,
+        `PH MANGOTE: ${data?.hoseHolderPH || ''}`,
+      ],
+    ],
+    styles: {
+      textColor: [0, 0, 0],
+      lineWidth: 0.1,
+      lineColor: [0, 0, 0],
+      cellPadding: 1,
+    },
+    headStyles: {
+      fontStyle: 'bold',
+      halign: 'center',
+      fillColor: [255, 255, 0],
+    },
+  });
+  autoTable(doc, {
+    startY: doc.lastAutoTable.finalY,
+    head: [
+      // Cabeçalho geral
+      [
+        {
+          content: 'NÃO CONFORMIDADE',
+          colSpan: 1,
+          styles: { halign: 'center', fillColor: [255, 255, 0] },
+        },
+      ],
+    ],
+    body: [[`CONSTATAÇÕES: `]],
+    styles: {
+      textColor: [0, 0, 0],
+      lineWidth: 0.1,
+      lineColor: [0, 0, 0],
+      cellPadding: 1,
+    },
+    headStyles: {
+      fontStyle: 'bold',
+      halign: 'center',
+      fillColor: [255, 255, 0],
+    },
+  });
+  autoTable(doc, {
+    startY: doc.lastAutoTable.finalY,
+    head: [
+      // Cabeçalho geral
+      [
+        {
+          content: 'ÚLTIMO PRODUTOS TRANSPORTADOS',
+          colSpan: 2,
+          styles: { halign: 'center', fillColor: [255, 255, 0] },
+        },
+      ],
+    ],
+    body: [
+      [`ÚLTIMO PRODUTO:`, `${data?.lastProduct || ''}`],
+      [`PENÚLTIMO PRODUTO:`, `${data?.pernultimateProduct || ''}`],
+      [`ANTEPENÚLTIMO PRODUTO:`, `${data?.antepernultimateProduct || ''}`],
+    ],
+    styles: {
+      textColor: [0, 0, 0],
+      lineWidth: 0.1,
+      lineColor: [0, 0, 0],
+      cellPadding: 1,
+    },
+    headStyles: {
+      fontStyle: 'bold',
+      halign: 'center',
+      fillColor: [255, 255, 0],
+    },
+  });
+
+  // Assinaturas
+  doc.setFontSize(9);
+  doc.text(
+    '_______________________________________',
+    16,
+    doc.lastAutoTable.finalY + 10,
+  );
+  doc.text('RESPONSÁVEL PELA INSPEÇÃO', 20, doc.lastAutoTable.finalY + 15);
+
+  // Pula para a próxima página 📄
+  doc.addPage();
+
+  autoTable(doc, {
+    head: [
+      [
+        {
           content: `DATA HIGIENIZAÇÃO: ${data?.hygieneCertificateDate || ''}`,
-          styles: { fillColor: [0, 102, 204] },
+          styles: { fillColor: [255, 255, 0] },
         },
         {
           content: `REVISÃO: ${data?.reviewDate || ''}`,
-          styles: { fillColor: [0, 102, 204], cellWidth: 90 },
+          styles: { fillColor: [255, 255, 0] },
         },
       ],
+    ],
+    styles: {
+      textColor: [0, 0, 0],
+      lineWidth: 0.1,
+      lineColor: [0, 0, 0],
+      cellPadding: 1,
+    },
+    headStyles: {
+      fontStyle: 'bold',
+      fillColor: [255, 255, 0],
+    },
+  });
+
+  // Parte de IDENTIFICAÇÃO
+  autoTable(doc, {
+    startY: doc.lastAutoTable.finalY,
+    head: [
       [
         {
           content: 'IDENTIFICAÇÃO DO VEÍCULO',
@@ -107,11 +385,22 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
       title: 'LACRES',
       body: [
         ['BOCA DE VISITA', data?.visitMouth || ''],
-        ['RESPIRO', data?.respiring || ''],
-        ['VÁLVULA DE DESCARGA', data?.dischargeValve || ''],
-        ['RELÓGIO DE PRESSÃO', data?.pressureWatch || ''],
+        [
+          'VÁLVULA DE SEGURANÇA DA BOCA DE VISITA',
+          data?.securityValveVisitMouth || '',
+        ],
+        ['MANÔMETRO', data?.manometer || ''],
         ['SUPORTE DO MANGOTE', data?.hoseHolder || ''],
-        ['VÁLVULA DO DRENO', data?.drainValve || ''],
+        ['DRENO', data?.drainValve || ''],
+        ['VÁLVULA DE BOCA DE DESCARGA', data?.dischargeValve || ''],
+      ],
+    },
+    {
+      title: 'LIMPEZA EXTERNA',
+      body: [
+        ['VÁLVULA', data?.valves || ''],
+        ['MANGUEIRAS', data?.hoseExternal || ''],
+        ['TUBULAÇÕES', data?.pipesExternal || ''],
       ],
     },
     {
@@ -119,18 +408,18 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
       body: [
         ['CORPO ESTRANHO', data?.strangeBody || ''],
         ['SUJIDADE', data?.suitability || ''],
-        ['PRESENÇA DE ÁGUA / LÍQUIDOS', data?.presenceOfLiquids || ''],
+        ['PRESENÇA DE ÁGUA/LÍQUIDOS', data?.presenceOfLiquids || ''],
         ['ODORES', data?.odors || ''],
+        ['MANGOTE COM SUJIDADE', data?.hoseSuitability || ''],
+        ['MANGOTE DANIFICADO', data?.damagedHose || ''],
       ],
     },
     {
       title: 'INFORMAÇÕES ADICIONAIS',
       body: [
-        ['EXECUÇÃO DA LAVAGEM', data?.washingExecution || ''],
-        ['INSPECTOR’S CHOICE', data?.inspectorChoice || ''],
         ['DETERGENTE UTILIZADO', data?.detergentUsed || ''],
-        ['TEMPERATURA ÁGUA (ENXAGUE)', data?.temperatureRinse || ''],
-        ['TEMPERATURA ÁGUA (LAVAGEM)', data?.temperatureWashing || ''],
+        ['TEMPERATURA ÁGUA (ENXAGUE) ', data?.temperatureRinse || ''],
+        ['TEMPERATURA ÁGUA (LAVAGEM) ', data?.temperatureWashing || ''],
       ],
     },
   ];
@@ -165,7 +454,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
     doc.lastAutoTable.finalY + 4,
     {
       maxWidth: 190,
-    }
+    },
   );
 
   doc.setFontSize(10);
@@ -173,7 +462,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
     'PRAZO DE VALIDADE DO SERVIÇO DE DESCONTAMINAÇÃO: 48 HORAS',
     105,
     doc.lastAutoTable.finalY + 30,
-    { align: 'center' }
+    { align: 'center' },
   );
 
   // Assinaturas
@@ -181,22 +470,18 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
   doc.text(
     '_______________________________________',
     10,
-    doc.lastAutoTable.finalY + 40
+    doc.lastAutoTable.finalY + 40,
   );
-  doc.text(
-    'NOME LEGÍVEL DO RESPONSÁVEL PELA INSPEÇÃO\nKARINA FERNANDES TANGLI',
-    10,
-    doc.lastAutoTable.finalY + 45
-  );
+  doc.text('RESPONSÁVEL PELA INSPEÇÃO', 10, doc.lastAutoTable.finalY + 45);
   doc.text(
     '_______________________________________',
     130,
-    doc.lastAutoTable.finalY + 40
+    doc.lastAutoTable.finalY + 40,
   );
   doc.text(
     `NOME LEGÍVEL DO CONDUTOR DO VEÍCULO\n ${data.driverName || ''}`,
     130,
-    doc.lastAutoTable.finalY + 45
+    doc.lastAutoTable.finalY + 45,
   );
 
   // Salvar
