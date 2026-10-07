@@ -73,6 +73,7 @@ export interface Report {
   /* DADOS DA HIGIENIZAÇÃO */
   hygieneCertificateDate?: string | Timestamp | Date;
   reviewDate?: string | Timestamp | Date;
+  review: string;
   capacity: string;
   dischargeValve: string;
   drainValve: string;

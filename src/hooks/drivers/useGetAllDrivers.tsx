@@ -10,7 +10,13 @@ import { getAllDrivers } from 'services/drivers/getAllDrivers';
 
 export const useGetAllDrivers = (id?: string) => {
   const location = useLocation();
-  const URLToEnableGet = ['/', '/drivers', '/tasks/new'];
+  const URLToEnableGet = [
+    '/',
+    '/drivers',
+    '/tasks/new',
+    '/reports/new',
+    '/reports/:id/edit',
+  ];
 
   const response = useQuery<Array<Drivers>>({
     queryKey: ['drivers'],

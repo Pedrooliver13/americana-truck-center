@@ -18,9 +18,11 @@ import { useGetAllReports } from 'hooks/reports/useGetAllReports';
 import { usePostReport } from 'hooks/reports/usePostReport';
 import { useDeleteReportById } from 'hooks/reports/useDeleteReportById';
 import { useGetAllClients } from 'hooks/clients/useGetAllClients';
+import { useGetAllDrivers } from 'hooks/drivers/useGetAllDrivers';
 
 // Models
 import { Clients } from 'models/clients/clients';
+import { Drivers } from 'models/drivers/drivers';
 import { PostReport, ReportsToExport, Report } from 'models/reports/reports';
 
 export interface ReportsContextProps {
@@ -28,6 +30,7 @@ export interface ReportsContextProps {
   reportsList?: Array<Report>;
   priceItem?: Report;
   clientsListOptions: Array<Clients>;
+  driverListOptions: Array<Drivers>;
   formatedDataToExport?: Array<ReportsToExport>;
 
   createReport: (data: PostReport) => void;
@@ -58,6 +61,9 @@ export const ReportsProvider = ({
 
   const { data: clientsList, isFetching: isFetchingClientsList } =
     useGetAllClients(id);
+
+  const { data: driversList, isFetching: isFetchingDriversList } =
+    useGetAllDrivers(id);
 
   const { mutateAsync: createReportPostMutate, isPending: isPendingPost } =
     usePostReport();
@@ -95,6 +101,20 @@ export const ReportsProvider = ({
     });
   }, [clientsList]);
 
+  const driverListOptions = useMemo(() => {
+    if (!Array.isArray(driversList)) {
+      return [];
+    }
+
+    return driversList?.map((item) => {
+      return {
+        ...item,
+        label: item?.name,
+        value: item?.id,
+      };
+    });
+  }, [driversList]);
+
   const createReport = useCallback(
     async (data: PostReport): Promise<void> => {
       const payload = {
@@ -103,14 +123,14 @@ export const ReportsProvider = ({
 
       createReportPostMutate(payload);
     },
-    [createReportPostMutate]
+    [createReportPostMutate],
   );
 
   const deleteReport = useCallback(
     (id: string) => {
       deleteReportMutate(id);
     },
-    [deleteReportMutate]
+    [deleteReportMutate],
   );
 
   const onToggleModal = () => {
@@ -123,6 +143,7 @@ export const ReportsProvider = ({
         id,
         reportsList: reportsList ?? [],
         clientsListOptions,
+        driverListOptions,
         formatedDataToExport,
         createReport,
         deleteReport,
@@ -133,7 +154,8 @@ export const ReportsProvider = ({
           isPendingPost ||
           isPendingDelete ||
           isFetchingReportList ||
-          isFetchingClientsList,
+          isFetchingClientsList ||
+          isFetchingDriversList,
       }}
     >
       {children}

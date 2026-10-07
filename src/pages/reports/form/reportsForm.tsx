@@ -1,5 +1,5 @@
 // Packages
-import { ReactElement, useMemo, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { FormItem } from 'react-hook-form-antd';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,8 +24,6 @@ import {
 } from 'components/core';
 
 // Hooks
-import { useGetAllClients } from 'hooks/clients/useGetAllClients';
-import { useGetAllDrivers } from 'hooks/drivers/useGetAllDrivers';
 import { useReportsContext } from 'hooks/reports/useReportsContext';
 
 // Models
@@ -108,7 +106,7 @@ const schema = zod.object({
   /* /AVALIAÇÃO - APÓS HIGIENIZAÇÃO */
 
   hygieneCertificateDate: zod.any(),
-  reviewDate: zod.any(),
+  review: zod.string(),
   capacity: zod.string(),
   dischargeValve: zod.string(),
   drainValve: zod.string(),
@@ -123,13 +121,8 @@ export const ReportsForm = (): ReactElement => {
   const navigate = useNavigate();
   const [isOpenModal, setIsOpenModal] = useState(false);
 
-  const { createReport } = useReportsContext();
-
-  const { data: clientsList, isFetching: isFetchingClientsList } =
-    useGetAllClients();
-
-  const { data: driversList, isFetching: isFetchingDriversList } =
-    useGetAllDrivers();
+  const { createReport, clientsListOptions, driverListOptions, isLoading } =
+    useReportsContext();
 
   const {
     control,
@@ -203,7 +196,7 @@ export const ReportsForm = (): ReactElement => {
       /* /AVALIAÇÃO - APÓS HIGIENIZAÇÃO */
 
       hygieneCertificateDate: '',
-      reviewDate: '',
+      review: '1',
       socialName: '',
       capacity: '',
       driverName: '',
@@ -216,34 +209,6 @@ export const ReportsForm = (): ReactElement => {
     },
     resolver: zodResolver(schema),
   });
-
-  const clientListOptions = useMemo(() => {
-    if (!Array.isArray(clientsList)) {
-      return [];
-    }
-
-    return clientsList?.map((item) => {
-      return {
-        ...item,
-        label: item?.name,
-        value: item?.id,
-      };
-    });
-  }, [clientsList]);
-
-  const driverListOptions = useMemo(() => {
-    if (!Array.isArray(driversList)) {
-      return [];
-    }
-
-    return driversList?.map((item) => {
-      return {
-        ...item,
-        label: item?.name,
-        value: item?.id,
-      };
-    });
-  }, [driversList]);
 
   const handleToggleModal = () => {
     setIsOpenModal((state) => !state);
@@ -284,8 +249,6 @@ export const ReportsForm = (): ReactElement => {
   }
 
   const onSubmit = (data: FormValues) => {
-    console.log('data', data);
-
     createReport({
       ...data,
       reportId: generateNumericId(),
@@ -294,10 +257,6 @@ export const ReportsForm = (): ReactElement => {
         ? moment(data?.hygieneCertificateDate, 'DD/MM/YYYY').format(
             'DD/MM/YYYY',
           )
-        : '',
-
-      reviewDate: data?.reviewDate
-        ? moment(data?.reviewDate, 'DD/MM/YYYY').format('DD/MM/YYYY')
         : '',
     });
   };
@@ -338,7 +297,7 @@ export const ReportsForm = (): ReactElement => {
                     allowClear
                     autoClearSearchValue
                     onChange={handleChangeClient}
-                    options={clientListOptions}
+                    options={clientsListOptions}
                     autoFocus
                   />
                 </FormItem>
@@ -1087,38 +1046,17 @@ export const ReportsForm = (): ReactElement => {
               </Col>
 
               <Col xs={24} md={12}>
-                <FormItem control={control} name="reviewDate">
-                  <div>
-                    <label htmlFor={'reviewDate'}>
-                      <Typography.Title level={5} className="label">
-                        Data de Revisão *
-                      </Typography.Title>
-                    </label>
-
-                    <DatePicker
-                      style={{ width: '100%' }}
-                      id="reviewDate"
-                      name="reviewDate"
-                      placeholder="Data Revisão"
-                      autoComplete="off"
-                      size="large"
-                      format={{
-                        format: 'DD/MM/YYYY',
-                        type: 'mask',
-                      }}
-                      onChange={(_date, dateString) => {
-                        setValue(
-                          'reviewDate',
-                          Array.isArray(dateString)
-                            ? dateString[0]
-                            : dateString,
-                        );
-                      }}
-                    />
-                  </div>
+                <FormItem control={control} name="review">
+                  <Input
+                    id="review"
+                    name="review"
+                    label="Revisão"
+                    placeholder="Revisão"
+                    autoComplete="off"
+                    maxLength={150}
+                  />
                 </FormItem>
               </Col>
-
               <Col xs={24} md={12}>
                 <FormItem control={control} name="socialName">
                   <Input
@@ -1166,9 +1104,7 @@ export const ReportsForm = (): ReactElement => {
                 size="large"
                 type="primary"
                 htmlType="submit"
-                disabled={
-                  isSubmitting || isFetchingClientsList || isFetchingDriversList
-                }
+                disabled={isSubmitting || isLoading}
               >
                 Salvar
               </Button>

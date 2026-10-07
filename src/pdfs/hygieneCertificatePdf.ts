@@ -22,7 +22,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
   });
 
   autoTable(doc, {
-    startY: 30,
+    startY: 23,
     head: [
       [
         {
@@ -69,6 +69,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
       lineWidth: 0.1,
       lineColor: [0, 0, 0],
       cellPadding: 1,
+      fontSize: 9,
     },
   });
   autoTable(doc, {
@@ -134,6 +135,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
       lineWidth: 0.1,
       lineColor: [0, 0, 0],
       cellPadding: 1,
+      fontSize: 9,
     },
     headStyles: {
       fontStyle: 'bold',
@@ -165,6 +167,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
       lineWidth: 0.1,
       lineColor: [0, 0, 0],
       cellPadding: 1,
+      fontSize: 9,
     },
     headStyles: {
       fontStyle: 'bold',
@@ -200,6 +203,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
       lineWidth: 0.1,
       lineColor: [0, 0, 0],
       cellPadding: 1,
+      fontSize: 9,
     },
     headStyles: {
       fontStyle: 'bold',
@@ -230,6 +234,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
       lineWidth: 0.1,
       lineColor: [0, 0, 0],
       cellPadding: 1,
+      fontSize: 9,
     },
     headStyles: {
       fontStyle: 'bold',
@@ -255,6 +260,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
       lineWidth: 0.1,
       lineColor: [0, 0, 0],
       cellPadding: 1,
+      fontSize: 9,
     },
     headStyles: {
       fontStyle: 'bold',
@@ -284,6 +290,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
       lineWidth: 0.1,
       lineColor: [0, 0, 0],
       cellPadding: 1,
+      fontSize: 9,
     },
     headStyles: {
       fontStyle: 'bold',
@@ -312,7 +319,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
           styles: { fillColor: [255, 255, 0] },
         },
         {
-          content: `REVISÃO: ${data?.reviewDate || ''}`,
+          content: `REVISÃO: ${data?.review || ''}`,
           styles: { fillColor: [255, 255, 0] },
         },
       ],
@@ -322,6 +329,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
       lineWidth: 0.1,
       lineColor: [0, 0, 0],
       cellPadding: 1,
+      fontSize: 9,
     },
     headStyles: {
       fontStyle: 'bold',
@@ -355,11 +363,17 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
       ],
       [`CONDUTOR: ${data.driverName || ''}`],
     ],
+    columnStyles: {
+      0: {
+        cellWidth: 130, // largura máxima da primeira coluna
+      },
+    },
     styles: {
       textColor: [0, 0, 0],
       lineWidth: 0.1,
       lineColor: [0, 0, 0],
       cellPadding: 2,
+      fontSize: 9,
     },
   });
 
@@ -442,12 +456,13 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
         lineWidth: 0.1,
         lineColor: [0, 0, 0],
         cellPadding: 1,
+        fontSize: 9,
       },
     });
   });
 
   // Rodapé e observações
-  doc.setFontSize(8);
+  doc.setFontSize(7);
   doc.text(
     'Certifico para os devidos fins que o veículo foi submetido ao processo de higienização segundo os requisitos acima descritos. Que os colaboradores destinados para higienização e para inspeção da higienização das carretas atendem aos requisitos mínimos de higiene. Que as mangueiras utilizadas se encontram em boas condições (sem emendas, por exemplo) ponto que não há evidencias de resíduos do último produto transportado, apos o término do processo de higienização. Que todas as entradas e saída do caminhão são bem fechadas antes de ser levado há contratante. Que os tubos de armazenagem da mangueira são fechados com tampas nas duas extremidade e possue local para lacres. Acessáorios para carga e descarga, tais como, mangueiras, medidor de vazão e outros, foram contemplados no processo de higienização.',
     12,
