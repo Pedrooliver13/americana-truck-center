@@ -31,7 +31,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
             'TELEFONE: (19) 3478-4615 / CNPJ: 37.541.303/0001-21 / E-MAIL: contato@americanatruckcenter.com.br\n' +
             'CÓDIGO DE REGISTRO IPEM: 012796/2022',
           colSpan: 5,
-          styles: { halign: 'center', fontSize: 8 },
+          styles: { halign: 'center', fontSize: 7 },
         },
       ],
     ],
@@ -311,7 +311,35 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
   // Pula para a próxima página 📄
   doc.addPage();
 
+  doc.addImage(LogoImage, 'PNG', 12, 2, logoWidth, logoHeight);
+
+  doc.setFontSize(12);
+  doc.text(`Id: ${String(data?.reportId)?.substring(0, 5)}`, 195, 20, {
+    align: 'right',
+  });
+
   autoTable(doc, {
+    startY: 23,
+    head: [
+      [
+        {
+          content:
+            'AV. LETICIA CIA BOÉR, 600 - VILA BERTINI - AMERICANA/SP\n' +
+            'TELEFONE: (19) 3478-4615 / CNPJ: 37.541.303/0001-21 / E-MAIL: contato@americanatruckcenter.com.br\n' +
+            'CÓDIGO DE REGISTRO IPEM: 012796/2022',
+          colSpan: 5,
+          styles: { halign: 'center', fontSize: 7 },
+        },
+      ],
+    ],
+    tableWidth: 182,
+    columnStyles: {
+      0: { cellWidth: 35 },
+    },
+  });
+
+  autoTable(doc, {
+    startY: doc.lastAutoTable.finalY,
     head: [
       [
         {
@@ -462,7 +490,7 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
   });
 
   // Rodapé e observações
-  doc.setFontSize(7);
+  doc.setFontSize(6);
   doc.text(
     'Certifico para os devidos fins que o veículo foi submetido ao processo de higienização segundo os requisitos acima descritos. Que os colaboradores destinados para higienização e para inspeção da higienização das carretas atendem aos requisitos mínimos de higiene. Que as mangueiras utilizadas se encontram em boas condições (sem emendas, por exemplo) ponto que não há evidencias de resíduos do último produto transportado, apos o término do processo de higienização. Que todas as entradas e saída do caminhão são bem fechadas antes de ser levado há contratante. Que os tubos de armazenagem da mangueira são fechados com tampas nas duas extremidade e possue local para lacres. Acessáorios para carga e descarga, tais como, mangueiras, medidor de vazão e outros, foram contemplados no processo de higienização.',
     12,
@@ -476,29 +504,31 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
   doc.text(
     'PRAZO DE VALIDADE DO SERVIÇO DE DESCONTAMINAÇÃO: 48 HORAS',
     105,
-    doc.lastAutoTable.finalY + 30,
+    doc.lastAutoTable.finalY + 22,
     { align: 'center' },
   );
 
   // Assinaturas
-  doc.setFontSize(9);
+  doc.setFontSize(8);
   doc.text(
     '_______________________________________',
     10,
-    doc.lastAutoTable.finalY + 40,
+    doc.lastAutoTable.finalY + 35,
   );
-  doc.text('RESPONSÁVEL PELA INSPEÇÃO', 10, doc.lastAutoTable.finalY + 45);
+  doc.text('RESPONSÁVEL PELA INSPEÇÃO', 10, doc.lastAutoTable.finalY + 40);
   doc.text(
     '_______________________________________',
     130,
-    doc.lastAutoTable.finalY + 40,
+    doc.lastAutoTable.finalY + 35,
   );
   doc.text(
-    `NOME LEGÍVEL DO CONDUTOR DO VEÍCULO\n ${data.driverName || ''}`,
+    `NOME LEGÍVEL DO CONDUTOR DO VEÍCULO`,
     130,
-    doc.lastAutoTable.finalY + 45,
+    doc.lastAutoTable.finalY + 40,
   );
 
   // Salvar
-  doc.save('certificado_higienizacao.pdf');
+  doc.save(
+    `certificado_higienizacao_${data?.reportId || 'unknown'}${data?.hygieneCertificateDate ? `-${data?.hygieneCertificateDate}` : ''}.pdf`,
+  );
 };
