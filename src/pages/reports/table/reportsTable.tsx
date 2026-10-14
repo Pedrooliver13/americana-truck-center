@@ -1,7 +1,10 @@
 // Packages
 import { ReactElement, useState } from 'react';
-import { DeleteOutlined as DeleteOutlinedIcon } from '@ant-design/icons';
 import moment from 'moment';
+import {
+  DeleteOutlined as DeleteOutlinedIcon,
+  EditOutlined as EditOutlinedIcon,
+} from '@ant-design/icons';
 
 // Components
 import { Button, Modal, Tooltip } from 'components/core';
@@ -21,6 +24,7 @@ export const ReportsTable = (): ReactElement => {
     useReportsTableTour();
 
   const {
+    navigate,
     reportsList,
     formatedDataToExport,
     deleteReport,
@@ -90,7 +94,7 @@ export const ReportsTable = (): ReactElement => {
               },
               ...getColumnSearchProps('createdAt', 'Data', (record) => {
                 return moment(record?.seconds * 1000).format(
-                  'DD/MM/YYYY HH:mm'
+                  'DD/MM/YYYY HH:mm',
                 );
               }),
             },
@@ -103,10 +107,22 @@ export const ReportsTable = (): ReactElement => {
               render: (_text, record) => (
                 <div className="table__actions">
                   <ButtonPrintHygieneCertificateReport record={record} />
+                  <Tooltip title="Editar Laudo">
+                    <>
+                      <Button
+                        id="edit-report"
+                        type="text"
+                        className="table__actions--normal"
+                        icon={<EditOutlinedIcon color="#2B3034" />}
+                        size="small"
+                        onClick={() => navigate(`/reports/${record?.id}`)}
+                      />
+                    </>
+                  </Tooltip>
                   <Tooltip title="Deletar Laudo">
                     <>
                       <Button
-                        id="delete-service"
+                        id="delete-report"
                         danger
                         icon={<DeleteOutlinedIcon />}
                         type="text"

@@ -19,21 +19,30 @@ import { usePostReport } from 'hooks/reports/usePostReport';
 import { useDeleteReportById } from 'hooks/reports/useDeleteReportById';
 import { useGetAllClients } from 'hooks/clients/useGetAllClients';
 import { useGetAllDrivers } from 'hooks/drivers/useGetAllDrivers';
+import { useGetByIdReport } from 'hooks/reports/useGetByIdReport';
+import { usePutReport } from 'hooks/reports/usePutReport';
 
 // Models
 import { Clients } from 'models/clients/clients';
 import { Drivers } from 'models/drivers/drivers';
-import { PostReport, ReportsToExport, Report } from 'models/reports/reports';
+import {
+  PostReport,
+  ReportsToExport,
+  Report,
+  PutReport,
+} from 'models/reports/reports';
 
 export interface ReportsContextProps {
   id?: string;
   reportsList?: Array<Report>;
+  reportItem?: Report;
   priceItem?: Report;
   clientsListOptions: Array<Clients>;
   driverListOptions: Array<Drivers>;
   formatedDataToExport?: Array<ReportsToExport>;
 
   createReport: (data: PostReport) => void;
+  updateReport: (data: PutReport) => void;
   deleteReport: (id: string) => void;
   onToggleModal: () => void;
   navigate: NavigateFunction;
@@ -59,6 +68,9 @@ export const ReportsProvider = ({
   const { data: reportsList, isFetching: isFetchingReportList } =
     useGetAllReports(id);
 
+  const { data: reportItem, isFetching: isFetchingReportItem } =
+    useGetByIdReport(id);
+
   const { data: clientsList, isFetching: isFetchingClientsList } =
     useGetAllClients(id);
 
@@ -67,6 +79,9 @@ export const ReportsProvider = ({
 
   const { mutateAsync: createReportPostMutate, isPending: isPendingPost } =
     usePostReport();
+
+  const { mutateAsync: updateReportPutMutate, isPending: isPendingPut } =
+    usePutReport();
 
   const { mutateAsync: deleteReportMutate, isPending: isPendingDelete } =
     useDeleteReportById();
@@ -126,6 +141,17 @@ export const ReportsProvider = ({
     [createReportPostMutate],
   );
 
+  const updateReport = useCallback(
+    async (data: PutReport): Promise<void> => {
+      const payload = {
+        ...data,
+      };
+
+      await updateReportPutMutate(payload);
+    },
+    [updateReportPutMutate],
+  );
+
   const deleteReport = useCallback(
     (id: string) => {
       deleteReportMutate(id);
@@ -142,20 +168,24 @@ export const ReportsProvider = ({
       value={{
         id,
         reportsList: reportsList ?? [],
+        reportItem: reportItem,
         clientsListOptions,
         driverListOptions,
         formatedDataToExport,
         createReport,
+        updateReport,
         deleteReport,
         onToggleModal,
         navigate,
         isOpenModal,
         isLoading:
           isPendingPost ||
+          isPendingPut ||
           isPendingDelete ||
           isFetchingReportList ||
           isFetchingClientsList ||
-          isFetchingDriversList,
+          isFetchingDriversList ||
+          isFetchingReportItem,
       }}
     >
       {children}

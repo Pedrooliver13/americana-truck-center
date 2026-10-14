@@ -121,8 +121,15 @@ export const ReportsForm = (): ReactElement => {
   const navigate = useNavigate();
   const [isOpenModal, setIsOpenModal] = useState(false);
 
-  const { createReport, clientsListOptions, driverListOptions, isLoading } =
-    useReportsContext();
+  const {
+    id,
+    reportItem,
+    updateReport,
+    createReport,
+    clientsListOptions,
+    driverListOptions,
+    isLoading,
+  } = useReportsContext();
 
   const {
     control,
@@ -207,6 +214,7 @@ export const ReportsForm = (): ReactElement => {
       temperatureRinse: '60º',
       temperatureWashing: '60º',
     },
+    values: reportItem,
     resolver: zodResolver(schema),
   });
 
@@ -249,6 +257,11 @@ export const ReportsForm = (): ReactElement => {
   }
 
   const onSubmit = (data: FormValues) => {
+    if (id) {
+      updateReport({ id, ...data });
+      return;
+    }
+
     createReport({
       ...data,
       reportId: generateNumericId(),
@@ -1100,6 +1113,9 @@ export const ReportsForm = (): ReactElement => {
             </Row>
 
             <div className="prices-form__footer">
+              <Button size="large" type="default" onClick={handleToggleModal}>
+                Cancelar
+              </Button>
               <Button
                 size="large"
                 type="primary"
