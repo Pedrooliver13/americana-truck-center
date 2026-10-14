@@ -72,6 +72,7 @@ export const Router = (): ReactElement => {
         <Route element={<ReportContextLayout />}>
           <Route path="/reports" element={<ReportsTable />} />
           <Route path="/reports/new" element={<ReportsForm />} />
+          <Route path="/reports/:id" element={<ReportsForm />} />
         </Route>
 
         <Route path="/settings" element={<Settings />} />

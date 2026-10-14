@@ -107,8 +107,6 @@ export const TasksForm = (): ReactElement => {
     }
   };
 
-  console.log('watch()', watch());
-
   return (
     <>
       <Styled.TasksFormContainer className="container">

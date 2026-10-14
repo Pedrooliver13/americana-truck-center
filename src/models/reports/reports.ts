@@ -93,4 +93,8 @@ export interface ReportsToExport {
 
 export interface PostReport extends HygieneCertificate {}
 
+export interface PutReport extends HygieneCertificate {
+  id: string;
+}
+
 export interface HygieneCertificate extends Report {}
