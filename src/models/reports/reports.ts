@@ -37,6 +37,12 @@ export interface Report {
   ladderUsed: string;
   returnedLadder: string;
 
+  plasticWrapUsed: string;
+  returnedPlasticWrap: string;
+
+  squeegeeUsed: string;
+  returnedSqueegee: string;
+
   temperatureCheck: string;
   timeCheck: string;
   valveLeakTest: string;
