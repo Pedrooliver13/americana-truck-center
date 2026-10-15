@@ -66,6 +66,12 @@ const schema = zod.object({
   ladderUsed: zod.string(),
   returnedLadder: zod.string(),
 
+  plasticWrapUsed: zod.string(),
+  returnedPlasticWrap: zod.string(),
+
+  squeegeeUsed: zod.string(),
+  returnedSqueegee: zod.string(),
+
   temperatureCheck: zod.string(),
   timeCheck: zod.string(),
   valveLeakTest: zod.string(),
@@ -163,6 +169,10 @@ export const ReportsForm = (): ReactElement => {
       returnedPliers: '',
       ladderUsed: '',
       returnedLadder: '',
+      plasticWrapUsed: '',
+      returnedPlasticWrap: '',
+      squeegeeUsed: '',
+      returnedSqueegee: '',
       temperatureCheck: '',
       timeCheck: '',
       valveLeakTest: 'REPROVADO',
@@ -465,7 +475,6 @@ export const ReportsForm = (): ReactElement => {
                   />
                 </FormItem>
               </Col>
-
               <Col xs={24} md={12}>
                 <FormItem control={control} name="glovesUsed">
                   <Input
@@ -515,7 +524,6 @@ export const ReportsForm = (): ReactElement => {
                   />
                 </FormItem>
               </Col>
-
               <Col xs={24} md={12}>
                 <FormItem control={control} name="flashlightsUsed">
                   <Input
@@ -583,6 +591,54 @@ export const ReportsForm = (): ReactElement => {
                     name="returnedLadder"
                     label="Escada Devolvida"
                     placeholder="Escada Devolvida"
+                    autoComplete="off"
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="plasticWrapUsed">
+                  <Input
+                    id="plasticWrapUsed"
+                    name="plasticWrapUsed"
+                    label="Papel filme stretch Utilizado"
+                    placeholder="Papel filme stretch Utilizado"
+                    autoComplete="off"
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="returnedPlasticWrap">
+                  <Input
+                    id="returnedPlasticWrap"
+                    name="returnedPlasticWrap"
+                    label="Papel filme stretch Devolvido"
+                    placeholder="Papel filme stretch Devolvido"
+                    autoComplete="off"
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="squeegeeUsed">
+                  <Input
+                    id="squeegeeUsed"
+                    name="squeegeeUsed"
+                    label="Rodo Utilizado"
+                    placeholder="Rodo Utilizado"
+                    autoComplete="off"
+                    maxLength={150}
+                  />
+                </FormItem>
+              </Col>
+              <Col xs={24} md={12}>
+                <FormItem control={control} name="returnedSqueegee">
+                  <Input
+                    id="returnedSqueegee"
+                    name="returnedSqueegee"
+                    label="Rodo Devolvido"
+                    placeholder="Rodo Devolvido"
                     autoComplete="off"
                     maxLength={150}
                   />

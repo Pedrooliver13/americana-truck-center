@@ -16,6 +16,12 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
   const logoHeight = 25;
   doc.addImage(LogoImage, 'PNG', 12, 2, logoWidth, logoHeight);
 
+  doc.setFont('helvetica', 'bold');
+  doc.text('AMERICANA TRUCK CENTER', 105, 20, {
+    align: 'center',
+  });
+
+  doc.setFont('helvetica', 'normal');
   doc.setFontSize(12);
   doc.text(`Id: ${String(data?.reportId)?.substring(0, 5)}`, 195, 20, {
     align: 'right',
@@ -128,6 +134,18 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
         'Escada',
         data?.ladderUsed,
         data?.returnedLadder,
+      ],
+      [
+        'Inspeção interna do tanque',
+        'Papel filme stretch',
+        data?.plasticWrapUsed,
+        data?.returnedPlasticWrap,
+      ],
+      [
+        'Inspeção interna do tanque',
+        'Rodo',
+        data?.squeegeeUsed,
+        data?.returnedSqueegee,
       ],
     ],
     styles: {
@@ -313,7 +331,14 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
 
   doc.addImage(LogoImage, 'PNG', 12, 2, logoWidth, logoHeight);
 
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('AMERICANA TRUCK CENTER', 105, 20, {
+    align: 'center',
+  });
+
   doc.setFontSize(12);
+  doc.setFont('helvetica', 'normal');
   doc.text(`Id: ${String(data?.reportId)?.substring(0, 5)}`, 195, 20, {
     align: 'right',
   });
@@ -410,9 +435,8 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
     {
       title: 'PROCESSOS DE HIGIENIZAÇÃO',
       body: [
-        ['ENXAGUE COM ÁGUA (30 MIN)', 'LAVAGEM COM ÁGUA QUENTE VAPOR (150°)'],
-        ['SECAGEM COM PANO', 'USO DE DETERGENTE'],
-        ['USO DE DETERGENTE', 'VENTILAÇÃO/EXAUSTÃO'],
+        ['LAVAGEM COM ÁGUA QUENTE', 'ENXAGUE COM ÁGUA', 'SECAGEM COM PANO'],
+        ['USO DE DETERGENTE', 'VENTILAÇÃO/EXAUSTÃO', ''],
       ],
     },
     {
