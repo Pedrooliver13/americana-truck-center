@@ -68,6 +68,10 @@ export const XlsxButtonBase = (
       const startDate = moment(data?.dateValue[0], 'DD/MM/YYYY');
       const endDate = moment(data?.dateValue[1], 'DD/MM/YYYY');
 
+      if (!task?.DATA) {
+        return true;
+      }
+
       return (
         moment(task?.DATA, 'DD/MM/YYYY').isSameOrBefore(endDate) &&
         moment(task?.DATA, 'DD/MM/YYYY').isSameOrAfter(startDate)
