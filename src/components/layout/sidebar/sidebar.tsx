@@ -110,7 +110,7 @@ export const Sidebar = (props: SidebarProps): ReactElement => {
           {
             key: '/reports',
             icon: <FileDoneOutlinedIcon />,
-            label: <Link to={'/reports'}>Laudo</Link>,
+            label: <Link to={'/reports'}>Laudo alimentício</Link>,
           },
 
           /* FOOTER */
