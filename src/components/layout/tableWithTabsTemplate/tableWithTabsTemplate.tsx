@@ -74,12 +74,12 @@ interface TableWithTabsTemplateProps {
 }
 
 export const TableWithTabsTemplate = (
-  props: TableWithTabsTemplateProps
+  props: TableWithTabsTemplateProps,
 ): ReactElement => {
   const isMobile = useIsMobile();
 
   const [activeTabKey, setActiveTabKey] = useState<string>(
-    props.tabs[0]?.key || ''
+    props.tabs[0]?.key || '',
   );
   const [searchValue, setSearchValue] = useState<string>('');
   const [debouncedSearch, setDebouncedSearch] = useState<string>('');
@@ -100,7 +100,7 @@ export const TableWithTabsTemplate = (
 
   const activeTab = useMemo(
     () => props.tabs.find((tab) => tab.key === activeTabKey),
-    [activeTabKey, props.tabs]
+    [activeTabKey, props.tabs],
   );
 
   const filteredData = useMemo(() => {
@@ -117,11 +117,19 @@ export const TableWithTabsTemplate = (
 
     const normalizedSearch = normalize(debouncedSearch);
 
-    return (activeTab.dataSource ?? []).filter((item) =>
-      Object.keys(item).some((key) =>
-        normalize(item[key]).includes(normalizedSearch)
-      )
-    );
+    return (activeTab.dataSource ?? []).filter((item) => {
+      if (item?.createdBy) {
+        delete item?.createdBy;
+      }
+
+      if (item?.updatedBy) {
+        delete item?.updatedBy;
+      }
+
+      return Object.keys(item).some((key) =>
+        normalize(item[key]).includes(normalizedSearch),
+      );
+    });
   }, [activeTab, debouncedSearch]);
 
   const handleSearch = useCallback((event: ChangeEvent<HTMLInputElement>) => {
