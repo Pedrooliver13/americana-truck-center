@@ -175,8 +175,8 @@ export const ReportsForm = (): ReactElement => {
       returnedSqueegee: '',
       temperatureCheck: '',
       timeCheck: '',
-      valveLeakTest: 'REPROVADO',
-      phTest: 'REPROVADO',
+      valveLeakTest: 'APROVADO',
+      phTest: 'APROVADO',
       /* /CHECKLIST */
 
       /* LACRES */
@@ -198,9 +198,9 @@ export const ReportsForm = (): ReactElement => {
       /* /ÚLTIMOS PRODUTOS TRANSPORTADOS */
 
       /* LIMPEZA EXTERNA */
-      valves: 'NÃO',
-      hoseExternal: 'NÃO',
-      pipesExternal: 'NÃO',
+      valves: 'SIM',
+      hoseExternal: 'SIM',
+      pipesExternal: 'SIM',
       /* /LIMPEZA EXTERNA */
 
       /* AVALIAÇÃO - APÓS HIGIENIZAÇÃO */

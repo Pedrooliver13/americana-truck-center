@@ -17,8 +17,20 @@ export interface InputProps extends InputAntDesignProps {
 
 export const InputBase = (
   props: InputProps,
-  ref: React.LegacyRef<InputRef> | undefined
+  ref: React.LegacyRef<InputRef> | undefined,
 ): ReactElement => {
+  const handleChange: InputAntDesignProps['onChange'] = (event) => {
+    const { value } = event.target;
+    const upperCaseValue = value.toUpperCase();
+
+    if (upperCaseValue !== value) {
+      const input = event.target;
+      input.value = upperCaseValue;
+    }
+
+    props.onChange?.(event);
+  };
+
   return (
     <Styled.InputContainer>
       {props.label && (
@@ -32,7 +44,18 @@ export const InputBase = (
           </Typography.Title>
         </label>
       )}
-      <InputAntDesign ref={ref} size="large" {...props} required={false} />
+
+      <InputAntDesign
+        ref={ref}
+        size="large"
+        {...props}
+        onChange={handleChange}
+        style={{
+          ...props.style,
+          textTransform: 'uppercase',
+        }}
+        required={false}
+      />
     </Styled.InputContainer>
   );
 };
