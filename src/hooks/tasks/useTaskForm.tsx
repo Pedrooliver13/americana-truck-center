@@ -37,6 +37,7 @@ const schema = zod
     serviceName: zod.string().optional().nullable(),
     serviceValue: zod.string().optional().nullable(),
     search: zod.string().optional().nullable(),
+    services: zod.any(),
   })
   .superRefine((values, ctx) => {
     if (values.serviceName && !values.serviceValue) {
@@ -94,6 +95,7 @@ export const useTaskForm = () => {
       observation: '',
       serviceName: '',
       serviceValue: '',
+      services: [],
     },
     values: taskItem,
     resolver: zodResolver(schema),
@@ -101,6 +103,7 @@ export const useTaskForm = () => {
 
   const searchValue = watch('search');
   const client = watch('client');
+  const taskServices = watch('services');
 
   const {
     totalPrice,
@@ -108,7 +111,7 @@ export const useTaskForm = () => {
     listServices,
     setServicesSelectedList,
     handleChangeAddNewServiceInList,
-  } = useTasksCount(taskItem?.services ?? []);
+  } = useTasksCount(taskServices ?? []);
 
   const handlers = {
     handleChangeAddNewServiceInList,
@@ -185,11 +188,18 @@ export const useTaskForm = () => {
     handleEditItem: async (id: string): Promise<void> => {
       const value = watch();
 
+      if (listServices?.length <= 0) {
+        toast.error('Selecione ao menos um serviço!');
+        return;
+      }
+
       delete value.search;
 
       const filteredData = handlers.removeUndefined({
         ...taskItem,
         ...value,
+        total: totalPrice,
+        services: listServices,
         id,
       });
 
@@ -199,7 +209,19 @@ export const useTaskForm = () => {
 
   const selects = {
     servicesOptions: useMemo(() => {
-      const services = taskItem?.services ?? pricesList ?? [];
+      const taskServices = taskItem?.services ?? [];
+      const availableServices = pricesList ?? [];
+
+      const services = taskItem?.services
+        ? [
+            ...new Map(
+              [...taskServices, ...availableServices].map((service) => [
+                service.id,
+                service,
+              ]),
+            ).values(),
+          ]
+        : availableServices;
 
       if (!id) {
         // ? preenche os campos com 0 quando for adicionar uma nova tarefa

@@ -10,13 +10,13 @@ import { getAllPrices } from 'services/prices/getAllPrices';
 
 export const useGetAllPrices = (id?: string) => {
   const location = useLocation();
-  const URLToEnableGet = ['/', '/prices', '/tasks/new'];
+  const URLToEnableGet = ['/', '/prices', '/tasks/new', `/tasks/${id}`];
 
   const response = useQuery<Array<Prices>>({
     queryKey: ['prices'],
     queryFn: () => getAllPrices() as Promise<Array<Prices>>,
     staleTime: 1000 * 60 * 30, // 30 minutes
-    enabled: Boolean(!id) && URLToEnableGet.includes(location.pathname),
+    enabled: URLToEnableGet.includes(location.pathname),
   });
 
   return response;

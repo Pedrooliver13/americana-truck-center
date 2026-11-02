@@ -72,8 +72,7 @@ export const TasksProvider = ({
   const navigate = useNavigate();
 
   // Get's
-  const { data: tasksList, isFetching: isFetchingTasksList } =
-    useGetAllTasks(id);
+  const { data: tasksList, isFetching: isFetchingTasksList } = useGetAllTasks();
 
   const { data: taskItem, isFetching: isFetchingTaskItem } = useGetByIdTask(id);
 

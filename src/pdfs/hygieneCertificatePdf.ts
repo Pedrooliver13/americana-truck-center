@@ -430,15 +430,37 @@ export const generateHygieneCertificate = (data: HygieneCertificate) => {
     },
   });
 
+  autoTable(doc, {
+    startY: doc.lastAutoTable.finalY,
+    head: [
+      [
+        {
+          content: 'PROCESSOS DE HIGIENIZAÇÃO',
+          colSpan: 3,
+          styles: { halign: 'center', fillColor: [255, 255, 0] },
+        },
+      ],
+    ],
+    body: [
+      ['LAVAGEM COM ÁGUA QUENTE', 'ENXAGUE COM ÁGUA', 'SECAGEM COM PANO'],
+      ['USO DE DETERGENTE', 'VENTILAÇÃO/EXAUSTÃO', ''],
+    ],
+    columnStyles: {
+      0: {
+        cellWidth: 60, // largura máxima da primeira coluna
+      },
+    },
+    styles: {
+      textColor: [0, 0, 0],
+      lineWidth: 0.1,
+      lineColor: [0, 0, 0],
+      cellPadding: 1,
+      fontSize: 9,
+    },
+  });
+
   // Demais seções (loop para reaproveitar estrutura)
   const sections = [
-    {
-      title: 'PROCESSOS DE HIGIENIZAÇÃO',
-      body: [
-        ['LAVAGEM COM ÁGUA QUENTE', 'ENXAGUE COM ÁGUA', 'SECAGEM COM PANO'],
-        ['USO DE DETERGENTE', 'VENTILAÇÃO/EXAUSTÃO', ''],
-      ],
-    },
     {
       title: 'HISTÓRICO DE PRODUTOS TRANSPORTADOS',
       body: [

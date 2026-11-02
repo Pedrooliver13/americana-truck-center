@@ -13,12 +13,11 @@ import {
 // Services
 import { getAllTasks } from 'services/tasks/getAllTasks';
 
-export const useGetAllTasks = (id?: string) => {
+export const useGetAllTasks = () => {
   const response = useQuery<Array<Task>>({
     queryKey: ['tasks'],
     queryFn: () => getAllTasks() as Promise<Array<Task>>,
     staleTime: 1000 * 60 * 30, // 30 minutes
-    enabled: Boolean(!id),
   });
 
   if (!response?.data || !Array.isArray(response?.data)) {
