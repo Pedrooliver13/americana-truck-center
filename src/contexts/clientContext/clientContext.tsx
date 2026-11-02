@@ -56,8 +56,7 @@ export const ClientsProvider = ({
   const { data: clientItem, isFetching: isFetchingClientItem } =
     useGetByIdClient(id);
 
-  const { data: tasksList, isFetching: isFetchingTasksList } =
-    useGetAllTasks(id);
+  const { data: tasksList, isFetching: isFetchingTasksList } = useGetAllTasks();
 
   const { mutateAsync: createClientMutate, isPending: isPendingPostClient } =
     usePostClient();
