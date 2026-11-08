@@ -34,6 +34,7 @@ export const useGetAllTasks = () => {
         statusName: statusName[task?.status],
         serviceStatusName:
           serviceStatusName[task?.serviceStatus || ETaskServiceStatus.PENDING],
+        date: moment(task?.createdAt?.seconds * 1000).format('DD/MM/YYYY'),
       }))
       .sort((a, b) => {
         const dateA = moment(a?.createdAt?.seconds * 1000);
